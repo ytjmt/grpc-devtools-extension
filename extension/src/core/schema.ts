@@ -2,6 +2,8 @@ import {
   createFileRegistry,
   createRegistry,
   fromBinary,
+  type DescEnum,
+  type DescEnumValue,
   type DescFile,
   type DescMethod,
   type DescService,
@@ -76,8 +78,21 @@ export function loadDescriptorSet(bytes: Uint8Array): LoadedSchema {
   }
 
   const services: string[] = [];
-  for (const t of registry) if (t.kind === "service") services.push(t.typeName);
+  for (const t of registry) {
+    if (t.kind === "service") services.push(t.typeName);
+    if (t.kind === "enum") preferFirstAlias(t);
+  }
   return { registry, skipped, services: services.sort() };
+}
+
+/**
+ * With `allow_alias`, several names share a number. protobuf-es looks names up
+ * through `DescEnum.value[number]`, which ends up holding the last alias; point
+ * it at the first declared name instead, as protoc-based JSON printers do.
+ */
+function preferFirstAlias(desc: DescEnum) {
+  const byNumber = desc.value as Record<number, DescEnumValue>;
+  for (const v of [...desc.values].reverse()) byNumber[v.number] = v;
 }
 
 export interface IndexedSchema {

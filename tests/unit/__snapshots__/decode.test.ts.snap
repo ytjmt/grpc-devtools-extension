@@ -796,7 +796,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded shop calls w
             "pageSize": 2,
           },
           "statuses": [
-            "PRODUCT_STATUS_PUBLISHED",
+            "PRODUCT_STATUS_ACTIVE",
           ],
         },
         "via": "schema",
@@ -886,10 +886,10 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded shop calls w
                 "thumbnail": "iVBORw0KGgo=",
                 "viewCount": "9007199254740993",
               },
-              "status": "PRODUCT_STATUS_PUBLISHED",
+              "status": "PRODUCT_STATUS_ACTIVE",
               "statusHistory": [
                 "PRODUCT_STATUS_DRAFT",
-                "PRODUCT_STATUS_PUBLISHED",
+                "PRODUCT_STATUS_ACTIVE",
               ],
               "tags": [
                 "organic",
@@ -938,7 +938,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded shop calls w
                 "currencyCode": "JPY",
                 "units": "4500",
               },
-              "status": "PRODUCT_STATUS_PUBLISHED",
+              "status": "PRODUCT_STATUS_ACTIVE",
               "title": "Risograph Poster",
             },
           ],
@@ -1053,10 +1053,10 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded shop calls w
               "thumbnail": "iVBORw0KGgo=",
               "viewCount": "9007199254740993",
             },
-            "status": "PRODUCT_STATUS_PUBLISHED",
+            "status": "PRODUCT_STATUS_ACTIVE",
             "statusHistory": [
               "PRODUCT_STATUS_DRAFT",
-              "PRODUCT_STATUS_PUBLISHED",
+              "PRODUCT_STATUS_ACTIVE",
             ],
             "tags": [
               "organic",

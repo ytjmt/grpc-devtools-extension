@@ -83,6 +83,7 @@ export const en = {
   "browse.selectType": "Select a type",
   "browse.notFound": "{type} is not in this schema",
   "browse.deprecated": "deprecated",
+  "browse.aliasOf": "alias of {name}",
   "browse.request": "Request",
   "browse.response": "Response",
   "browse.field": "Field",

@@ -55,9 +55,10 @@ describe("shop scenario decoding", () => {
     expect(product.barcode).toBe("4901234567894");
     expect(product.inStockQuantity).toBe(15);
     expect(product.label).toBe("Bestseller");
-    // ACTIVE and PUBLISHED share number 2 (allow_alias), so the wire cannot tell them apart.
-    // protobuf-es names aliases by their last declaration, unlike protoc-based JSON (first).
-    expect(product.statusHistory).toEqual(["PRODUCT_STATUS_DRAFT", "PRODUCT_STATUS_PUBLISHED"]);
+    // ACTIVE and PUBLISHED share number 2 (allow_alias), so the wire cannot tell them apart;
+    // like protoc-based JSON, the first declared name is shown.
+    expect(product.statusHistory).toEqual(["PRODUCT_STATUS_DRAFT", "PRODUCT_STATUS_ACTIVE"]);
+    expect(product.status).toBe("PRODUCT_STATUS_ACTIVE");
     expect(product.variants[2]).toMatchObject({ color: "COLOR_INDIGO", size: "SIZE_S", priceDelta: { units: "-300" } });
     expect(product.category.children[0].children[0].displayName).toBe("T-shirts");
   });

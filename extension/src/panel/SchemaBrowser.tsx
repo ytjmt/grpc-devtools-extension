@@ -426,13 +426,21 @@ function EnumBody({ en }: { en: DescEnum }) {
         </tr>
       </thead>
       <tbody>
-        {en.values.map((v) => (
-          <tr key={v.name}>
-            <td className="num">{v.number}</td>
-            <td className="mono">{v.name}</td>
-            <td>{getComment(v)}</td>
-          </tr>
-        ))}
+        {en.values.map((v) => {
+          // With allow_alias, the first value with a number is the name shown in decoded messages.
+          const primary = en.values.find((o) => o.number === v.number)!;
+          return (
+            <tr key={v.name}>
+              <td className="num">{v.number}</td>
+              <td className="mono">
+                <span className={v.deprecated ? "deprecated" : ""}>{v.name}</span>
+                {primary !== v && <span className="muted"> ({t("browse.aliasOf", { name: primary.name })})</span>}
+                {v.deprecated && <span className="badge warn">{t("browse.deprecated")}</span>}
+              </td>
+              <td>{getComment(v)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

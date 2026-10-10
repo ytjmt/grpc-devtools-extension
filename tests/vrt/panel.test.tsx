@@ -203,6 +203,16 @@ describe("light theme details", () => {
       },
     }));
 
+  test("shop: enum with alias and deprecated value", () =>
+    shot("shop-browse-enum-alias", {
+      theme,
+      calls: shopCalls,
+      act: async () => {
+        await openBrowse(1);
+        await openTree("ProductStatus");
+      },
+    }));
+
   test("unknown fields warning", () =>
     shot("detail-unknown-fields", { theme, calls: [syntheticCalls.unknownFields()], act: selectRow("Greet") }));
 
