@@ -59,7 +59,17 @@ pnpm test:vrt          # screenshot tests rendered by Chromium in Docker (add -u
 pnpm fixtures:record   # re-record tests/fixtures/demo-calls.json from the demo app
 pnpm example:gen       # regenerate example code and descriptor sets
 pnpm example:build && pnpm example:serve   # demo app at http://localhost:8080
+pnpm package           # build and zip into release/
 ```
+
+### Release
+
+The version lives in `package.json` and is written into the built manifest. To publish to GitHub Releases with `gh`:
+
+1. Bump `version` in `package.json` (1-4 numbers, e.g. `0.2.0`), commit, and push to `main`.
+2. Run `pnpm release`. It checks that `main` matches `origin/main` and the tag is new, runs typecheck and tests, then creates the `v<version>` release with the zipped build and generated notes.
+
+`pnpm release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
 
 ### Layout
 

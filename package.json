@@ -15,7 +15,9 @@
     "fixtures:record": "pnpm build && RECORD_FIXTURES=1 playwright test record-fixtures",
     "test:unit": "vitest run --project unit",
     "test:component": "vitest run --project component",
-    "test:vrt": "docker compose up -d --wait playwright && vitest run --project vrt"
+    "test:vrt": "docker compose up -d --wait playwright && vitest run --project vrt",
+    "package": "scripts/package.sh",
+    "release": "scripts/release.sh"
   },
   "devEngines": {
     "packageManager": {
