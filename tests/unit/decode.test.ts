@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { GreetRequestSchema, GreetResponseSchema } from "../../example/gen/demo/v1/demo_pb";
 import { decodeCall } from "../../extension/src/core/decode";
 import { detectProtocol } from "../../extension/src/core/framing";
+import type { DecodedMessage } from "../../extension/src/core/types";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";
 import { decodeSchemaless } from "../../extension/src/core/schemaless";
 import {
@@ -129,9 +130,15 @@ describe("decodeCall", () => {
 
 describe("golden: recorded and synthetic fixtures", () => {
   // `raw` is excluded: it only echoes the input fixture.
+  // `type` is a full descriptor object; `typeName` already identifies it.
+  const withoutType = (messages: DecodedMessage[]) => messages.map(({ type: _type, ...m }) => m);
   const decodeForSnapshot = (index: SchemaIndex) => (c: (typeof demoCalls)[number]) => {
     const { raw: _raw, ...decoded } = decodeCall(c, index);
-    return decoded;
+    return {
+      ...decoded,
+      requestMessages: withoutType(decoded.requestMessages),
+      responseMessages: withoutType(decoded.responseMessages),
+    };
   };
 
   it("decodes recorded demo calls with the schema", () => {

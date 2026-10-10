@@ -130,6 +130,17 @@ export const syntheticCalls = {
       resBody: frame(0, greetRes).subarray(0, 10),
     }),
 
+  /** Response carrying field 9, which the demo schema does not define (as if the server were newer). */
+  unknownFields: (): RawCall =>
+    raw({
+      contentType: "application/grpc-web+proto",
+      reqBody: frame(0, greetReq),
+      resBody: concat(
+        frame(0, concat(greetRes, new Uint8Array([9 << 3, 1]))),
+        trailers([{ name: "grpc-status", value: "0" }]),
+      ),
+    }),
+
   withAny: (): RawCall =>
     raw({
       contentType: "application/grpc-web+proto",

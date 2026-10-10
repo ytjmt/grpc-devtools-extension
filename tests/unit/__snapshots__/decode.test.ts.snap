@@ -45,6 +45,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -98,6 +99,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -151,6 +153,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -196,6 +199,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
     ],
     "responseMessages": [],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -276,6 +280,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -345,6 +350,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -423,6 +429,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -476,6 +483,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -542,6 +550,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -595,6 +604,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
     ],
     "responseMessages": [],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -675,6 +685,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -744,6 +755,7 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
       },
     ],
     "schemaFound": false,
+    "schemaId": undefined,
     "schemaName": undefined,
     "service": "demo.v1.DemoService",
     "status": {
@@ -794,6 +806,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -841,6 +854,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -885,6 +899,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -932,6 +947,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -969,6 +985,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
     ],
     "responseMessages": [],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -1001,6 +1018,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
     ],
     "responseMessages": [],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {
@@ -1021,6 +1039,60 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
         },
       },
     ],
+  },
+  "unknownFields": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 8,
+        "typeName": "demo.v1.GreetResponse",
+        "unknownFields": [
+          {
+            "number": 9,
+            "path": "",
+          },
+        ],
+        "value": {
+          "greeting": "hi",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
   },
   "withAny": {
     "codec": "proto",
@@ -1057,6 +1129,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
       },
     ],
     "schemaFound": true,
+    "schemaId": "schema-0",
     "schemaName": "schema-0",
     "service": "demo.v1.DemoService",
     "status": {

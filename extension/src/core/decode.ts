@@ -12,6 +12,7 @@ import {
 } from "./framing";
 import type { SchemaIndex } from "./schema";
 import { decodeSchemaless } from "./schemaless";
+import { findUnknownFields } from "./unknownFields";
 import { codeFromConnectString, codeFromHttpStatus, codeName } from "./status";
 import type { CallStatus, Codec, DecodedCall, DecodedMessage, Frame, Header, RawCall } from "./types";
 
@@ -99,6 +100,7 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
     transport,
     codec,
     schemaFound: desc !== undefined,
+    schemaId: resolution.method ? resolution.schema?.id : undefined,
     schemaName: resolution.method ? resolution.schema?.name : undefined,
     outOfScopeSchemas: resolution.outOfScope,
     requestMessages,
@@ -164,7 +166,7 @@ export function decodeMessage(
   if (codec === "json") {
     const text = utf8Lossy(bytes);
     try {
-      return { via: "json", typeName: type?.typeName, value: JSON.parse(text), size };
+      return { via: "json", typeName: type?.typeName, type, value: JSON.parse(text), size };
     } catch (e) {
       return { via: "error", value: text, size, error: msg("warn.jsonParseFailed", { error: String(e) }) };
     }
@@ -172,9 +174,17 @@ export function decodeMessage(
   let schemaError: Text | undefined;
   if (type) {
     try {
-      const msg = fromBinary(type, bytes);
-      const value = toJson(type, msg, { registry: registry });
-      return { via: "schema", typeName: type.typeName, value, size };
+      const message = fromBinary(type, bytes);
+      const value = toJson(type, message, { registry });
+      const unknownFields = findUnknownFields(type, message);
+      return {
+        via: "schema",
+        typeName: type.typeName,
+        type,
+        value,
+        size,
+        ...(unknownFields.length ? { unknownFields } : {}),
+      };
     } catch (e) {
       // e.g. the registered schema is stale; fall through to schemaless.
       schemaError = msg("warn.decodeAsTypeFailed", { type: type.typeName, error: String(e) });

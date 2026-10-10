@@ -1,4 +1,6 @@
+import type { DescMessage } from "@bufbuild/protobuf";
 import type { Text } from "../i18n";
+import type { UnknownFieldRef } from "./unknownFields";
 
 /** One HTTP exchange captured from chrome.devtools.network, kept undecoded. */
 export interface RawCall {
@@ -34,9 +36,13 @@ export interface DecodedMessage {
   /** "schema" = decoded with a registered type, "json" = JSON codec, "schemaless" = wire-format guess. */
   via: "schema" | "json" | "schemaless" | "error";
   typeName?: string;
+  /** The message type when known: drives field tooltips and links to the schema browser. */
+  type?: DescMessage;
   value: unknown;
   size: number;
   error?: Text;
+  /** Fields on the wire that the schema does not define (schema may be outdated). */
+  unknownFields?: UnknownFieldRef[];
 }
 
 export interface CallStatus {
@@ -58,7 +64,8 @@ export interface DecodedCall {
   codec: Codec;
   /** True when a registered schema knows this method. */
   schemaFound: boolean;
-  /** Name of the schema used for decoding, when found. */
+  /** Id and name of the schema used for decoding, when found. */
+  schemaId?: string;
   schemaName?: string;
   /** Schemas defining this service whose scopes exclude the request URL. */
   outOfScopeSchemas: string[];
