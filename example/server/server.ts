@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { createServer as createHttp2Server } from "node:http2";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { create, createRegistry } from "@bufbuild/protobuf";
@@ -8,6 +9,8 @@ import { connectNodeAdapter } from "@connectrpc/connect-node";
 import { DemoService, Mood, NoteSchema } from "../gen/demo/v1/demo_pb.js";
 
 const PORT = Number(process.env.PORT ?? 8080);
+// Native gRPC needs HTTP/2; served separately (h2c) for tools like grpcurl.
+const GRPC_PORT = Number(process.env.GRPC_PORT ?? PORT + 1);
 const STATIC_DIR = new URL("../client/dist/", import.meta.url).pathname;
 const DESCRIPTOR = new URL("../descriptor.binpb", import.meta.url).pathname;
 
@@ -56,3 +59,5 @@ createServer(async (req, res) => {
     res.writeHead(404).end("not found");
   }
 }).listen(PORT, () => console.log(`demo server on http://localhost:${PORT}`));
+
+createHttp2Server(rpc).listen(GRPC_PORT, () => console.log(`demo gRPC (h2c) on localhost:${GRPC_PORT}`));

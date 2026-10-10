@@ -12,23 +12,31 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file demo/v1/demo.proto.
  */
 export const file_demo_v1_demo: GenFile = /*@__PURE__*/
-  fileDesc("ChJkZW1vL3YxL2RlbW8ucHJvdG8SB2RlbW8udjEi2wEKDEdyZWV0UmVxdWVzdBIMCgRuYW1lGAEgASgJEhIKCmJpZ19udW1iZXIYAiABKAMSDAoEYmxvYhgDIAEoDBIMCgR0YWdzGAQgAygJEjEKBnNjb3JlcxgFIAMoCzIhLmRlbW8udjEuR3JlZXRSZXF1ZXN0LlNjb3Jlc0VudHJ5Eg8KBWVtYWlsGAYgASgJSAASDwoFcGhvbmUYByABKAlIABotCgtTY29yZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAU6AjgBQgkKB2NvbnRhY3QiiwEKDUdyZWV0UmVzcG9uc2USEAoIZ3JlZXRpbmcYASABKAkSGwoEbW9vZBgCIAEoDjINLmRlbW8udjEuTW9vZBImCgJhdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASIwoFZXh0cmEYBCABKAsyFC5nb29nbGUucHJvdG9idWYuQW55IhQKBE5vdGUSDAoEdGV4dBgBIAEoCSIvCgxDb3VudFJlcXVlc3QSDQoFdXBfdG8YASABKAUSEAoIZGVsYXlfbXMYAiABKAUiGgoNQ291bnRSZXNwb25zZRIJCgFuGAEgASgFKj0KBE1vb2QSFAoQTU9PRF9VTlNQRUNJRklFRBAAEg4KCk1PT0RfSEFQUFkQARIPCgtNT09EX1NMRUVQWRACMrYBCgtEZW1vU2VydmljZRI2CgVHcmVldBIVLmRlbW8udjEuR3JlZXRSZXF1ZXN0GhYuZGVtby52MS5HcmVldFJlc3BvbnNlEjUKBEZhaWwSFS5kZW1vLnYxLkdyZWV0UmVxdWVzdBoWLmRlbW8udjEuR3JlZXRSZXNwb25zZRI4CgVDb3VudBIVLmRlbW8udjEuQ291bnRSZXF1ZXN0GhYuZGVtby52MS5Db3VudFJlc3BvbnNlMAFiBnByb3RvMw", [file_google_protobuf_any, file_google_protobuf_timestamp]);
+  fileDesc("ChJkZW1vL3YxL2RlbW8ucHJvdG8SB2RlbW8udjEi8QEKDEdyZWV0UmVxdWVzdBIMCgRuYW1lGAEgASgJEhIKCmJpZ19udW1iZXIYAiABKAMSDAoEYmxvYhgDIAEoDBIMCgR0YWdzGAQgAygJEjEKBnNjb3JlcxgFIAMoCzIhLmRlbW8udjEuR3JlZXRSZXF1ZXN0LlNjb3Jlc0VudHJ5Eg8KBWVtYWlsGAYgASgJSAASDwoFcGhvbmUYByABKAlIABIUCghuaWNrbmFtZRgIIAEoCUICGAEaLQoLU2NvcmVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgFOgI4AUIJCgdjb250YWN0IosBCg1HcmVldFJlc3BvbnNlEhAKCGdyZWV0aW5nGAEgASgJEhsKBG1vb2QYAiABKA4yDS5kZW1vLnYxLk1vb2QSJgoCYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEiMKBWV4dHJhGAQgASgLMhQuZ29vZ2xlLnByb3RvYnVmLkFueSIUCgROb3RlEgwKBHRleHQYASABKAkiLwoMQ291bnRSZXF1ZXN0Eg0KBXVwX3RvGAEgASgFEhAKCGRlbGF5X21zGAIgASgFIhoKDUNvdW50UmVzcG9uc2USCQoBbhgBIAEoBSo9CgRNb29kEhQKEE1PT0RfVU5TUEVDSUZJRUQQABIOCgpNT09EX0hBUFBZEAESDwoLTU9PRF9TTEVFUFkQAjK2AQoLRGVtb1NlcnZpY2USNgoFR3JlZXQSFS5kZW1vLnYxLkdyZWV0UmVxdWVzdBoWLmRlbW8udjEuR3JlZXRSZXNwb25zZRI1CgRGYWlsEhUuZGVtby52MS5HcmVldFJlcXVlc3QaFi5kZW1vLnYxLkdyZWV0UmVzcG9uc2USOAoFQ291bnQSFS5kZW1vLnYxLkNvdW50UmVxdWVzdBoWLmRlbW8udjEuQ291bnRSZXNwb25zZTABYgZwcm90bzM", [file_google_protobuf_any, file_google_protobuf_timestamp]);
 
 /**
+ * Request for DemoService.Greet.
+ *
  * @generated from message demo.v1.GreetRequest
  */
 export type GreetRequest = Message<"demo.v1.GreetRequest"> & {
   /**
+   * Who to greet.
+   *
    * @generated from field: string name = 1;
    */
   name: string;
 
   /**
+   * Above 2^53, to check that int64 stays exact in JSON.
+   *
    * @generated from field: int64 big_number = 2;
    */
   bigNumber: bigint;
 
   /**
+   * Arbitrary bytes, including invalid UTF-8.
+   *
    * @generated from field: bytes blob = 3;
    */
   blob: Uint8Array;
@@ -44,6 +52,8 @@ export type GreetRequest = Message<"demo.v1.GreetRequest"> & {
   scores: { [key: string]: number };
 
   /**
+   * How to reach the person being greeted.
+   *
    * @generated from oneof demo.v1.GreetRequest.contact
    */
   contact: {
@@ -59,6 +69,14 @@ export type GreetRequest = Message<"demo.v1.GreetRequest"> & {
     value: string;
     case: "phone";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * Use name instead.
+   *
+   * @generated from field: string nickname = 8 [deprecated = true];
+   * @deprecated
+   */
+  nickname: string;
 };
 
 /**
@@ -69,10 +87,14 @@ export const GreetRequestSchema: GenMessage<GreetRequest> = /*@__PURE__*/
   messageDesc(file_demo_v1_demo, 0);
 
 /**
+ * Response for DemoService.Greet.
+ *
  * @generated from message demo.v1.GreetResponse
  */
 export type GreetResponse = Message<"demo.v1.GreetResponse"> & {
   /**
+   * The greeting text.
+   *
    * @generated from field: string greeting = 1;
    */
   greeting: string;
@@ -83,11 +105,15 @@ export type GreetResponse = Message<"demo.v1.GreetResponse"> & {
   mood: Mood;
 
   /**
+   * When the greeting was made.
+   *
    * @generated from field: google.protobuf.Timestamp at = 3;
    */
   at?: Timestamp | undefined;
 
   /**
+   * Extra payload; the demo server packs a Note.
+   *
    * @generated from field: google.protobuf.Any extra = 4;
    */
   extra?: Any | undefined;
@@ -101,6 +127,8 @@ export const GreetResponseSchema: GenMessage<GreetResponse> = /*@__PURE__*/
   messageDesc(file_demo_v1_demo, 1);
 
 /**
+ * A free-form note.
+ *
  * @generated from message demo.v1.Note
  */
 export type Note = Message<"demo.v1.Note"> & {
@@ -122,11 +150,15 @@ export const NoteSchema: GenMessage<Note> = /*@__PURE__*/
  */
 export type CountRequest = Message<"demo.v1.CountRequest"> & {
   /**
+   * Last number to send.
+   *
    * @generated from field: int32 up_to = 1;
    */
   upTo: number;
 
   /**
+   * Pause between messages.
+   *
    * @generated from field: int32 delay_ms = 2;
    */
   delayMs: number;
@@ -157,6 +189,8 @@ export const CountResponseSchema: GenMessage<CountResponse> = /*@__PURE__*/
   messageDesc(file_demo_v1_demo, 4);
 
 /**
+ * How the greeter feels.
+ *
  * @generated from enum demo.v1.Mood
  */
 export enum Mood {
@@ -166,11 +200,15 @@ export enum Mood {
   UNSPECIFIED = 0,
 
   /**
+   * Cheerful.
+   *
    * @generated from enum value: MOOD_HAPPY = 1;
    */
   HAPPY = 1,
 
   /**
+   * Needs coffee.
+   *
    * @generated from enum value: MOOD_SLEEPY = 2;
    */
   SLEEPY = 2,
@@ -183,10 +221,14 @@ export const MoodSchema: GenEnum<Mood> = /*@__PURE__*/
   enumDesc(file_demo_v1_demo, 0);
 
 /**
+ * Demo service used by the example app and the tests.
+ *
  * @generated from service demo.v1.DemoService
  */
 export const DemoService: GenService<{
   /**
+   * Returns a greeting.
+   *
    * @generated from rpc demo.v1.DemoService.Greet
    */
   greet: {
@@ -195,6 +237,8 @@ export const DemoService: GenService<{
     output: typeof GreetResponseSchema;
   },
   /**
+   * Always fails with PERMISSION_DENIED.
+   *
    * @generated from rpc demo.v1.DemoService.Fail
    */
   fail: {
@@ -203,6 +247,8 @@ export const DemoService: GenService<{
     output: typeof GreetResponseSchema;
   },
   /**
+   * Streams 1..up_to, waiting delay_ms between messages.
+   *
    * @generated from rpc demo.v1.DemoService.Count
    */
   count: {

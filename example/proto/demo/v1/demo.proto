@@ -5,37 +5,54 @@ package demo.v1;
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 
+// How the greeter feels.
 enum Mood {
   MOOD_UNSPECIFIED = 0;
+  // Cheerful.
   MOOD_HAPPY = 1;
+  // Needs coffee.
   MOOD_SLEEPY = 2;
 }
 
+// Request for DemoService.Greet.
 message GreetRequest {
+  // Who to greet.
   string name = 1;
+  // Above 2^53, to check that int64 stays exact in JSON.
   int64 big_number = 2;
+  // Arbitrary bytes, including invalid UTF-8.
   bytes blob = 3;
   repeated string tags = 4;
   map<string, int32> scores = 5;
+  // How to reach the person being greeted.
   oneof contact {
     string email = 6;
     string phone = 7;
   }
+  // Use name instead.
+  string nickname = 8 [deprecated = true];
 }
 
+// Response for DemoService.Greet.
 message GreetResponse {
+  // The greeting text.
   string greeting = 1;
   Mood mood = 2;
+  // When the greeting was made.
   google.protobuf.Timestamp at = 3;
+  // Extra payload; the demo server packs a Note.
   google.protobuf.Any extra = 4;
 }
 
+// A free-form note.
 message Note {
   string text = 1;
 }
 
 message CountRequest {
+  // Last number to send.
   int32 up_to = 1;
+  // Pause between messages.
   int32 delay_ms = 2;
 }
 
@@ -43,8 +60,12 @@ message CountResponse {
   int32 n = 1;
 }
 
+// Demo service used by the example app and the tests.
 service DemoService {
+  // Returns a greeting.
   rpc Greet(GreetRequest) returns (GreetResponse);
+  // Always fails with PERMISSION_DENIED.
   rpc Fail(GreetRequest) returns (GreetResponse);
+  // Streams 1..up_to, waiting delay_ms between messages.
   rpc Count(CountRequest) returns (stream CountResponse);
 }
