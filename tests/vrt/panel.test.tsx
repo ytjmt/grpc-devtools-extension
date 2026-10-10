@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import type { SchemaSource } from "../../extension/src/core/storage";
 import type { RawCall } from "../../extension/src/core/types";
-import { demoCalls, syntheticCalls } from "../fixtures/builders";
+import { demoCalls, shopCalls, syntheticCalls } from "../fixtures/builders";
 import { loadDescriptor } from "../support/fakeSchemaBackend";
 import { demoSchemaSource, descriptorUrl, renderPanel } from "../support/renderPanel";
 
@@ -167,6 +167,39 @@ describe("light theme details", () => {
       act: async () => {
         await openBrowse(1);
         await page.getByRole("link", { name: /^3 calls/ }).click();
+      },
+    }));
+
+  test("shop: nested product response", () =>
+    shot("shop-product", {
+      theme,
+      calls: shopCalls,
+      size: { width: 900, height: 640 },
+      act: selectRow("GetProduct", "grpc-web"),
+    }));
+
+  test("shop: gRPC-Web error details", () =>
+    shot("shop-error-details", { theme, calls: shopCalls, act: selectRow("CreateOrder", "grpc-web") }));
+
+  test("shop: Product message in the browser", () =>
+    shot("shop-browse-product", {
+      theme,
+      calls: shopCalls,
+      size: { width: 900, height: 760 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("Product");
+      },
+    }));
+
+  test("shop: all four method kinds", () =>
+    shot("shop-browse-orders", {
+      theme,
+      calls: shopCalls,
+      size: { width: 900, height: 520 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("OrderService");
       },
     }));
 

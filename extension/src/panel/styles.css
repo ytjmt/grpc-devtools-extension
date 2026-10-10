@@ -1,4 +1,6 @@
 :root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, Menlo, Consolas, monospace;
   --bg: #ffffff;
   --bg-alt: #f1f3f4;
   --bg-selected: #cfe8fc;
@@ -47,7 +49,14 @@ body,
   height: 100%;
   background: var(--bg);
   color: var(--text);
-  font: 12px system-ui, -apple-system, "Segoe UI", sans-serif;
+  font: 12px var(--font-sans);
+}
+
+/* Elements whose browser default is the generic monospace family. */
+pre,
+code,
+kbd {
+  font-family: var(--font-mono);
 }
 
 button {
@@ -257,7 +266,7 @@ input[type="url"],
 
 .message-header .type {
   color: var(--text);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .message-header .index {
@@ -265,7 +274,7 @@ input[type="url"],
 }
 
 .jt-row {
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   line-height: 18px;
   white-space: pre-wrap;
   word-break: break-all;
@@ -311,7 +320,7 @@ input[type="url"],
 table.headers {
   border-collapse: collapse;
   margin: 0 8px 8px 20px;
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 table.headers th {
@@ -446,7 +455,7 @@ table.headers td {
 
 .services {
   margin: 4px 0;
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .scopes {
@@ -473,7 +482,7 @@ table.headers td {
 }
 
 .scopes code {
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 3px;
@@ -483,7 +492,7 @@ table.headers td {
 
 .scopes textarea {
   flex: 1 1 320px;
-  font: 12px ui-monospace, Menlo, monospace;
+  font: 12px var(--font-mono);
   color: inherit;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -560,7 +569,7 @@ table.headers td {
   font-size: 10px;
   text-align: center;
   color: var(--muted);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .tree-row.kind-package .tree-label {
@@ -574,7 +583,7 @@ table.headers td {
 
 .tree-hint {
   color: var(--muted);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .browser-detail {
@@ -598,12 +607,12 @@ table.headers td {
 
 .type-header h2 {
   margin: 0;
-  font: 600 14px ui-monospace, Menlo, monospace;
+  font: 600 14px var(--font-mono);
 }
 
 .type-kind {
   color: var(--json-key);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .comment {
@@ -637,12 +646,12 @@ table.headers td {
   text-align: right;
   padding-right: 12px;
   color: var(--muted);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .decl-table .mono,
 .decl-table td:nth-child(2) {
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .decl-table tr.in-oneof td:nth-child(2) {
@@ -666,7 +675,7 @@ table.headers td {
 .decl-section ul {
   margin: 0;
   padding-left: 18px;
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .type-link {
@@ -783,7 +792,7 @@ table.headers td {
   padding: 1px 2px 1px 8px;
   border-radius: 10px;
   background: var(--bg-selected);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -820,12 +829,12 @@ table.headers td {
 }
 
 .method-name {
-  font: 600 12px ui-monospace, Menlo, monospace;
+  font: 600 12px var(--font-mono);
 }
 
 .method-kind {
   color: var(--muted);
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .method-calls {
@@ -834,7 +843,7 @@ table.headers td {
 
 .method-types {
   margin-top: 2px;
-  font-family: ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
 }
 
 .method-item .comment {
