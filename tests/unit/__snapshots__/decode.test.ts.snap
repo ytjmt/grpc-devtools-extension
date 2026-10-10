@@ -1,0 +1,1078 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls with the schema 1`] = `
+[
+  {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 74,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP/+gMMofw==",
+          "email": "x@example.com",
+          "name": "ytjmt",
+          "scores": {
+            "art": -1,
+            "math": 90,
+          },
+          "tags": [
+            "a",
+            "b",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 98,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "at": "2026-10-10T12:12:17.536Z",
+          "extra": {
+            "@type": "type.googleapis.com/demo.v1.Note",
+            "text": "tags=a,b",
+          },
+          "greeting": "Hello, ytjmt! (7 bytes received)",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "json",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 140,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP/+gMMofw==",
+          "email": "x@example.com",
+          "name": "ytjmt",
+          "scores": {
+            "art": -1,
+            "math": 90,
+          },
+          "tags": [
+            "a",
+            "b",
+          ],
+        },
+        "via": "json",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 170,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "at": "2026-10-10T12:12:17.560Z",
+          "extra": {
+            "@type": "type.googleapis.com/demo.v1.Note",
+            "text": "tags=a,b",
+          },
+          "greeting": "Hello, ytjmt! (7 bytes received)",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "json",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 74,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP/+gMMofw==",
+          "email": "x@example.com",
+          "name": "ytjmt",
+          "scores": {
+            "art": -1,
+            "math": 90,
+          },
+          "tags": [
+            "a",
+            "b",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 98,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "at": "2026-10-10T12:12:17.574Z",
+          "extra": {
+            "@type": "type.googleapis.com/demo.v1.Note",
+            "text": "tags=a,b",
+          },
+          "greeting": "Hello, ytjmt! (7 bytes received)",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Fail",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Fail",
+    "requestMessages": [
+      {
+        "size": 74,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP/+gMMofw==",
+          "email": "x@example.com",
+          "name": "ytjmt",
+          "scores": {
+            "art": -1,
+            "math": 90,
+          },
+          "tags": [
+            "a",
+            "b",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 7,
+      "details": undefined,
+      "message": "no greeting for ytjmt",
+      "name": "PERMISSION_DENIED",
+    },
+    "trailers": [
+      {
+        "name": "grpc-message",
+        "value": "no%20greeting%20for%20ytjmt",
+      },
+      {
+        "name": "grpc-status",
+        "value": "7",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Count",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Count",
+    "requestMessages": [
+      {
+        "size": 5,
+        "typeName": "demo.v1.CountRequest",
+        "value": {
+          "delayMs": 300,
+          "upTo": 5,
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 1,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 2,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 3,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 4,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 5,
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect-stream",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Count",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Count",
+    "requestMessages": [
+      {
+        "size": 5,
+        "typeName": "demo.v1.CountRequest",
+        "value": {
+          "delayMs": 300,
+          "upTo": 5,
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 1,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 2,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 3,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 4,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 5,
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+]
+`;
+
+exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls without a schema 1`] = `
+[
+  {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "error": undefined,
+        "size": 74,
+        "value": {
+          "1": "ytjmt",
+          "2": "9007199254740993",
+          "3": {
+            "bytes": "AP/+gMMofw==",
+          },
+          "4": [
+            "a",
+            "b",
+          ],
+          "5": [
+            {
+              "1": "math",
+              "2": 90,
+            },
+            {
+              "1": "art",
+              "2": -1,
+            },
+          ],
+          "6": "x@example.com",
+        },
+        "via": "schemaless",
+      },
+    ],
+    "responseMessages": [
+      {
+        "error": undefined,
+        "size": 98,
+        "value": {
+          "1": "Hello, ytjmt! (7 bytes received)",
+          "2": 1,
+          "3": {
+            "1": 1791634337,
+            "2": 536000000,
+          },
+          "4": {
+            "1": "type.googleapis.com/demo.v1.Note",
+            "2": {
+              "1": "tags=a,b",
+            },
+          },
+        },
+        "via": "schemaless",
+      },
+    ],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "json",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 140,
+        "typeName": undefined,
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP/+gMMofw==",
+          "email": "x@example.com",
+          "name": "ytjmt",
+          "scores": {
+            "art": -1,
+            "math": 90,
+          },
+          "tags": [
+            "a",
+            "b",
+          ],
+        },
+        "via": "json",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 170,
+        "typeName": undefined,
+        "value": {
+          "at": "2026-10-10T12:12:17.560Z",
+          "extra": {
+            "@type": "type.googleapis.com/demo.v1.Note",
+            "text": "tags=a,b",
+          },
+          "greeting": "Hello, ytjmt! (7 bytes received)",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "json",
+      },
+    ],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "error": undefined,
+        "size": 74,
+        "value": {
+          "1": "ytjmt",
+          "2": "9007199254740993",
+          "3": {
+            "bytes": "AP/+gMMofw==",
+          },
+          "4": [
+            "a",
+            "b",
+          ],
+          "5": [
+            {
+              "1": "math",
+              "2": 90,
+            },
+            {
+              "1": "art",
+              "2": -1,
+            },
+          ],
+          "6": "x@example.com",
+        },
+        "via": "schemaless",
+      },
+    ],
+    "responseMessages": [
+      {
+        "error": undefined,
+        "size": 98,
+        "value": {
+          "1": "Hello, ytjmt! (7 bytes received)",
+          "2": 1,
+          "3": {
+            "1": 1791634337,
+            "2": 574000000,
+          },
+          "4": {
+            "1": "type.googleapis.com/demo.v1.Note",
+            "2": {
+              "1": "tags=a,b",
+            },
+          },
+        },
+        "via": "schemaless",
+      },
+    ],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Fail",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Fail",
+    "requestMessages": [
+      {
+        "error": undefined,
+        "size": 74,
+        "value": {
+          "1": "ytjmt",
+          "2": "9007199254740993",
+          "3": {
+            "bytes": "AP/+gMMofw==",
+          },
+          "4": [
+            "a",
+            "b",
+          ],
+          "5": [
+            {
+              "1": "math",
+              "2": 90,
+            },
+            {
+              "1": "art",
+              "2": -1,
+            },
+          ],
+          "6": "x@example.com",
+        },
+        "via": "schemaless",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 7,
+      "details": undefined,
+      "message": "no greeting for ytjmt",
+      "name": "PERMISSION_DENIED",
+    },
+    "trailers": [
+      {
+        "name": "grpc-message",
+        "value": "no%20greeting%20for%20ytjmt",
+      },
+      {
+        "name": "grpc-status",
+        "value": "7",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Count",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Count",
+    "requestMessages": [
+      {
+        "error": undefined,
+        "size": 5,
+        "value": {
+          "1": 5,
+          "2": 300,
+        },
+        "via": "schemaless",
+      },
+    ],
+    "responseMessages": [
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 1,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 2,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 3,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 4,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 5,
+        },
+        "via": "schemaless",
+      },
+    ],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect-stream",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "Count",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Count",
+    "requestMessages": [
+      {
+        "error": undefined,
+        "size": 5,
+        "value": {
+          "1": 5,
+          "2": 300,
+        },
+        "via": "schemaless",
+      },
+    ],
+    "responseMessages": [
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 1,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 2,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 3,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 4,
+        },
+        "via": "schemaless",
+      },
+      {
+        "error": undefined,
+        "size": 2,
+        "value": {
+          "1": 5,
+        },
+        "via": "schemaless",
+      },
+    ],
+    "schemaFound": false,
+    "schemaName": undefined,
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+]
+`;
+
+exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] = `
+{
+  "compressedFrame": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "error": {
+          "key": "warn.compressedFrame",
+          "params": undefined,
+        },
+        "size": 3,
+        "value": null,
+        "via": "error",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 6,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "greeting": "hi",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  "connectGet": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 6,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "greeting": "hi",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  "connectStreamError": {
+    "codec": "proto",
+    "method": "Count",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Count",
+    "requestMessages": [
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountRequest",
+        "value": {
+          "upTo": 3,
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 1,
+        },
+        "via": "schema",
+      },
+      {
+        "size": 2,
+        "typeName": "demo.v1.CountResponse",
+        "value": {
+          "n": 2,
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 14,
+      "details": undefined,
+      "message": "server shutting down",
+      "name": "UNAVAILABLE",
+    },
+    "trailers": [
+      {
+        "name": "x-request-id",
+        "value": "abc",
+      },
+    ],
+    "transport": "connect-stream",
+    "warnings": [],
+  },
+  "grpcWebText": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 6,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "greeting": "hi",
+          "mood": "MOOD_HAPPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web-text",
+    "warnings": [],
+  },
+  "trailersOnlyError": {
+    "codec": "proto",
+    "method": "Fail",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Fail",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 16,
+      "details": undefined,
+      "message": "token expired",
+      "name": "UNAUTHENTICATED",
+    },
+    "trailers": [],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  "truncatedResponse": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 2,
+      "message": {
+        "key": "status.missingGrpcStatus",
+        "params": undefined,
+      },
+      "name": "UNKNOWN",
+    },
+    "trailers": [],
+    "transport": "grpc-web",
+    "warnings": [
+      {
+        "key": "warn.incompleteResponseFrame",
+        "params": {
+          "bytes": 10,
+        },
+      },
+    ],
+  },
+  "withAny": {
+    "codec": "proto",
+    "method": "Greet",
+    "outOfScopeSchemas": [],
+    "path": "/demo.v1.DemoService/Greet",
+    "requestMessages": [
+      {
+        "size": 36,
+        "typeName": "demo.v1.GreetRequest",
+        "value": {
+          "bigNumber": "9007199254740993",
+          "blob": "AP+A",
+          "email": "x@example.com",
+          "name": "ytjmt",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 68,
+        "typeName": "demo.v1.GreetResponse",
+        "value": {
+          "at": "2026-01-01T00:00:00Z",
+          "extra": {
+            "@type": "type.googleapis.com/demo.v1.Note",
+            "text": "nested note",
+          },
+          "greeting": "hello",
+          "mood": "MOOD_SLEEPY",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaName": "schema-0",
+    "service": "demo.v1.DemoService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+}
+`;

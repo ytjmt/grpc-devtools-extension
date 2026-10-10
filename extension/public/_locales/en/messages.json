@@ -1,0 +1,4 @@
+{
+  "extName": { "message": "gRPC Network DevTools" },
+  "extDescription": { "message": "Inspect gRPC-Web / Connect requests and responses in Chrome DevTools." }
+}

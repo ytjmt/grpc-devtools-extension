@@ -1,0 +1,13 @@
+services:
+  # Remote Chromium for VRT: tests run on the host, rendering happens in Linux.
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.64.0-noble
+    command: ["npx", "-y", "playwright@1.64.0", "run-server", "--port", "3000", "--host", "0.0.0.0"]
+    init: true
+    ipc: host
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then(() => process.exit(0), () => process.exit(1))"]
+      interval: 1s
+      retries: 60

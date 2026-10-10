@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>gRPC devtools demo</title>
+  </head>
+  <body>
+    <h1>gRPC devtools demo</h1>
+    <p>
+      <button data-call="connect-greet">connect: Greet</button>
+      <button data-call="connect-json-greet">connect(json): Greet</button>
+      <button data-call="grpcweb-greet">grpc-web: Greet</button>
+      <button data-call="grpcweb-fail">grpc-web: Fail</button>
+      <button data-call="connect-count">connect: Count (stream)</button>
+      <button data-call="grpcweb-count">grpc-web: Count (stream)</button>
+    </p>
+    <pre id="log"></pre>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

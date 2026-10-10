@@ -1,0 +1,6 @@
+node_modules/
+dist/
+example/client/dist/
+tests/e2e/.results/
+.vitest/
+.DS_Store

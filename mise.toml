@@ -1,0 +1,13 @@
+[tools]
+buf = "1.73.0"
+protoc = "36.2"
+
+# Regenerates the demo code and the descriptor sets used by example/ and tests/.
+[tasks."example:gen"]
+dir = "{{config_root}}/example"
+run = [
+  "buf generate",
+  "buf build -o descriptor.binpb",
+  # Same schema via protoc *without* --include_imports, to exercise the well-known-type fallback.
+  "protoc -I proto --descriptor_set_out=descriptor.protoc.binpb $(find proto -name '*.proto')",
+]

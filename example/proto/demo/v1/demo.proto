@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package demo.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+enum Mood {
+  MOOD_UNSPECIFIED = 0;
+  MOOD_HAPPY = 1;
+  MOOD_SLEEPY = 2;
+}
+
+message GreetRequest {
+  string name = 1;
+  int64 big_number = 2;
+  bytes blob = 3;
+  repeated string tags = 4;
+  map<string, int32> scores = 5;
+  oneof contact {
+    string email = 6;
+    string phone = 7;
+  }
+}
+
+message GreetResponse {
+  string greeting = 1;
+  Mood mood = 2;
+  google.protobuf.Timestamp at = 3;
+  google.protobuf.Any extra = 4;
+}
+
+message Note {
+  string text = 1;
+}
+
+message CountRequest {
+  int32 up_to = 1;
+  int32 delay_ms = 2;
+}
+
+message CountResponse {
+  int32 n = 1;
+}
+
+service DemoService {
+  rpc Greet(GreetRequest) returns (GreetResponse);
+  rpc Fail(GreetRequest) returns (GreetResponse);
+  rpc Count(CountRequest) returns (stream CountResponse);
+}

@@ -1,0 +1,644 @@
+[
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Greet",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:00.000Z",
+    "time": 13,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "74"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "connect-protocol-version",
+        "value": "1"
+      },
+      {
+        "name": "content-type",
+        "value": "application/proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "content-length",
+        "value": "98"
+      },
+      {
+        "name": "content-type",
+        "value": "application/proto"
+      }
+    ],
+    "requestBodyText": "\n\u0005ytjmt\u0010\u0010\u001a\u0007\u0000ÿþÃ(\"\u0001a\"\u0001b*\b\n\u0004math\u0010Z*\u0010\n\u0003art\u0010ÿÿÿÿÿÿÿÿÿ\u00012\rx@example.com",
+    "responseBody": {
+      "content": "CiBIZWxsbywgeXRqbXQhICg3IGJ5dGVzIHJlY2VpdmVkKRABGgwIodeo1gYQgOzK/wEiLgogdHlwZS5nb29nbGVhcGlzLmNvbS9kZW1vLnYxLk5vdGUSCgoIdGFncz1hLGI=",
+      "encoding": "base64"
+    },
+    "id": 1
+  },
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Greet",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:01.000Z",
+    "time": 10,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "140"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "connect-protocol-version",
+        "value": "1"
+      },
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "content-length",
+        "value": "170"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "content-type",
+        "value": "application/json"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      }
+    ],
+    "requestBodyText": "{\"name\":\"ytjmt\",\"bigNumber\":\"9007199254740993\",\"blob\":\"AP/+gMMofw==\",\"tags\":[\"a\",\"b\"],\"scores\":{\"math\":90,\"art\":-1},\"email\":\"x@example.com\"}",
+    "responseBody": {
+      "content": "{\"greeting\":\"Hello, ytjmt! (7 bytes received)\",\"mood\":\"MOOD_HAPPY\",\"at\":\"2026-10-10T12:12:17.560Z\",\"extra\":{\"text\":\"tags=a,b\",\"@type\":\"type.googleapis.com/demo.v1.Note\"}}",
+      "encoding": ""
+    },
+    "id": 2
+  },
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Greet",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:02.000Z",
+    "time": 8,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "79"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      },
+      {
+        "name": "x-grpc-web",
+        "value": "1"
+      },
+      {
+        "name": "x-user-agent",
+        "value": "connect-es/2.2.0"
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      }
+    ],
+    "requestBodyText": "\u0000\u0000\u0000\u0000J\n\u0005ytjmt\u0010\u0010\u001a\u0007\u0000ÿþÃ(\"\u0001a\"\u0001b*\b\n\u0004math\u0010Z*\u0010\n\u0003art\u0010ÿÿÿÿÿÿÿÿÿ\u00012\rx@example.com",
+    "responseBody": {
+      "content": "AAAAAGIKIEhlbGxvLCB5dGptdCEgKDcgYnl0ZXMgcmVjZWl2ZWQpEAEaDAih16jWBhCAl9qRAiIuCiB0eXBlLmdvb2dsZWFwaXMuY29tL2RlbW8udjEuTm90ZRIKCgh0YWdzPWEsYoAAAAAQZ3JwYy1zdGF0dXM6IDANCg==",
+      "encoding": "base64"
+    },
+    "id": 3
+  },
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Fail",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:03.000Z",
+    "time": 3,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "79"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      },
+      {
+        "name": "x-grpc-web",
+        "value": "1"
+      },
+      {
+        "name": "x-user-agent",
+        "value": "connect-es/2.2.0"
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      }
+    ],
+    "requestBodyText": "\u0000\u0000\u0000\u0000J\n\u0005ytjmt\u0010\u0010\u001a\u0007\u0000ÿþÃ(\"\u0001a\"\u0001b*\b\n\u0004math\u0010Z*\u0010\n\u0003art\u0010ÿÿÿÿÿÿÿÿÿ\u00012\rx@example.com",
+    "responseBody": {
+      "content": "gAAAADtncnBjLW1lc3NhZ2U6IG5vJTIwZ3JlZXRpbmclMjBmb3IlMjB5dGptdA0KZ3JwYy1zdGF0dXM6IDcNCg==",
+      "encoding": "base64"
+    },
+    "id": 4
+  },
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Count",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:04.000Z",
+    "time": 1511,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "10"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "connect-protocol-version",
+        "value": "1"
+      },
+      {
+        "name": "content-type",
+        "value": "application/connect+proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/connect+proto"
+      }
+    ],
+    "requestBodyText": "\u0000\u0000\u0000\u0000\u0005\b\u0005\u0010¬\u0002",
+    "responseBody": {
+      "content": "AAAAAAIIAQAAAAACCAIAAAAAAggDAAAAAAIIBAAAAAACCAUCAAAAAnt9",
+      "encoding": "base64"
+    },
+    "id": 5
+  },
+  {
+    "url": "http://localhost:8080/demo.v1.DemoService/Count",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:05.000Z",
+    "time": 1514,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "10"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=1"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      },
+      {
+        "name": "x-grpc-web",
+        "value": "1"
+      },
+      {
+        "name": "x-user-agent",
+        "value": "connect-es/2.2.0"
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      }
+    ],
+    "requestBodyText": "\u0000\u0000\u0000\u0000\u0005\b\u0005\u0010¬\u0002",
+    "responseBody": {
+      "content": "AAAAAAIIAQAAAAACCAIAAAAAAggDAAAAAAIIBAAAAAACCAWAAAAAEGdycGMtc3RhdHVzOiAwDQo=",
+      "encoding": "base64"
+    },
+    "id": 6
+  }
+]
