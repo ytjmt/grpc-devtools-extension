@@ -20,6 +20,7 @@ import {
 
 const descriptor = readFileSync(new URL("../../example/descriptor.binpb", import.meta.url));
 const schemas = SchemaIndex.of(loadDescriptorSet(descriptor));
+const ALL_SERVICES = ["demo.v1.DemoService", "shop.v1.CatalogService", "shop.v1.OrderService"];
 
 describe("decodeCall", () => {
   it("decodes grpc-web unary with schema", () => {
@@ -159,14 +160,14 @@ describe("golden: recorded and synthetic fixtures", () => {
 
 describe("loadDescriptorSet", () => {
   it("lists services", () => {
-    expect(loadDescriptorSet(descriptor).services).toEqual(["demo.v1.DemoService"]);
+    expect(loadDescriptorSet(descriptor).services).toEqual(ALL_SERVICES);
   });
 
   it("loads protoc output generated without --include_imports", () => {
     // google/protobuf/{any,timestamp}.proto are missing; bundled well-known types fill in.
     const protocOnly = readFileSync(new URL("../../example/descriptor.protoc.binpb", import.meta.url));
     const loaded = loadDescriptorSet(protocOnly);
-    expect(loaded.services).toEqual(["demo.v1.DemoService"]);
+    expect(loaded.services).toEqual(ALL_SERVICES);
     expect(loaded.skipped).toEqual([]);
     const call = decodeCall(
       raw({ contentType: "application/grpc-web+proto", resBody: frame(0, greetRes) }),

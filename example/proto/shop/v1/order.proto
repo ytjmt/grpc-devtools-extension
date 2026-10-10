@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+package shop.v1;
+
+import "common/v1/address.proto";
+import "common/v1/audit.proto";
+import "common/v1/money.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// Where an order is in fulfilment.
+enum OrderState {
+  ORDER_STATE_UNSPECIFIED = 0;
+  ORDER_STATE_PENDING = 1;
+  ORDER_STATE_PAID = 2;
+  ORDER_STATE_SHIPPED = 3;
+  ORDER_STATE_DELIVERED = 4;
+  ORDER_STATE_CANCELLED = 5;
+}
+
+// A customer's order.
+message Order {
+  // One product variant in the order.
+  message LineItem {
+    // References Product.Variant.sku.
+    string sku = 1;
+    int32 quantity = 2;
+    common.v1.Money unit_price = 3;
+  }
+
+  // Card payment details; only the last digits are kept.
+  message CardPayment {
+    string brand = 1;
+    string last4 = 2;
+  }
+
+  // Bank transfer details.
+  message BankTransfer {
+    string bank_code = 1;
+    google.protobuf.Timestamp due_time = 2;
+  }
+
+  // Resource name, e.g. "orders/1001".
+  string name = 1;
+  repeated LineItem items = 2;
+  common.v1.Money total = 3;
+  common.v1.Address shipping_address = 4;
+  OrderState state = 5;
+
+  // How the customer pays.
+  oneof payment {
+    CardPayment card = 6;
+    BankTransfer bank_transfer = 7;
+    // No details needed.
+    google.protobuf.Empty cash_on_delivery = 8;
+  }
+
+  // Expected time from payment to delivery.
+  google.protobuf.Duration delivery_estimate = 9;
+  // Arbitrary labels; values may be any JSON.
+  map<string, google.protobuf.Value> labels = 10;
+  // Gift wrapping or other extensions, typed at runtime.
+  repeated google.protobuf.Any extensions = 11;
+  common.v1.AuditInfo audit = 12;
+}
+
+// Gift wrapping option, packed into Order.extensions.
+message GiftWrap {
+  string paper = 1;
+  string message = 2;
+}
+
+message CreateOrderRequest {
+  repeated Order.LineItem items = 1;
+  common.v1.Address shipping_address = 2;
+  oneof payment {
+    Order.CardPayment card = 3;
+    Order.BankTransfer bank_transfer = 4;
+    google.protobuf.Empty cash_on_delivery = 5;
+  }
+  repeated google.protobuf.Any extensions = 6;
+  // Retry key: the same key returns the same order.
+  string request_id = 7;
+}
+
+message CreateOrderResponse {
+  Order order = 1;
+}
+
+message GetOrderRequest {
+  string name = 1;
+}
+
+message GetOrderResponse {
+  Order order = 1;
+}
+
+message TrackOrderRequest {
+  string name = 1;
+}
+
+// A tracking update, streamed by TrackOrder.
+message TrackOrderResponse {
+  OrderState state = 1;
+  google.protobuf.Timestamp event_time = 2;
+  // Carrier-specific location data.
+  google.protobuf.Struct location = 3;
+}
+
+// One receipt image, streamed by UploadReceipts.
+message UploadReceiptsRequest {
+  string order = 1;
+  bytes image = 2;
+  string content_type = 3;
+}
+
+message UploadReceiptsResponse {
+  int32 received = 1;
+  int64 total_bytes = 2;
+}
+
+// A chat message in either direction.
+message ChatWithSupportRequest {
+  string order = 1;
+  string text = 2;
+}
+
+message ChatWithSupportResponse {
+  string agent = 1;
+  string text = 2;
+  google.protobuf.Timestamp send_time = 3;
+}
+
+// Place and follow orders.
+service OrderService {
+  // Places an order. Fails with INVALID_ARGUMENT (ValidationError details)
+  // or FAILED_PRECONDITION (OutOfStock details).
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  // Returns one order. Side-effect free, so Connect clients may use HTTP GET.
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  // Streams state changes until the order is delivered.
+  rpc TrackOrder(TrackOrderRequest) returns (stream TrackOrderResponse);
+  // Uploads receipt images; client streaming, so not callable from browsers.
+  rpc UploadReceipts(stream UploadReceiptsRequest) returns (UploadReceiptsResponse);
+  // Live chat with support; bidirectional streaming, not callable from browsers.
+  rpc ChatWithSupport(stream ChatWithSupportRequest) returns (stream ChatWithSupportResponse);
+}

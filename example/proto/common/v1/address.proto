@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package common.v1;
+
+// A postal address.
+message Address {
+  // CLDR region code, e.g. "JP".
+  string region_code = 1;
+  string postal_code = 2;
+  // Prefecture, state, or province.
+  string administrative_area = 3;
+  string locality = 4;
+  // Street lines, most specific last.
+  repeated string address_lines = 5;
+  repeated string recipients = 6;
+}

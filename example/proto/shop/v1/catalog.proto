@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package shop.v1;
+
+import "common/v1/audit.proto";
+import "common/v1/money.proto";
+import "common/v1/pagination.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// Lifecycle of a product listing.
+enum ProductStatus {
+  option allow_alias = true;
+
+  PRODUCT_STATUS_UNSPECIFIED = 0;
+  // Being prepared; not visible to customers.
+  PRODUCT_STATUS_DRAFT = 1;
+  // Visible and purchasable.
+  PRODUCT_STATUS_ACTIVE = 2;
+  // Alias of ACTIVE kept for older clients.
+  PRODUCT_STATUS_PUBLISHED = 2;
+  PRODUCT_STATUS_ARCHIVED = 3;
+  // Use ARCHIVED instead.
+  PRODUCT_STATUS_DISCONTINUED = 4 [deprecated = true];
+}
+
+// Something the shop sells.
+message Product {
+  // Colors offered for variants.
+  enum Color {
+    COLOR_UNSPECIFIED = 0;
+    COLOR_BLACK = 1;
+    COLOR_WHITE = 2;
+    COLOR_INDIGO = 3;
+  }
+
+  // A purchasable variation of the product, identified by SKU.
+  message Variant {
+    // Garment sizes.
+    enum Size {
+      SIZE_UNSPECIFIED = 0;
+      SIZE_S = 1;
+      SIZE_M = 2;
+      SIZE_L = 3;
+    }
+
+    string sku = 1;
+    Color color = 2;
+    Size size = 3;
+    int32 stock = 4;
+    // Added to the product price; may be negative.
+    common.v1.Money price_delta = 5;
+  }
+
+  // Removed fields stay reserved so their numbers and names are never reused.
+  reserved 9, 15 to 20;
+  reserved "legacy_sku";
+
+  // Resource name, e.g. "products/tee-001".
+  string name = 1;
+  string title = 2;
+  // Unset when the product has no description (proto3 optional).
+  optional string description = 3;
+  ProductStatus status = 4;
+  common.v1.Money price = 5;
+  // Price overrides per region code.
+  map<string, common.v1.Money> regional_prices = 6;
+  // Free-form key/value attributes such as material.
+  map<string, string> attributes = 7;
+  repeated Variant variants = 8;
+  repeated string tags = 10;
+  // Every status the product has had, oldest first.
+  repeated ProductStatus status_history = 11;
+  Category category = 12;
+  // Arbitrary JSON supplied by merchandisers.
+  google.protobuf.Struct metadata = 13;
+  // JAN/EAN barcode; null when not assigned.
+  google.protobuf.StringValue barcode = 14;
+  ProductStats stats = 21;
+  common.v1.AuditInfo audit = 22;
+
+  // How soon the product can ship.
+  oneof availability {
+    int32 in_stock_quantity = 23;
+    google.protobuf.Timestamp restock_time = 24;
+    bool made_to_order = 25;
+  }
+
+  // Short label for listings; serialized as "label" in JSON.
+  string short_label = 26 [json_name = "label"];
+}
+
+// A node in the category tree; categories nest recursively.
+message Category {
+  string id = 1;
+  string display_name = 2;
+  repeated Category children = 3;
+}
+
+// Numbers about a product, using a variety of scalar types.
+message ProductStats {
+  // Average rating from 0 to 5.
+  float rating = 1;
+  // Ranking score; higher is more popular.
+  double popularity = 2;
+  uint64 view_count = 3;
+  uint32 review_count = 4;
+  // Rank change since yesterday (zigzag-encoded).
+  sint32 rank_delta = 5;
+  // Net stock movement this month (zigzag-encoded).
+  sint64 stock_delta = 6;
+  // CRC32 of the product image.
+  fixed32 image_crc = 7;
+  // Content hash used for cache keys.
+  fixed64 content_hash = 8;
+  sfixed32 temperature_offset = 9;
+  sfixed64 ledger_balance = 10;
+  bool featured = 11;
+  // Raw thumbnail bytes for quick previews.
+  bytes thumbnail = 12;
+}
+
+message GetProductRequest {
+  string name = 1;
+  // Fields to return; all fields when empty.
+  google.protobuf.FieldMask read_mask = 2;
+}
+
+message GetProductResponse {
+  Product product = 1;
+}
+
+message ListProductsRequest {
+  common.v1.PageRequest page = 1;
+  // Only products in these statuses; all when empty.
+  repeated ProductStatus statuses = 2;
+  // Free-text query.
+  string query = 3;
+  // Only products whose price is at most this amount.
+  common.v1.Money max_price = 4;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+  common.v1.PageResponse page = 2;
+}
+
+message UpdateProductRequest {
+  Product product = 1;
+  // Fields of product to update.
+  google.protobuf.FieldMask update_mask = 2;
+  // Optimistic concurrency: fail if the revision changed.
+  google.protobuf.UInt64Value expected_revision = 3;
+}
+
+message UpdateProductResponse {
+  Product product = 1;
+}
+
+message DeleteProductRequest {
+  string name = 1;
+}
+
+// Intentionally empty: room to add fields later without breaking clients.
+message DeleteProductResponse {}
+
+message WatchInventoryRequest {
+  repeated string skus = 1;
+  // Minimum time between events for the same SKU.
+  google.protobuf.Duration interval = 2;
+}
+
+// A change to stock or price, streamed by WatchInventory.
+message WatchInventoryResponse {
+  // Stock level changed.
+  message StockChanged {
+    string sku = 1;
+    int32 stock = 2;
+  }
+
+  // Price changed.
+  message PriceChanged {
+    string sku = 1;
+    common.v1.Money old_price = 2;
+    common.v1.Money new_price = 3;
+  }
+
+  google.protobuf.Timestamp event_time = 1;
+  oneof event {
+    StockChanged stock_changed = 2;
+    PriceChanged price_changed = 3;
+    // The product was archived and will send no more events.
+    string archived_product = 4;
+  }
+}
+
+// Browse and maintain the product catalog.
+service CatalogService {
+  // Returns one product. Side-effect free, so Connect clients may use HTTP GET.
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  // Lists products page by page.
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  // Updates the fields named in update_mask.
+  rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+  // Deletes a product.
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
+  // Streams stock and price changes for the given SKUs.
+  rpc WatchInventory(WatchInventoryRequest) returns (stream WatchInventoryResponse);
+}

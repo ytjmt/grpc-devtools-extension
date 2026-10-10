@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Who changed a resource and when.
+message AuditInfo {
+  google.protobuf.Timestamp create_time = 1;
+  google.protobuf.Timestamp update_time = 2;
+  // Account that created the resource.
+  string creator = 3;
+  // Incremented on every update; used for optimistic concurrency.
+  uint64 revision = 4;
+}

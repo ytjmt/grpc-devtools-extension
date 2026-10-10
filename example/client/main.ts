@@ -2,6 +2,7 @@ import { createRegistry } from "@bufbuild/protobuf";
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
 import { DemoService, NoteSchema } from "../gen/demo/v1/demo_pb";
+import { shopCalls } from "./shop";
 
 const baseUrl = location.origin;
 const connect = createClient(DemoService, createConnectTransport({ baseUrl, useBinaryFormat: true }));
@@ -27,7 +28,8 @@ async function stream(client: ReturnType<typeof createClient<typeof DemoService>
   return ns.join(",");
 }
 
-const calls: Record<string, () => Promise<unknown>> = {
+/** Minimal demo; tests depend on exactly these calls (?auto=1). */
+const demoCalls: Record<string, () => Promise<unknown>> = {
   "connect-greet": () => connect.greet(greetReq).then((r) => r.greeting),
   "connect-json-greet": () => connectJson.greet(greetReq).then((r) => r.greeting),
   "grpcweb-greet": () => grpcWeb.greet(greetReq).then((r) => r.greeting),
@@ -36,22 +38,32 @@ const calls: Record<string, () => Promise<unknown>> = {
   "grpcweb-count": () => stream(grpcWeb),
 };
 
-async function run(name: string) {
+const scenarios = { demo: demoCalls, shop: shopCalls };
+
+async function run(calls: Record<string, () => Promise<unknown>>, name: string) {
   try {
-    log(`${name}: ok ${JSON.stringify(await calls[name]())}`);
+    log(`${name}: ok ${JSON.stringify(await calls[name](), (_, v) => (typeof v === "bigint" ? String(v) : v))}`);
   } catch (e) {
     log(`${name}: error ${String(e)}`);
   }
 }
 
-document.querySelectorAll<HTMLButtonElement>("button[data-call]").forEach((b) =>
-  b.addEventListener("click", () => run(b.dataset.call!)),
-);
+for (const [scenario, calls] of Object.entries(scenarios)) {
+  const container = document.getElementById(`${scenario}-calls`)!;
+  for (const name of Object.keys(calls)) {
+    const button = document.createElement("button");
+    button.textContent = name;
+    button.addEventListener("click", () => run(calls, name));
+    container.append(button, " ");
+  }
+}
 
-if (new URLSearchParams(location.search).has("auto")) {
+// ?auto=1 (or ?auto=demo) runs the demo calls, ?auto=shop the shop scenario.
+const auto = new URLSearchParams(location.search).get("auto");
+if (auto !== null) {
+  const calls = auto === "shop" ? shopCalls : demoCalls;
   (async () => {
-    for (const name of Object.keys(calls)) await run(name);
+    for (const name of Object.keys(calls)) await run(calls, name);
     document.title = "done";
   })();
 }
-

@@ -190,7 +190,9 @@ describe("schema scopes", () => {
     await openManage(2);
     await expect
       .element(page.getByRole("note").first())
-      .toMatchTextContent("b.binpb also defines demo.v1.DemoService for the same requests");
+      .toMatchTextContent(
+        "b.binpb also defines demo.v1.DemoService, shop.v1.CatalogService, shop.v1.OrderService for the same requests",
+      );
   });
 });
 

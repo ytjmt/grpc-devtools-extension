@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package shop.v1;
+
+// Error detail listing invalid request fields, sent with INVALID_ARGUMENT.
+message ValidationError {
+  // A single invalid field.
+  message FieldViolation {
+    // Path to the field, e.g. "items[0].quantity".
+    string field = 1;
+    string description = 2;
+  }
+
+  repeated FieldViolation violations = 1;
+}
+
+// Error detail for FAILED_PRECONDITION when stock runs out.
+message OutOfStock {
+  string sku = 1;
+  int32 requested = 2;
+  int32 available = 3;
+}

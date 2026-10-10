@@ -1,3 +1,12 @@
 version: v2
 modules:
   - path: proto
+lint:
+  use:
+    - STANDARD
+  except:
+    # shop.v1.ProductStatus uses an alias on purpose, to exercise the decoder.
+    - ENUM_NO_ALLOW_ALIAS
+  ignore:
+    # The minimal demo service predates the shop example and is used by fixtures as-is.
+    - proto/demo

@@ -95,14 +95,11 @@ export function SchemaBrowser({
   );
 }
 
+/** The first service in any package (packages like common.v1 may hold only messages), else the first type. */
 function firstService(trees: { schema: BrowseSchema; nodes: TreeNode[] }[]): BrowseSelection | undefined {
-  for (const { schema, nodes } of trees) {
-    for (const pkg of nodes) {
-      const node = pkg.children.find((c) => c.kind === "service") ?? pkg.children[0];
-      if (node?.typeName) return { schemaId: schema.id, typeName: node.typeName };
-    }
-  }
-  return undefined;
+  const all = trees.flatMap(({ schema, nodes }) => nodes.flatMap((pkg) => pkg.children.map((node) => ({ schema, node }))));
+  const pick = all.find(({ node }) => node.kind === "service") ?? all.find(({ node }) => node.typeName);
+  return pick && { schemaId: pick.schema.id, typeName: pick.node.typeName! };
 }
 
 function TreeItem({

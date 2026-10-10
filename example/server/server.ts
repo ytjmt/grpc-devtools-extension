@@ -7,6 +7,8 @@ import { anyPack, timestampNow } from "@bufbuild/protobuf/wkt";
 import { Code, ConnectError, type ConnectRouter } from "@connectrpc/connect";
 import { connectNodeAdapter } from "@connectrpc/connect-node";
 import { DemoService, Mood, NoteSchema } from "../gen/demo/v1/demo_pb.js";
+import { GiftWrapSchema } from "../gen/shop/v1/order_pb.js";
+import { shopRoutes } from "./shop.js";
 
 const PORT = Number(process.env.PORT ?? 8080);
 // Native gRPC needs HTTP/2; served separately (h2c) for tools like grpcurl.
@@ -14,7 +16,12 @@ const GRPC_PORT = Number(process.env.GRPC_PORT ?? PORT + 1);
 const STATIC_DIR = new URL("../client/dist/", import.meta.url).pathname;
 const DESCRIPTOR = new URL("../descriptor.binpb", import.meta.url).pathname;
 
-const routes = (router: ConnectRouter) =>
+const routes = (router: ConnectRouter) => {
+  shopRoutes(router);
+  demoRoutes(router);
+};
+
+const demoRoutes = (router: ConnectRouter) =>
   router.service(DemoService, {
     greet(req) {
       return {
@@ -35,7 +42,8 @@ const routes = (router: ConnectRouter) =>
     },
   });
 
-const rpc = connectNodeAdapter({ routes, jsonOptions: { registry: createRegistry(NoteSchema) } });
+// Types that can appear inside google.protobuf.Any in JSON payloads.
+const rpc = connectNodeAdapter({ routes, jsonOptions: { registry: createRegistry(NoteSchema, GiftWrapSchema) } });
 
 const MIME: Record<string, string> = {
   ".html": "text/html",
@@ -45,7 +53,7 @@ const MIME: Record<string, string> = {
 
 createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
-  if (url.pathname.startsWith("/demo.v1.")) return rpc(req, res);
+  if (/^\/(demo|shop)\.v1\./.test(url.pathname)) return rpc(req, res);
   if (url.pathname === "/_devtools/descriptor.binpb") {
     res.writeHead(200, { "content-type": "application/octet-stream", "access-control-allow-origin": "*" });
     return res.end(await readFile(DESCRIPTOR));

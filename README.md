@@ -60,7 +60,7 @@ pnpm typecheck
 pnpm test              # unit + component tests (Vitest; components run in browser mode)
 pnpm test:e2e          # Playwright: real Chrome + DevTools + demo server
 pnpm test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
-pnpm fixtures:record   # re-record tests/fixtures/demo-calls.json from the demo app
+pnpm fixtures:record   # re-record tests/fixtures/*-calls.json from the example app (-g shop for one scenario)
 pnpm example:gen       # regenerate example code and descriptor sets
 pnpm example:build && pnpm example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
 pnpm package           # build and zip into release/
@@ -75,6 +75,21 @@ The version lives in `package.json` and is written into the built manifest. To p
 
 `pnpm release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
 
+### Example app
+
+`example/` has two sets of protos served by one Connect server (`pnpm example:serve`):
+
+- `demo.v1`: a minimal service the tests and recorded fixtures depend on.
+- `common.v1` + `shop.v1`: a realistic catalog and order API. Shared types (money, address, paging, audit) are imported across files, and the messages cover nested and recursive types, maps of messages, oneofs, proto3 `optional`, enum aliases, `reserved`, custom `json_name`, every scalar type, well-known types (`Timestamp`, `Duration`, `FieldMask`, `Struct`/`Value`, wrappers, `Any`, `Empty`), typed error details, and all four RPC kinds.
+
+Open `http://localhost:8080/?auto=shop` to run the shop scenario over Connect (binary, JSON, and GET) and gRPC-Web. Client and bidi streaming cannot run in a browser; try them against the native gRPC port:
+
+```bash
+grpcurl -plaintext -protoset example/descriptor.binpb \
+  -d '{"text":"hi"} {"text":"where is my order?"}' \
+  localhost:8081 shop.v1.OrderService/ChatWithSupport
+```
+
 ### Layout
 
 ```
@@ -82,7 +97,7 @@ extension/          the extension (DevTools page, panel UI, decoder)
   src/core/         protocol detection, framing, decoding, schemas
   src/panel/        React UI
   src/i18n/         all UI wording
-example/            demo proto, Connect server, and client
+example/            demo and shop protos, Connect server, and client
 tests/
   unit/             decoder, schemas, capture (Node)
   component/        UI components (Vitest browser mode)

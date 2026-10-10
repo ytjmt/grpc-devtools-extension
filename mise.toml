@@ -6,6 +6,7 @@ protoc = "36.2"
 [tasks."example:gen"]
 dir = "{{config_root}}/example"
 run = [
+  "buf lint",
   "buf generate",
   "buf build -o descriptor.binpb",
   # Same schema via protoc *without* --include_imports, to exercise the well-known-type fallback.

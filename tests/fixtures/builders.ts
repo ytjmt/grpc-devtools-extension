@@ -10,9 +10,18 @@ import {
 import { bytesToBase64 } from "../../extension/src/core/bytes";
 import type { Header, RawCall } from "../../extension/src/core/types";
 import demoCallsJson from "./demo-calls.json";
+import shopCallsJson from "./shop-calls.json";
 
 /** Real calls captured from the demo app by `pnpm fixtures:record`. */
 export const demoCalls = demoCallsJson as RawCall[];
+
+/**
+ * The shop scenario (?auto=shop): common.v1 + shop.v1 types over every transport,
+ * in this order: ListProducts, GetProduct, GetProduct (GET + read_mask), UpdateProduct,
+ * DeleteProduct, GetProduct (NOT_FOUND), WatchInventory, CreateOrder, CreateOrder
+ * (INVALID_ARGUMENT), CreateOrder (FAILED_PRECONDITION), GetOrder (GET), TrackOrder.
+ */
+export const shopCalls = shopCallsJson as RawCall[];
 
 export const utf8 = (s: string) => new TextEncoder().encode(s);
 const latin1 = (b: Uint8Array) => String.fromCharCode(...b);

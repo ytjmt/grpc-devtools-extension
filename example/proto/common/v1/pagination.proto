@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package common.v1;
+
+// Paging parameters shared by list requests.
+message PageRequest {
+  // Maximum number of results; the server may return fewer.
+  int32 page_size = 1;
+  // Token from a previous PageResponse to continue from.
+  string page_token = 2;
+}
+
+// Paging information returned by list responses.
+message PageResponse {
+  // Empty when there are no more results.
+  string next_page_token = 1;
+  // Total number of results, if known.
+  optional int64 total_size = 2;
+}

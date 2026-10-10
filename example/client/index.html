@@ -6,13 +6,13 @@
   </head>
   <body>
     <h1>gRPC devtools demo</h1>
+    <h2>Demo service</h2>
+    <p id="demo-calls"></p>
+    <h2>Shop (common.v1 + shop.v1)</h2>
+    <p id="shop-calls"></p>
     <p>
-      <button data-call="connect-greet">connect: Greet</button>
-      <button data-call="connect-json-greet">connect(json): Greet</button>
-      <button data-call="grpcweb-greet">grpc-web: Greet</button>
-      <button data-call="grpcweb-fail">grpc-web: Fail</button>
-      <button data-call="connect-count">connect: Count (stream)</button>
-      <button data-call="grpcweb-count">grpc-web: Count (stream)</button>
+      Client and bidi streaming (<code>UploadReceipts</code>, <code>ChatWithSupport</code>) cannot be called from a
+      browser; try them with <code>grpcurl</code> against the native gRPC port.
     </p>
     <pre id="log"></pre>
     <script type="module" src="./main.ts"></script>
