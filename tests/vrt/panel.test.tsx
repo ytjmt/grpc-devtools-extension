@@ -130,6 +130,9 @@ describe("light theme details", () => {
 
   test("empty state", () => shot("empty", { theme, calls: [] }));
 
+  test("schema browser: medium-width pane", () =>
+    shot("browse-service-medium", { theme, size: { width: 760, height: 420 }, act: () => openBrowse(1) }));
+
   test("schema browser: enum and usages", () =>
     shot("browse-enum", {
       theme,
@@ -155,6 +158,15 @@ describe("light theme details", () => {
       act: async () => {
         await openBrowse(1);
         await openTree("GreetResponse");
+      },
+    }));
+
+  test("calls filtered by method from the browser", () =>
+    shot("list-method-filter", {
+      theme,
+      act: async () => {
+        await openBrowse(1);
+        await page.getByRole("link", { name: /^3 calls/ }).click();
       },
     }));
 

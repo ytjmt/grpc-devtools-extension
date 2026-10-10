@@ -10,6 +10,7 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 - Shows request and response messages, headers, trailers, gRPC status, and error details
 - Decodes messages by field name with your schema, or by field number without one
 - Browses registered schemas: services, messages, enums, `.proto` comments, type links, and where each type is used
+- Shows how many calls each method has recorded and their latest status, and filters the log to a method
 - Explains fields on hover in decoded messages, and warns when a response has fields the schema does not define
 - Copies a call as a `buf curl` or `grpcurl` command (`grpcurl` needs the server to speak native gRPC)
 - Filters by method or errors only, keeps the log across navigations, copies messages as JSON

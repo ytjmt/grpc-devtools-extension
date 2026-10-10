@@ -83,8 +83,6 @@ export const en = {
   "browse.selectType": "Select a type",
   "browse.notFound": "{type} is not in this schema",
   "browse.deprecated": "deprecated",
-  "browse.method": "Method",
-  "browse.kind": "Kind",
   "browse.request": "Request",
   "browse.response": "Response",
   "browse.field": "Field",
@@ -98,6 +96,13 @@ export const en = {
   "browse.noFields": "No fields",
   "browse.nestedTypes": "Nested types",
   "browse.usedBy": "Used by",
+  "browse.noCalls": "no calls",
+  "browse.callCountOne": "1 call",
+  "browse.callCountOther": "{count} calls",
+  "browse.lastStatus": "last {status}",
+  "browse.showCalls": "Show recorded calls of {method}",
+  "toolbar.methodFilter": "Method: {method}",
+  "toolbar.clearMethodFilter": "Clear method filter",
 
   // Call detail: schema links, field info, copy as command
   "detail.openType": "Show {type} in the schema browser",

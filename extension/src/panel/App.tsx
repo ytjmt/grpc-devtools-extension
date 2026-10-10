@@ -3,6 +3,7 @@ import type { CaptureStore } from "../capture";
 import { t } from "../i18n";
 import type { SchemaRef } from "../core/curl";
 import { CallDetail } from "./CallDetail";
+import { collectMethodStats } from "./methodStats";
 import { SchemaBrowser, type BrowseSchema, type BrowseSelection } from "./SchemaBrowser";
 import { CallList } from "./CallList";
 import type { SchemaBackend } from "./schemaBackend";
@@ -24,6 +25,8 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
   const [selectedId, setSelectedId] = useState<number>();
   const [filter, setFilter] = useState("");
   const [errorsOnly, setErrorsOnly] = useState(false);
+  /** Exact RPC path from "Show recorded calls" in the schema browser. */
+  const [methodFilter, setMethodFilter] = useState<string>();
   const [view, setView] = useState<"calls" | "schemas">("calls");
   const [schemasTab, setSchemasTab] = useState<"browse" | "manage">("browse");
   const [browseSelection, setBrowseSelection] = useState<BrowseSelection>();
@@ -44,9 +47,16 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
     const q = filter.trim().toLowerCase();
     return rows.filter((r) => {
       if (errorsOnly && (r.call?.status.code ?? 2) === 0) return false;
+      if (methodFilter && r.call?.path !== methodFilter) return false;
       return !q || (r.call?.path ?? r.raw.url).toLowerCase().includes(q);
     });
-  }, [rows, filter, errorsOnly]);
+  }, [rows, filter, errorsOnly, methodFilter]);
+  const methodStats = useMemo(() => collectMethodStats(rows), [rows]);
+  const showCalls = (path: string) => {
+    setMethodFilter(path);
+    setSelectedId(undefined);
+    setView("calls");
+  };
   const selected = rows.find((r) => r.raw.id === selectedId);
   const schemaRefOf = (id: string | undefined): SchemaRef | undefined => {
     const source = schemas.entries.find((e) => e.source.id === id)?.source;
@@ -67,6 +77,18 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
+        {methodFilter && (
+          <span className="chip" role="status">
+            {t("toolbar.methodFilter", { method: methodFilter })}
+            <button
+              aria-label={t("toolbar.clearMethodFilter")}
+              title={t("toolbar.clearMethodFilter")}
+              onClick={() => setMethodFilter(undefined)}
+            >
+              ✕
+            </button>
+          </span>
+        )}
         <label>
           <input type="checkbox" checked={errorsOnly} onChange={(e) => setErrorsOnly(e.target.checked)} />
           {t("toolbar.errorsOnly")}
@@ -102,7 +124,12 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
             ))}
           </div>
           {schemasTab === "browse" ? (
-            <SchemaBrowser schemas={browseSchemas} selection={browseSelection} onSelect={setBrowseSelection} />
+            <SchemaBrowser
+              schemas={browseSchemas}
+              selection={browseSelection}
+              onSelect={setBrowseSelection}
+              calls={{ stats: methodStats, onShowCalls: showCalls }}
+            />
           ) : (
             <SchemasView schemas={schemas} />
           )}

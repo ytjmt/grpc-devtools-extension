@@ -1,9 +1,10 @@
 import type { DescEnum, DescField, DescMessage, DescOneof, DescService, FileRegistry } from "@bufbuild/protobuf";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getComment } from "../core/comments";
 import { fieldLabel, fieldTypeName, fieldTypeRef } from "../core/fields";
 import { buildTree, buildUsages, filterTree, findType, type TreeNode, type UsageRef } from "../core/schemaTree";
 import { t } from "../i18n";
+import { methodKey, type MethodStats } from "./methodStats";
 
 export interface BrowseSchema {
   id: string;
@@ -18,14 +19,22 @@ export interface BrowseSelection {
   member?: string;
 }
 
+/** Recorded-call statistics for methods, and a way to jump to those calls. */
+export interface CallLinks {
+  stats: Map<string, MethodStats>;
+  onShowCalls: (path: string) => void;
+}
+
 export function SchemaBrowser({
   schemas,
   selection,
   onSelect,
+  calls,
 }: {
   schemas: BrowseSchema[];
   selection?: BrowseSelection;
   onSelect: (selection: BrowseSelection) => void;
+  calls?: CallLinks;
 }) {
   const [query, setQuery] = useState("");
   const trees = useMemo(() => schemas.map((s) => ({ schema: s, nodes: buildTree(s.registry) })), [schemas]);
@@ -67,6 +76,7 @@ export function SchemaBrowser({
                   forceOpen={query.trim() !== ""}
                   selection={current}
                   onSelect={onSelect}
+                  stats={calls?.stats}
                 />
               ))}
             </div>
@@ -76,7 +86,7 @@ export function SchemaBrowser({
       </div>
       <div className="browser-detail">
         {current && selectedSchema ? (
-          <TypeDetail schema={selectedSchema} selection={current} onSelect={onSelect} />
+          <TypeDetail schema={selectedSchema} selection={current} onSelect={onSelect} calls={calls} />
         ) : (
           <div className="empty">{t("browse.selectType")}</div>
         )}
@@ -102,6 +112,7 @@ function TreeItem({
   forceOpen,
   selection,
   onSelect,
+  stats,
 }: {
   node: TreeNode;
   depth: number;
@@ -109,7 +120,10 @@ function TreeItem({
   forceOpen: boolean;
   selection?: BrowseSelection;
   onSelect: (s: BrowseSelection) => void;
+  stats?: Map<string, MethodStats>;
 }) {
+  const methodStats =
+    node.kind === "method" ? stats?.get(methodKey(schemaId, `/${node.typeName}/${node.member}`)) : undefined;
   // Packages (except well-known types) and services start open, so methods are visible at once.
   const [open, setOpen] = useState(
     (node.kind === "package" && !node.label.startsWith("google.")) || node.kind === "service",
@@ -149,6 +163,11 @@ function TreeItem({
         </span>
         <span className="tree-label">{node.label}</span>
         {node.hint && <span className="tree-hint">· {node.hint}</span>}
+        {methodStats && (
+          <span className={`tree-count ${methodStats.last.code === 0 ? "" : "failed"}`} aria-hidden>
+            {methodStats.count}
+          </span>
+        )}
       </div>
       {expanded &&
         node.children.map((c) => (
@@ -160,6 +179,7 @@ function TreeItem({
             forceOpen={forceOpen}
             selection={selection}
             onSelect={onSelect}
+            stats={stats}
           />
         ))}
     </>
@@ -174,10 +194,12 @@ function TypeDetail({
   schema,
   selection,
   onSelect,
+  calls,
 }: {
   schema: BrowseSchema;
   selection: BrowseSelection;
   onSelect: (s: BrowseSelection) => void;
+  calls?: CallLinks;
 }) {
   const desc = findType(schema.registry, selection.typeName);
   const usages = useMemo(() => buildUsages(schema.registry), [schema.registry]);
@@ -197,7 +219,9 @@ function TypeDetail({
         <span className="muted"> · {desc.file.proto.name}</span>
       </div>
       <Comment text={getComment(desc)} />
-      {desc.kind === "service" && <ServiceBody service={desc} member={selection.member} link={link} />}
+      {desc.kind === "service" && (
+        <ServiceBody service={desc} member={selection.member} link={link} schemaId={schema.id} calls={calls} />
+      )}
       {desc.kind === "message" && <MessageBody message={desc} link={link} />}
       {desc.kind === "enum" && <EnumBody en={desc} />}
       {desc.kind !== "service" && <Usages refs={usages.get(desc.typeName) ?? []} link={link} />}
@@ -235,47 +259,51 @@ function ServiceBody({
   service,
   member,
   link,
+  schemaId,
+  calls,
 }: {
   service: DescService;
   member?: string;
   link: (t: string) => () => void;
+  schemaId: string;
+  calls?: CallLinks;
 }) {
-  const highlighted = useRef<HTMLTableRowElement>(null);
+  const highlighted = useRef<HTMLLIElement>(null);
   useEffect(() => {
     highlighted.current?.scrollIntoView({ block: "nearest" });
   }, [member]);
+  // One block per method rather than a wide table, so narrow DevTools panes need no horizontal scroll.
   return (
-    <table className="decl-table">
-      <thead>
-        <tr>
-          <th>{t("browse.method")}</th>
-          <th>{t("browse.kind")}</th>
-          <th>{t("browse.request")}</th>
-          <th>{t("browse.response")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {service.methods.map((m) => (
-          <Fragment key={m.name}>
-            <tr ref={m.name === member ? highlighted : undefined} className={m.name === member ? "highlight" : ""}>
-              <td className={m.deprecated ? "deprecated" : ""}>{m.name}</td>
-              <td>{t(METHOD_KINDS[m.methodKind])}</td>
-              <td>
-                <TypeLink typeName={m.input.typeName} link={link} />
-              </td>
-              <td>
-                <TypeLink typeName={m.output.typeName} link={link} />
-              </td>
-            </tr>
-            {getComment(m) && (
-              <tr className={`comment-row ${m.name === member ? "highlight" : ""}`}>
-                <td colSpan={4}>{getComment(m)}</td>
-              </tr>
+    <ul className="method-list">
+      {service.methods.map((m) => (
+        <li
+          key={m.name}
+          ref={m.name === member ? highlighted : undefined}
+          className={`method-item ${m.name === member ? "highlight" : ""}`}
+        >
+          <div className="method-head">
+            <span className={`method-name ${m.deprecated ? "deprecated" : ""}`}>{m.name}</span>
+            <span className="method-kind">{t(METHOD_KINDS[m.methodKind])}</span>
+            {calls && (
+              <span className="method-calls">
+                <CallsCell path={`/${service.typeName}/${m.name}`} schemaId={schemaId} calls={calls} />
+              </span>
             )}
-          </Fragment>
-        ))}
-      </tbody>
-    </table>
+          </div>
+          <div className="method-types">
+            <span className="visually-hidden">{t("browse.request")}: </span>
+            <TypeLink typeName={m.input.typeName} link={link} />
+            <span className="muted" aria-hidden>
+              {" "}
+              →{" "}
+            </span>
+            <span className="visually-hidden">{t("browse.response")}: </span>
+            <TypeLink typeName={m.output.typeName} link={link} />
+          </div>
+          <Comment text={getComment(m)} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -416,5 +444,27 @@ function Usages({ refs, link }: { refs: UsageRef[]; link: (t: string) => () => v
         ))}
       </ul>
     </section>
+  );
+}
+
+function CallsCell({ path, schemaId, calls }: { path: string; schemaId: string; calls: CallLinks }) {
+  const stats = calls.stats.get(methodKey(schemaId, path));
+  if (!stats) return <span className="muted">{t("browse.noCalls")}</span>;
+  const count = stats.count === 1 ? t("browse.callCountOne") : t("browse.callCountOther", { count: stats.count });
+  return (
+    <a
+      href="#"
+      className="type-link calls-link"
+      title={t("browse.showCalls", { method: path })}
+      onClick={(e) => {
+        e.preventDefault();
+        calls.onShowCalls(path);
+      }}
+    >
+      <span className="nowrap">{count}</span>{" "}
+      <span className={stats.last.code === 0 ? "muted" : "error-text"}>
+        · {t("browse.lastStatus", { status: `${stats.last.code} ${stats.last.name}` })}
+      </span>
+    </a>
   );
 }

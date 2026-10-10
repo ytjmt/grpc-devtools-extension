@@ -654,16 +654,6 @@ table.headers td {
   padding-top: 6px;
 }
 
-.decl-table tr.highlight td {
-  background: var(--bg-selected);
-}
-
-.decl-table tr.comment-row td {
-  color: var(--muted);
-  font-family: inherit;
-  padding-left: 12px;
-}
-
 .deprecated {
   text-decoration: line-through;
 }
@@ -760,4 +750,109 @@ table.headers td {
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
+}
+
+/* Recorded-call counts in the schema browser */
+.tree-count {
+  margin-left: auto;
+  margin-right: 6px;
+  padding: 0 5px;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--muted);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+}
+
+.tree-count.failed,
+.error-text {
+  color: var(--error);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Active method filter in the toolbar */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 1px 2px 1px 8px;
+  border-radius: 10px;
+  background: var(--bg-selected);
+  font-family: ui-monospace, Menlo, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip button {
+  border: none;
+  background: none;
+  padding: 0 4px;
+  border-radius: 8px;
+}
+
+/* Service methods: one block each, wrapping instead of overflowing */
+.method-list {
+  list-style: none;
+  margin: 4px 0 12px;
+  padding: 0;
+}
+
+.method-item {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bg-alt);
+}
+
+.method-item.highlight {
+  background: var(--bg-selected);
+}
+
+.method-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.method-name {
+  font: 600 12px ui-monospace, Menlo, monospace;
+}
+
+.method-kind {
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.method-calls {
+  margin-left: auto;
+}
+
+.method-types {
+  margin-top: 2px;
+  font-family: ui-monospace, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+
+.method-item .comment {
+  margin: 2px 0 0;
+}
+
+/* Long type names in field tables may break, keeping columns within the pane. */
+.decl-table .type-link,
+.decl-table .mono {
+  overflow-wrap: anywhere;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

@@ -26,7 +26,12 @@ describe("SchemaBrowser", () => {
     await render(<Harness />);
     await expect.element(page.getByRole("heading", { name: "demo.v1.DemoService" })).toBeVisible();
     await expect.element(page.getByText("Demo service used by the example app and the tests.")).toBeVisible();
-    expect(detail().innerText).toContain("Count\tserver streaming\tdemo.v1.CountRequest\tdemo.v1.CountResponse");
+    const count = [...detail().querySelectorAll(".method-item")].find((m) => m.querySelector(".method-name")?.textContent === "Count");
+    expect(count?.querySelector(".method-kind")?.textContent).toBe("server streaming");
+    expect([...count!.querySelectorAll(".type-link")].map((a) => a.textContent)).toEqual([
+      "demo.v1.CountRequest",
+      "demo.v1.CountResponse",
+    ]);
     await expect.element(page.getByText("Streams 1..up_to, waiting delay_ms between messages.")).toBeVisible();
   });
 
@@ -61,7 +66,7 @@ describe("SchemaBrowser", () => {
     await render(<Harness />);
     await treeItem("Fail").click();
     await expect.element(treeItem("Fail")).toHaveAttribute("aria-selected", "true");
-    expect(detail().querySelector("tr.highlight")?.textContent).toContain("Fail");
+    expect(detail().querySelector(".method-item.highlight .method-name")?.textContent).toBe("Fail");
   });
 
   it("searches type, method and field names", async () => {

@@ -261,3 +261,33 @@ describe("calls and schemas together", () => {
     await expect.element(page.getByRole("menuitem", { name: "Copy as grpcurl" })).toBeDisabled();
   });
 });
+
+describe("recorded calls in the schema browser", () => {
+  const rowCount = () => document.querySelectorAll(".list tbody tr").length;
+
+  it("shows counts per method and filters the log by one", async () => {
+    await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
+    await schemasButton(1).click();
+    const table = () => (document.querySelector(".type-detail .method-list") as HTMLElement).innerText;
+    await expect.poll(table).toContain("3 calls · last 0 OK");
+    expect(table()).toContain("1 call · last 7 PERMISSION_DENIED");
+    expect(table()).toContain("2 calls · last 0 OK");
+    expect(document.querySelector('[role="treeitem"][aria-label="Fail"] .tree-count.failed')?.textContent).toBe("1");
+
+    await page.getByRole("link", { name: /^3 calls/ }).click();
+    await expect.element(page.getByRole("status")).toMatchTextContent("Method: /demo.v1.DemoService/Greet");
+    await expect.poll(rowCount).toBe(3);
+    await expect.element(page.getByText("3 / 6 requests")).toBeVisible();
+
+    await page.getByRole("button", { name: "Clear method filter" }).click();
+    await expect.poll(rowCount).toBe(6);
+  });
+
+  it("shows a dash for methods without recorded calls", async () => {
+    await renderPanel({ calls: [demoCalls[3]], sources: [await demoSchemaSource()] });
+    await schemasButton(1).click();
+    const greet = () =>
+      [...document.querySelectorAll(".method-item")].find((m) => m.querySelector(".method-name")?.textContent === "Greet");
+    await expect.poll(() => greet()?.querySelector(".method-calls")?.textContent).toBe("no calls");
+  });
+});
