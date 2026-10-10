@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { demoCalls, syntheticCalls } from "../fixtures/builders";
+import { compressionCalls, demoCalls, syntheticCalls } from "../fixtures/builders";
 import { loadDescriptor } from "../support/fakeSchemaBackend";
 import { demoSchemaSource, descriptorUrl, renderPanel } from "../support/renderPanel";
 
@@ -291,5 +291,17 @@ describe("recorded calls in the schema browser", () => {
     const greet = () =>
       [...document.querySelectorAll(".method-item")].find((m) => m.querySelector(".method-name")?.textContent === "Greet");
     await expect.poll(() => greet()?.querySelector(".method-calls")?.textContent).toBe("no calls");
+  });
+});
+
+describe("compressed calls", () => {
+  it("decodes compressed calls once decompression finishes", async () => {
+    await renderPanel({ calls: compressionCalls, sources: [await demoSchemaSource()] });
+    await expect.element(schemasButton(1)).toBeVisible();
+    // WatchInventory over Connect streaming with gzip envelopes.
+    await page.elementLocator(document.querySelector('tr[data-method="WatchInventory"]')!).click();
+    await expect.poll(() => document.querySelectorAll(".message").length).toBe(4);
+    await expect.element(page.getByRole("note")).not.toBeInTheDocument();
+    expect(document.querySelector(".message-header .type")?.textContent).toBe("shop.v1.WatchInventoryResponse");
   });
 });

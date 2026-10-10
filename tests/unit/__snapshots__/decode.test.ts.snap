@@ -1,5 +1,712 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`golden: recorded and synthetic fixtures > decodes recorded compressed calls after decompression 1`] = `
+[
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 18,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/tee-001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 649,
+        "typeName": "shop.v1.GetProductResponse",
+        "value": {
+          "product": {
+            "attributes": {
+              "fit": "relaxed",
+              "material": "organic cotton",
+            },
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "7",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "barcode": "4901234567894",
+            "category": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "displayName": "T-shirts",
+                      "id": "tees",
+                    },
+                  ],
+                  "displayName": "Tops",
+                  "id": "tops",
+                },
+              ],
+              "displayName": "Apparel",
+              "id": "apparel",
+            },
+            "description": "Heavyweight 6.2oz tee, garment dyed.",
+            "inStockQuantity": 15,
+            "label": "Bestseller",
+            "metadata": {
+              "campaigns": [
+                "spring-sale",
+                "eco-week",
+              ],
+              "limited": true,
+              "retired": null,
+              "season": "SS26",
+              "weightGrams": {
+                "l": 215,
+                "m": 200,
+                "s": 180,
+              },
+            },
+            "name": "products/tee-001",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "regionalPrices": {
+              "JP": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "US": {
+                "currencyCode": "USD",
+                "nanos": 990000000,
+                "units": "24",
+              },
+            },
+            "stats": {
+              "contentHash": "18369614221190020847",
+              "featured": true,
+              "imageCrc": 3735928559,
+              "ledgerBalance": "-9007199254740993",
+              "popularity": 0.873,
+              "rankDelta": -3,
+              "rating": 4.599999904632568,
+              "reviewCount": 128,
+              "stockDelta": "-120",
+              "temperatureOffset": -2,
+              "thumbnail": "iVBORw0KGgo=",
+              "viewCount": "9007199254740993",
+            },
+            "status": "PRODUCT_STATUS_ACTIVE",
+            "statusHistory": [
+              "PRODUCT_STATUS_DRAFT",
+              "PRODUCT_STATUS_ACTIVE",
+            ],
+            "tags": [
+              "organic",
+              "bestseller",
+            ],
+            "title": "Organic Cotton Tee",
+            "variants": [
+              {
+                "color": "COLOR_BLACK",
+                "size": "SIZE_M",
+                "sku": "TEE-001-BLK-M",
+                "stock": 12,
+              },
+              {
+                "color": "COLOR_WHITE",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "200",
+                },
+                "size": "SIZE_L",
+                "sku": "TEE-001-WHT-L",
+              },
+              {
+                "color": "COLOR_INDIGO",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "-300",
+                },
+                "size": "SIZE_S",
+                "sku": "TEE-001-IND-S",
+                "stock": 3,
+              },
+            ],
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "WatchInventory",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/WatchInventory",
+    "requestMessages": [
+      {
+        "size": 22,
+        "typeName": "shop.v1.WatchInventoryRequest",
+        "value": {
+          "interval": "0.050s",
+          "skus": [
+            "TEE-001-BLK-M",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 27,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:31:00Z",
+          "stockChanged": {
+            "sku": "TEE-001-BLK-M",
+            "stock": 11,
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 45,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:32:00Z",
+          "priceChanged": {
+            "newPrice": {
+              "currencyCode": "JPY",
+              "units": "2970",
+            },
+            "oldPrice": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "sku": "TEE-001-BLK-M",
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 27,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:33:00Z",
+          "stockChanged": {
+            "sku": "TEE-001-BLK-M",
+            "stock": 10,
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 26,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "archivedProduct": "products/mug-002",
+          "eventTime": "2026-01-15T09:34:00Z",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect-stream",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "ListProducts",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/ListProducts",
+    "requestMessages": [
+      {
+        "size": 4,
+        "typeName": "shop.v1.ListProductsRequest",
+        "value": {
+          "page": {
+            "pageSize": 1,
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 656,
+        "typeName": "shop.v1.ListProductsResponse",
+        "value": {
+          "page": {
+            "nextPageToken": "1",
+            "totalSize": "3",
+          },
+          "products": [
+            {
+              "attributes": {
+                "fit": "relaxed",
+                "material": "organic cotton",
+              },
+              "audit": {
+                "createTime": "2026-01-15T09:30:00Z",
+                "creator": "users/merch-7",
+                "revision": "7",
+                "updateTime": "2026-01-15T11:00:00Z",
+              },
+              "barcode": "4901234567894",
+              "category": {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "displayName": "T-shirts",
+                        "id": "tees",
+                      },
+                    ],
+                    "displayName": "Tops",
+                    "id": "tops",
+                  },
+                ],
+                "displayName": "Apparel",
+                "id": "apparel",
+              },
+              "description": "Heavyweight 6.2oz tee, garment dyed.",
+              "inStockQuantity": 15,
+              "label": "Bestseller",
+              "metadata": {
+                "campaigns": [
+                  "spring-sale",
+                  "eco-week",
+                ],
+                "limited": true,
+                "retired": null,
+                "season": "SS26",
+                "weightGrams": {
+                  "l": 215,
+                  "m": 200,
+                  "s": 180,
+                },
+              },
+              "name": "products/tee-001",
+              "price": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "regionalPrices": {
+                "JP": {
+                  "currencyCode": "JPY",
+                  "units": "3300",
+                },
+                "US": {
+                  "currencyCode": "USD",
+                  "nanos": 990000000,
+                  "units": "24",
+                },
+              },
+              "stats": {
+                "contentHash": "18369614221190020847",
+                "featured": true,
+                "imageCrc": 3735928559,
+                "ledgerBalance": "-9007199254740993",
+                "popularity": 0.873,
+                "rankDelta": -3,
+                "rating": 4.599999904632568,
+                "reviewCount": 128,
+                "stockDelta": "-120",
+                "temperatureOffset": -2,
+                "thumbnail": "iVBORw0KGgo=",
+                "viewCount": "9007199254740993",
+              },
+              "status": "PRODUCT_STATUS_ACTIVE",
+              "statusHistory": [
+                "PRODUCT_STATUS_DRAFT",
+                "PRODUCT_STATUS_ACTIVE",
+              ],
+              "tags": [
+                "organic",
+                "bestseller",
+              ],
+              "title": "Organic Cotton Tee",
+              "variants": [
+                {
+                  "color": "COLOR_BLACK",
+                  "size": "SIZE_M",
+                  "sku": "TEE-001-BLK-M",
+                  "stock": 12,
+                },
+                {
+                  "color": "COLOR_WHITE",
+                  "priceDelta": {
+                    "currencyCode": "JPY",
+                    "units": "200",
+                  },
+                  "size": "SIZE_L",
+                  "sku": "TEE-001-WHT-L",
+                },
+                {
+                  "color": "COLOR_INDIGO",
+                  "priceDelta": {
+                    "currencyCode": "JPY",
+                    "units": "-300",
+                  },
+                  "size": "SIZE_S",
+                  "sku": "TEE-001-IND-S",
+                  "stock": 3,
+                },
+              ],
+            },
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 18,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/tee-001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 649,
+        "typeName": "shop.v1.GetProductResponse",
+        "value": {
+          "product": {
+            "attributes": {
+              "fit": "relaxed",
+              "material": "organic cotton",
+            },
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "7",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "barcode": "4901234567894",
+            "category": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "displayName": "T-shirts",
+                      "id": "tees",
+                    },
+                  ],
+                  "displayName": "Tops",
+                  "id": "tops",
+                },
+              ],
+              "displayName": "Apparel",
+              "id": "apparel",
+            },
+            "description": "Heavyweight 6.2oz tee, garment dyed.",
+            "inStockQuantity": 15,
+            "label": "Bestseller",
+            "metadata": {
+              "campaigns": [
+                "spring-sale",
+                "eco-week",
+              ],
+              "limited": true,
+              "retired": null,
+              "season": "SS26",
+              "weightGrams": {
+                "l": 215,
+                "m": 200,
+                "s": 180,
+              },
+            },
+            "name": "products/tee-001",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "regionalPrices": {
+              "JP": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "US": {
+                "currencyCode": "USD",
+                "nanos": 990000000,
+                "units": "24",
+              },
+            },
+            "stats": {
+              "contentHash": "18369614221190020847",
+              "featured": true,
+              "imageCrc": 3735928559,
+              "ledgerBalance": "-9007199254740993",
+              "popularity": 0.873,
+              "rankDelta": -3,
+              "rating": 4.599999904632568,
+              "reviewCount": 128,
+              "stockDelta": "-120",
+              "temperatureOffset": -2,
+              "thumbnail": "iVBORw0KGgo=",
+              "viewCount": "9007199254740993",
+            },
+            "status": "PRODUCT_STATUS_ACTIVE",
+            "statusHistory": [
+              "PRODUCT_STATUS_DRAFT",
+              "PRODUCT_STATUS_ACTIVE",
+            ],
+            "tags": [
+              "organic",
+              "bestseller",
+            ],
+            "title": "Organic Cotton Tee",
+            "variants": [
+              {
+                "color": "COLOR_BLACK",
+                "size": "SIZE_M",
+                "sku": "TEE-001-BLK-M",
+                "stock": 12,
+              },
+              {
+                "color": "COLOR_WHITE",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "200",
+                },
+                "size": "SIZE_L",
+                "sku": "TEE-001-WHT-L",
+              },
+              {
+                "color": "COLOR_INDIGO",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "-300",
+                },
+                "size": "SIZE_S",
+                "sku": "TEE-001-IND-S",
+                "stock": 3,
+              },
+            ],
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 18,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/tee-001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 649,
+        "typeName": "shop.v1.GetProductResponse",
+        "value": {
+          "product": {
+            "attributes": {
+              "fit": "relaxed",
+              "material": "organic cotton",
+            },
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "7",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "barcode": "4901234567894",
+            "category": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "displayName": "T-shirts",
+                      "id": "tees",
+                    },
+                  ],
+                  "displayName": "Tops",
+                  "id": "tops",
+                },
+              ],
+              "displayName": "Apparel",
+              "id": "apparel",
+            },
+            "description": "Heavyweight 6.2oz tee, garment dyed.",
+            "inStockQuantity": 15,
+            "label": "Bestseller",
+            "metadata": {
+              "campaigns": [
+                "spring-sale",
+                "eco-week",
+              ],
+              "limited": true,
+              "retired": null,
+              "season": "SS26",
+              "weightGrams": {
+                "l": 215,
+                "m": 200,
+                "s": 180,
+              },
+            },
+            "name": "products/tee-001",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "regionalPrices": {
+              "JP": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "US": {
+                "currencyCode": "USD",
+                "nanos": 990000000,
+                "units": "24",
+              },
+            },
+            "stats": {
+              "contentHash": "18369614221190020847",
+              "featured": true,
+              "imageCrc": 3735928559,
+              "ledgerBalance": "-9007199254740993",
+              "popularity": 0.873,
+              "rankDelta": -3,
+              "rating": 4.599999904632568,
+              "reviewCount": 128,
+              "stockDelta": "-120",
+              "temperatureOffset": -2,
+              "thumbnail": "iVBORw0KGgo=",
+              "viewCount": "9007199254740993",
+            },
+            "status": "PRODUCT_STATUS_ACTIVE",
+            "statusHistory": [
+              "PRODUCT_STATUS_DRAFT",
+              "PRODUCT_STATUS_ACTIVE",
+            ],
+            "tags": [
+              "organic",
+              "bestseller",
+            ],
+            "title": "Organic Cotton Tee",
+            "variants": [
+              {
+                "color": "COLOR_BLACK",
+                "size": "SIZE_M",
+                "sku": "TEE-001-BLK-M",
+                "stock": 12,
+              },
+              {
+                "color": "COLOR_WHITE",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "200",
+                },
+                "size": "SIZE_L",
+                "sku": "TEE-001-WHT-L",
+              },
+              {
+                "color": "COLOR_INDIGO",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "-300",
+                },
+                "size": "SIZE_S",
+                "sku": "TEE-001-IND-S",
+                "stock": 3,
+              },
+            ],
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+]
+`;
+
 exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls with the schema 1`] = `
 [
   {
@@ -1822,7 +2529,7 @@ exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] =
     "requestMessages": [
       {
         "error": {
-          "key": "warn.compressedFrame",
+          "key": "warn.compressedNoEncoding",
           "params": undefined,
         },
         "size": 3,

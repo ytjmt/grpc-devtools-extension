@@ -10,6 +10,7 @@ import { DEMO_ORIGIN, expect, test } from "./fixtures";
 for (const { scenario, query, file } of [
   { scenario: "demo", query: "auto=1", file: "demo-calls.json" },
   { scenario: "shop", query: "auto=shop", file: "shop-calls.json" },
+  { scenario: "compression", query: "auto=compression", file: "compression-calls.json" },
 ]) {
   test(`record ${scenario} calls as fixtures`, async ({ app, devtools }) => {
     test.skip(!process.env.RECORD_FIXTURES, "set RECORD_FIXTURES=1 (pnpm fixtures:record)");

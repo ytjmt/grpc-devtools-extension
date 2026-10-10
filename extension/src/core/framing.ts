@@ -20,6 +20,20 @@ export function parseFrames(body: Uint8Array): { frames: Frame[]; rest: Uint8Arr
   return { frames, rest: body.subarray(off) };
 }
 
+/** Serializes frames back into an enveloped body. */
+export function encodeFrames(frames: Frame[], rest: Uint8Array = new Uint8Array()): Uint8Array {
+  const out = new Uint8Array(frames.reduce((n, f) => n + 5 + f.data.length, rest.length));
+  let off = 0;
+  for (const f of frames) {
+    out[off] = f.flags;
+    new DataView(out.buffer).setUint32(off + 1, f.data.length);
+    out.set(f.data, off + 5);
+    off += 5 + f.data.length;
+  }
+  out.set(rest, off);
+  return out;
+}
+
 /** Parses a gRPC-Web trailer frame ("key: value\r\n" lines). */
 export function parseTrailerBlock(text: string): Header[] {
   return text

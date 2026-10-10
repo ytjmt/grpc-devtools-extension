@@ -43,7 +43,12 @@ const demoRoutes = (router: ConnectRouter) =>
   });
 
 // Types that can appear inside google.protobuf.Any in JSON payloads.
-const rpc = connectNodeAdapter({ routes, jsonOptions: { registry: createRegistry(NoteSchema, GiftWrapSchema) } });
+const rpc = connectNodeAdapter({
+  routes,
+  jsonOptions: { registry: createRegistry(NoteSchema, GiftWrapSchema) },
+  // Compress even tiny demo messages when the client accepts it (?auto=compression).
+  compressMinBytes: 0,
+});
 
 const MIME: Record<string, string> = {
   ".html": "text/html",

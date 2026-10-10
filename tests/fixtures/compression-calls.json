@@ -1,0 +1,555 @@
+[
+  {
+    "url": "http://localhost:8080/shop.v1.CatalogService/GetProduct",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:00.000Z",
+    "time": 29,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "43"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=compression"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "grpc-accept-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "grpc-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      },
+      {
+        "name": "x-grpc-web",
+        "value": "1"
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "grpc-encoding",
+        "value": "gzip"
+      }
+    ],
+    "requestBodyText": "\u0001\u0000\u0000\u0000&\u001f\b\u0000\u0000\u0000\u0000\u0000\u0000\u0013ã\u0012((ÊO)M.)Ö/IMÕ500\u0004\u0000\u000fZ\u0012\u0012\u0000\u0000\u0000",
+    "responseBody": {
+      "content": "AQAAAisfiwgAAAAAAAATRZBNaBNRFIXzZtJkeuuk0ydCHKmMICjBadNJbW1BbGJLa21rbVL/di/JbTp1JjO892qtq7gRXYobNyLoThCkK1ddiwUX4sKVuhC6EMlesJEkjTmr+9174RwOPOoBI+RBebMkxbBEtNPpEUqv8QqruiXrciBlULUKiObpOWT3trfQraxLa2zICR5YEvGcVWHcx6q0yttYHrKUlAbq/PJt4+dxJwHK/DLt8lFQVvNUB3U1P20kk7X9x1/VSRM0n0nkLvNoIji0LbVsJxOgrrmSxjl67D6Wc8dAL8zMNBPauYWr9qJBkop1JDfYXd+cK9gLhpJUOzE+kNyZ7vnK0rSdN9QksdSU0X748rfRFlmJH9qvQBGFFOh5yO8oRCk6EGdhyDh6NJ5tD+ZJiMogFDRaCEJhGhCViIJqBVusu1yKjZcEDIgJZCKo0pgZzeedMUhBb4n5IXMrVUEHnROgm30i5G61YgvmIYCpYSmwtxDvQhb62mXPcuYL6qTSkAAiaO9ApKna2lST/Q5H3BZ7Hf6xMQU6xD3XdyWWqWKRJnKULm+iFuH9oI9OpEeczOj5sfELE6NvyKyeyTybGriRsHde1H9dSj6stWRYNXK2J10nF+u7b79l67sHHz/9+X2weNBoNK63y/veuEWK2pPlpVkdTNghpyCmPd9/tRejMe3d09d7MVPfFMjFsI+8tG6PW/H3pP8zgdz/ov8BuhmVpIkCAACBAAAAJB+LCAAAAAAAABNLLypI1i0uSSwpLbZSMODlAgD9bCSrEAAAAA==",
+      "encoding": "base64"
+    },
+    "id": 1
+  },
+  {
+    "url": "http://localhost:8080/shop.v1.CatalogService/WatchInventory",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:01.000Z",
+    "time": 218,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "47"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=compression"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "connect-accept-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "connect-content-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "connect-protocol-version",
+        "value": "1"
+      },
+      {
+        "name": "content-type",
+        "value": "application/connect+proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "connect-content-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "content-type",
+        "value": "application/connect+proto"
+      }
+    ],
+    "requestBodyText": "\u0001\u0000\u0000\u0000*\u001f\b\u0000\u0000\u0000\u0000\u0000\u0000\u0013ãâ\rquÕ500ÔuòñÖõ\u0015b\u0015hxøZ\u001c\u0000Þþ\u0016\u0000\u0000\u0000",
+    "responseBody": {
+      "content": "AQAAAC8fiwgAAAAAAAAT42LjuPJ80Wk2IUEu3hBXV10DA0NdJx9vXV8BbgAd1KX2GwAAAAEAAAA8H4sIAAAAAAAAE+Ni45jwYtFpNillLt4QV1ddAwNDXScfb11fIQ4uZq+ASIEnklJQ1ixxAAdDzAotAAAAAQAAAC8fiwgAAAAAAAAT42LjOPNi0Wk2IUEu3hBXV10DA0NdJx9vXV8BLgCAfMRaGwAAAAEAAAAuH4sIAAAAAAAAE+Ni4+h4ueg0m5JAQVF+SmlySbF+bmm6roGBEQDB2Hz8GgAAAAMAAAAWH4sIAAAAAAAAE6uuBQBDv6ajAgAAAA==",
+      "encoding": "base64"
+    },
+    "id": 2
+  },
+  {
+    "url": "http://localhost:8080/shop.v1.CatalogService/ListProducts",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:02.000Z",
+    "time": 5,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "24"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=compression"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "connect-protocol-version",
+        "value": "1"
+      },
+      {
+        "name": "content-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "content-type",
+        "value": "application/proto"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "content-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "content-length",
+        "value": "560"
+      },
+      {
+        "name": "content-type",
+        "value": "application/proto"
+      }
+    ],
+    "requestBodyText": "\n\u0002\b\u0001",
+    "responseBody": {
+      "content": "CoYFChBwcm9kdWN0cy90ZWUtMDAxEhJPcmdhbmljIENvdHRvbiBUZWUaJEhlYXZ5d2VpZ2h0IDYuMm96IHRlZSwgZ2FybWVudCBkeWVkLiACKggKA0pQWRDkGTIOCgJKUBIICgNKUFkQ5BkyEwoCVVMSDQoDVVNEEBgYgOeI2AM6GgoIbWF0ZXJpYWwSDm9yZ2FuaWMgY290dG9uOg4KA2ZpdBIHcmVsYXhlZEIVCg1URUUtMDAxLUJMSy1NEAEYAiAMQh0KDVRFRS0wMDEtV0hULUwQAhgDKggKA0pQWRDIAUInCg1URUUtMDAxLUlORC1TEAMYASADKhAKA0pQWRDU/f////////8BUgdvcmdhbmljUgpiZXN0c2VsbGVyWgIBAmIyCgdhcHBhcmVsEgdBcHBhcmVsGh4KBHRvcHMSBFRvcHMaEAoEdGVlcxIIVC1zaGlydHNqnwEKEAoGc2Vhc29uEgYaBFNTMjYKKgoJY2FtcGFpZ25zEh0yGwoNGgtzcHJpbmctc2FsZQoKGghlY28td2VlawpBCgt3ZWlnaHRHcmFtcxIyKjAKDgoBcxIJEQAAAAAAgGZACg4KAW0SCREAAAAAAABpQAoOCgFsEgkRAAAAAADgakAKDQoHbGltaXRlZBICIAEKDQoHcmV0aXJlZBICCAByDwoNNDkwMTIzNDU2Nzg5NKoBRw0zM5NAEVYOLbKd7+s/GIGAgICAgIAQIIABKAUw7wE9776t3kHvvv7Kzvrt/k3+////Uf///////9//WAFiCIlQTkcNChoKsgEhCgYImOeiywYSBgiwkaPLBhoNdXNlcnMvbWVyY2gtNyAHuAEP0gEKQmVzdHNlbGxlchIFCgExEAM=",
+      "encoding": "base64"
+    },
+    "id": 3
+  },
+  {
+    "url": "http://localhost:8080/shop.v1.CatalogService/GetProduct?connect=v1&encoding=proto&base64=1&compression=gzip&message=H4sIAAAAAAAAE-MSKCjKTylNLinWL0lN1TUwMAQAD1oSjRIAAAA",
+    "httpMethod": "GET",
+    "startedDateTime": "2026-01-01T00:00:03.000Z",
+    "time": 3,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=compression"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "content-encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "content-length",
+        "value": "555"
+      },
+      {
+        "name": "content-type",
+        "value": "application/proto"
+      }
+    ],
+    "requestBodyText": null,
+    "responseBody": {
+      "content": "CoYFChBwcm9kdWN0cy90ZWUtMDAxEhJPcmdhbmljIENvdHRvbiBUZWUaJEhlYXZ5d2VpZ2h0IDYuMm96IHRlZSwgZ2FybWVudCBkeWVkLiACKggKA0pQWRDkGTIOCgJKUBIICgNKUFkQ5BkyEwoCVVMSDQoDVVNEEBgYgOeI2AM6GgoIbWF0ZXJpYWwSDm9yZ2FuaWMgY290dG9uOg4KA2ZpdBIHcmVsYXhlZEIVCg1URUUtMDAxLUJMSy1NEAEYAiAMQh0KDVRFRS0wMDEtV0hULUwQAhgDKggKA0pQWRDIAUInCg1URUUtMDAxLUlORC1TEAMYASADKhAKA0pQWRDU/f////////8BUgdvcmdhbmljUgpiZXN0c2VsbGVyWgIBAmIyCgdhcHBhcmVsEgdBcHBhcmVsGh4KBHRvcHMSBFRvcHMaEAoEdGVlcxIIVC1zaGlydHNqnwEKEAoGc2Vhc29uEgYaBFNTMjYKKgoJY2FtcGFpZ25zEh0yGwoNGgtzcHJpbmctc2FsZQoKGghlY28td2VlawpBCgt3ZWlnaHRHcmFtcxIyKjAKDgoBcxIJEQAAAAAAgGZACg4KAW0SCREAAAAAAABpQAoOCgFsEgkRAAAAAADgakAKDQoHbGltaXRlZBICIAEKDQoHcmV0aXJlZBICCAByDwoNNDkwMTIzNDU2Nzg5NKoBRw0zM5NAEVYOLbKd7+s/GIGAgICAgIAQIIABKAUw7wE9776t3kHvvv7Kzvrt/k3+////Uf///////9//WAFiCIlQTkcNChoKsgEhCgYImOeiywYSBgiwkaPLBhoNdXNlcnMvbWVyY2gtNyAHuAEP0gEKQmVzdHNlbGxlcg==",
+      "encoding": "base64"
+    },
+    "id": 4
+  },
+  {
+    "url": "http://localhost:8080/shop.v1.CatalogService/GetProduct",
+    "httpMethod": "POST",
+    "startedDateTime": "2026-01-01T00:00:04.000Z",
+    "time": 9,
+    "httpStatus": 200,
+    "requestHeaders": [
+      {
+        "name": "Accept",
+        "value": "*/*"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate, br, zstd"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "23"
+      },
+      {
+        "name": "Host",
+        "value": "localhost:8080"
+      },
+      {
+        "name": "Origin",
+        "value": "http://localhost:8080"
+      },
+      {
+        "name": "Referer",
+        "value": "http://localhost:8080/?auto=compression"
+      },
+      {
+        "name": "Sec-Fetch-Dest",
+        "value": "empty"
+      },
+      {
+        "name": "Sec-Fetch-Mode",
+        "value": "cors"
+      },
+      {
+        "name": "Sec-Fetch-Site",
+        "value": "same-origin"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (fixture)"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "grpc-accept-encoding",
+        "value": "br"
+      },
+      {
+        "name": "sec-ch-ua",
+        "value": "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\""
+      },
+      {
+        "name": "sec-ch-ua-mobile",
+        "value": "?0"
+      },
+      {
+        "name": "sec-ch-ua-platform",
+        "value": "\"macOS\""
+      },
+      {
+        "name": "x-grpc-web",
+        "value": "1"
+      }
+    ],
+    "responseHeaders": [
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Date",
+        "value": "Thu, 01 Jan 2026 00:00:00 GMT"
+      },
+      {
+        "name": "Keep-Alive",
+        "value": "timeout=5"
+      },
+      {
+        "name": "Transfer-Encoding",
+        "value": "chunked"
+      },
+      {
+        "name": "content-type",
+        "value": "application/grpc-web+proto"
+      },
+      {
+        "name": "grpc-encoding",
+        "value": "br"
+      }
+    ],
+    "requestBodyText": "\u0000\u0000\u0000\u0000\u0012\n\u0010products/tee-001",
+    "responseBody": {
+      "content": "AQAAAhMbiAIgrArsxsdPeCjqLbI9cCo442n1FUk/7a92/l++9aS/OkpNc0aDo9HAdOkymejuwZt7v3v5fApDDSjkWGoBmbN3Tjm1QFoaBdI64MEhh5qF9K35qYRAYho5tfgeSIHw/MuNt9uIJzg8z0vzmkxw78bNw8RqTmVP/hlaOSBjvrAWYhkbW4zDfh6yxMqSYp0QlAYhWdKe45+wWHKdJ8SiL728iBRX6lwdybLqMRNAh8Wkyu4Udg6osBgMYMQmxmMx194HyBim/rH9nHYrgS9ajCWnDXMzb3VzQGfnVWJeOSlMryVZfgmIEwIl5A+WfodbRkIMpWP8NJzT5BIsI1AMLcnZOvIzHnEl1AGW8WgG6RTUr45//7FGcTwJgjhlB/lBnAtpCFEZdop/pXQqxDzf/i2lFrArS0orMDuh+koZgSRE48PziuWVV1bkjyOQAdeEbzFXyY6Pt3OCQUnVH1ZgjV0FYqXQPoal1y9AKflkJZbuMsENWt8bgp8WVWC7wQYcoAoskLOwqM/2IeFFDCsPLySv8msLPP8YMKUDs7xaAHvxWeVSEDtcNrZ29g6OTs4urg4zKFh8nt0+QZLE8hv9fPVmGurTFzKdF5lQmx95vjZ/4fu59re5+/X+F/n3j0zs/x6X/ykog98RExUsVkpYQbqK8Qcep7a4mMtf6pze4irFfu5YX8//ybI6fBVJDxH46RqBAAAAFIsHgGdycGMtc3RhdHVzOiAwDQoD",
+      "encoding": "base64"
+    },
+    "id": 5
+  }
+]

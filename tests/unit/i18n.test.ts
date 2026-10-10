@@ -8,7 +8,9 @@ describe("i18n", () => {
 
   it("passes literal text through and looks up keyed text", () => {
     expect(renderText("from server")).toBe("from server");
-    expect(renderText(msg("warn.compressedFrame"))).toBe("Compressed frames are not supported yet");
+    expect(renderText(msg("warn.compressed", { encoding: "zstd" }))).toBe(
+      "Compressed with zstd, which could not be decompressed",
+    );
   });
 
   it("renders LocalizedError via the catalog", () => {

@@ -72,7 +72,7 @@ describe("CallDetail", () => {
 
     await renderDetail(syntheticCalls.compressedFrame()).render;
     await tab("Request").last().click();
-    await expect.element(page.getByRole("note").last()).toMatchTextContent("Compressed frames are not supported yet");
+    await expect.element(page.getByRole("note").last()).toMatchTextContent("Marked as compressed, but no header says which encoding was used");
   });
 
   it("copies a message as JSON", async () => {

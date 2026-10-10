@@ -122,7 +122,8 @@ export const en = {
   // Core: decoding
   "warn.incompleteRequestFrame": "{bytes} trailing bytes of an incomplete frame in the request",
   "warn.incompleteResponseFrame": "{bytes} trailing bytes of an incomplete frame in the response",
-  "warn.compressedFrame": "Compressed frames are not supported yet",
+  "warn.compressed": "Compressed with {encoding}, which could not be decompressed",
+  "warn.compressedNoEncoding": "Marked as compressed, but no header says which encoding was used",
   "warn.decodeAsTypeFailed": "Failed to decode as {type}: {error}",
   "warn.jsonParseFailed": "Failed to parse JSON: {error}",
   "warn.notProtobuf": "Not valid protobuf wire format",
@@ -131,6 +132,7 @@ export const en = {
   "status.badEndStream": "Could not parse the end-of-stream message",
   "status.http2TrailersUnavailable": "HTTP/2 trailers are not available from HAR",
   "status.missingGrpcStatus": "Missing grpc-status trailer",
+  "status.compressedTrailers": "Trailers are compressed with {encoding}, which could not be decompressed",
 } as const;
 
 export type MessageKey = keyof typeof en;

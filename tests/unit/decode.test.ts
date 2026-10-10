@@ -9,6 +9,7 @@ import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema"
 import { decodeSchemaless } from "../../extension/src/core/schemaless";
 import {
   concat,
+  compressionCalls,
   demoCalls,
   frame,
   shopCalls,
@@ -99,7 +100,7 @@ describe("decodeCall", () => {
   it("flags compressed frames and truncated bodies", () => {
     expect(decodeCall(syntheticCalls.compressedFrame(), schemas).requestMessages[0]).toMatchObject({
       via: "error",
-      error: { key: "warn.compressedFrame" },
+      error: { key: "warn.compressedNoEncoding" },
     });
     expect(decodeCall(syntheticCalls.truncatedResponse(), schemas).warnings).toEqual([
       { key: "warn.incompleteResponseFrame", params: { bytes: 10 } },
@@ -153,6 +154,17 @@ describe("golden: recorded and synthetic fixtures", () => {
 
   it("decodes recorded shop calls with the schema", () => {
     expect(shopCalls.map(decodeForSnapshot(schemas))).toMatchSnapshot();
+  });
+
+  it("decodes recorded compressed calls after decompression", async () => {
+    const { decompressBodies } = await import("../../extension/src/core/compression");
+    const decoded = await Promise.all(
+      compressionCalls.map(async (c) => {
+        const { raw: _raw, ...d } = decodeCall(c, schemas, await decompressBodies(c));
+        return { ...d, requestMessages: withoutType(d.requestMessages), responseMessages: withoutType(d.responseMessages) };
+      }),
+    );
+    expect(decoded).toMatchSnapshot();
   });
 
   it("decodes synthetic calls", () => {

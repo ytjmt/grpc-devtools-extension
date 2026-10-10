@@ -10,6 +10,7 @@ import {
 import { bytesToBase64 } from "../../extension/src/core/bytes";
 import type { Header, RawCall } from "../../extension/src/core/types";
 import demoCallsJson from "./demo-calls.json";
+import compressionCallsJson from "./compression-calls.json";
 import shopCallsJson from "./shop-calls.json";
 
 /** Real calls captured from the demo app by `pnpm fixtures:record`. */
@@ -22,6 +23,13 @@ export const demoCalls = demoCallsJson as RawCall[];
  * (INVALID_ARGUMENT), CreateOrder (FAILED_PRECONDITION), GetOrder (GET), TrackOrder.
  */
 export const shopCalls = shopCallsJson as RawCall[];
+
+/**
+ * RPC-level compression (?auto=compression), in this order: gRPC-Web gzip both ways,
+ * Connect stream gzip both ways, Connect unary with a gzip request body (which Chrome
+ * records decompressed), Connect GET with compression=gzip, gRPC-Web brotli response.
+ */
+export const compressionCalls = compressionCallsJson as RawCall[];
 
 export const utf8 = (s: string) => new TextEncoder().encode(s);
 const latin1 = (b: Uint8Array) => String.fromCharCode(...b);

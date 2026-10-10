@@ -173,3 +173,29 @@ test("decodes the shop scenario with a realistic multi-file schema", async ({ ap
     await expect(panel.locator(".method-list")).toContainText("bidi streaming");
   });
 });
+
+test("decompresses gzip and brotli RPC messages", async ({ app, devtools }) => {
+  await app.goto(`${DEMO_ORIGIN}/?auto=compression`);
+  await expect(app).toHaveTitle("done", { timeout: 30_000 });
+  const panel = await devtools.openPanel();
+  await uploadSchema(panel);
+
+  const rows = panel.locator(".list tbody tr");
+  await expect(rows).toHaveCount(5);
+  // gzip: gRPC-Web, Connect streaming, Connect unary request, Connect GET.
+  for (let i = 0; i < 4; i++) {
+    await rows.nth(i).click();
+    for (const name of ["Request", "Response"]) {
+      await tab(panel, name).click();
+      await expect(panel.locator(".message .badge").first()).toHaveText("schema");
+      await expect(detail(panel)).not.toContainText("could not be decompressed");
+    }
+  }
+  await expect(detail(panel)).toContainText('title: "Organic Cotton Tee"');
+
+  // Chrome's DecompressionStream has no brotli (as of Chrome 156): say so instead of guessing.
+  await rows.nth(4).click();
+  await tab(panel, "Response").click();
+  await expect(detail(panel)).toContainText("Compressed with br, which could not be decompressed");
+  await expect(panel.locator(".status-box.failed")).toContainText("Trailers are compressed with br");
+});

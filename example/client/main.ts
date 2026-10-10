@@ -2,6 +2,7 @@ import { createRegistry } from "@bufbuild/protobuf";
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
 import { DemoService, NoteSchema } from "../gen/demo/v1/demo_pb";
+import { compressionCalls } from "./compression";
 import { shopCalls } from "./shop";
 
 const baseUrl = location.origin;
@@ -38,7 +39,7 @@ const demoCalls: Record<string, () => Promise<unknown>> = {
   "grpcweb-count": () => stream(grpcWeb),
 };
 
-const scenarios = { demo: demoCalls, shop: shopCalls };
+const scenarios = { demo: demoCalls, shop: shopCalls, compression: compressionCalls };
 
 async function run(calls: Record<string, () => Promise<unknown>>, name: string) {
   try {
@@ -58,10 +59,10 @@ for (const [scenario, calls] of Object.entries(scenarios)) {
   }
 }
 
-// ?auto=1 (or ?auto=demo) runs the demo calls, ?auto=shop the shop scenario.
+// ?auto=1 (or ?auto=demo) runs the demo calls; ?auto=shop and ?auto=compression the others.
 const auto = new URLSearchParams(location.search).get("auto");
 if (auto !== null) {
-  const calls = auto === "shop" ? shopCalls : demoCalls;
+  const calls = auto in scenarios ? scenarios[auto as keyof typeof scenarios] : demoCalls;
   (async () => {
     for (const name of Object.keys(calls)) await run(calls, name);
     document.title = "done";

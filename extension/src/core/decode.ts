@@ -15,9 +15,73 @@ import { decodeSchemaless } from "./schemaless";
 import { decodeDetail, decodeStatusDetails, type ErrorDetail } from "./rpcStatus";
 import { findUnknownFields } from "./unknownFields";
 import { codeFromConnectString, codeFromHttpStatus, codeName } from "./status";
-import type { CallStatus, Codec, DecodedCall, DecodedMessage, Frame, Header, RawCall } from "./types";
+import type { CallStatus, Codec, DecodedCall, DecodedMessage, Frame, Header, RawCall, Transport } from "./types";
 
-export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
+/**
+ * Request and response bytes of a call, after undoing grpc-web-text base64 and
+ * Connect GET query encoding. `*Encoding` names the RPC-level compression still
+ * applied: to flagged frames, or to the whole body for unary Connect.
+ */
+export interface Bodies {
+  request?: Uint8Array;
+  response?: Uint8Array;
+  requestEncoding?: string;
+  responseEncoding?: string;
+}
+
+/** RPC-level compression per direction, from headers; undefined for identity. */
+function compressionOf(raw: RawCall, transport: Transport): { request?: string; response?: string } {
+  const pick = (headers: Header[], name: string) => {
+    const v = headerValue(headers, name)?.trim().toLowerCase();
+    return v && v !== "identity" ? v : undefined;
+  };
+  switch (transport) {
+    case "connect-stream":
+      return {
+        request: pick(raw.requestHeaders, "connect-content-encoding"),
+        response: pick(raw.responseHeaders, "connect-content-encoding"),
+      };
+    case "connect": {
+      if (raw.httpMethod === "GET") {
+        const query = new URL(raw.url).searchParams.get("compression");
+        return { request: query && query !== "identity" ? query : undefined };
+      }
+      // Unary bodies use HTTP Content-Encoding, which Chrome undoes before the body
+      // reaches HAR, for responses and (as observed) request bodies alike. Only treat
+      // the request as compressed if the bytes still carry a gzip/zlib header.
+      const encoding = pick(raw.requestHeaders, "content-encoding");
+      const body = raw.requestBodyText ?? "";
+      const gzipMagic = body.charCodeAt(0) === 0x1f && body.charCodeAt(1) === 0x8b;
+      const zlibHeader = body.length > 1 && (body.charCodeAt(0) & 0x0f) === 8 && ((body.charCodeAt(0) << 8) | body.charCodeAt(1)) % 31 === 0;
+      const stillCompressed = (encoding === "gzip" && gzipMagic) || (encoding === "deflate" && zlibHeader);
+      return { request: stillCompressed ? encoding : undefined };
+    }
+    default:
+      return {
+        request: pick(raw.requestHeaders, "grpc-encoding"),
+        response: pick(raw.responseHeaders, "grpc-encoding"),
+      };
+  }
+}
+
+export function extractBodies(raw: RawCall): Bodies {
+  const detected = detectProtocol(raw.url, raw.httpMethod, raw.requestHeaders);
+  if (!detected) throw new Error(`not an RPC: ${raw.url}`);
+  const text = detected.transport === "grpc-web-text";
+  const encoding = compressionOf(raw, detected.transport);
+  return {
+    request: requestBytes(raw, text),
+    response: responseBytes(raw, text),
+    requestEncoding: encoding.request,
+    responseEncoding: encoding.response,
+  };
+}
+
+/**
+ * Decodes a captured call. Pass `bodies` from decompressBodies() to decode
+ * compressed calls; by default bodies are taken from the capture as-is.
+ */
+export function decodeCall(raw: RawCall, schemas: SchemaIndex, bodies: Bodies = extractBodies(raw)): DecodedCall {
   const detected = detectProtocol(raw.url, raw.httpMethod, raw.requestHeaders);
   if (!detected) throw new Error(`not an RPC: ${raw.url}`);
   const { transport, codec } = detected;
@@ -34,8 +98,7 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
   const decode = (bytes: Uint8Array, type: DescMessage | undefined) =>
     decodeMessage(bytes, codec, type, registry);
 
-  const reqBytes = requestBytes(raw, transport === "grpc-web-text");
-  const resBytes = responseBytes(raw, transport === "grpc-web-text");
+  const { request: reqBytes, response: resBytes, requestEncoding, responseEncoding } = bodies;
 
   let requestMessages: DecodedMessage[] = [];
   let responseMessages: DecodedMessage[] = [];
@@ -44,7 +107,11 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
 
   if (transport === "connect") {
     // Unary Connect: bodies are bare messages, errors are JSON.
-    if (reqBytes) requestMessages = [decode(reqBytes, desc?.input)];
+    if (reqBytes) {
+      requestMessages = [
+        requestEncoding ? compressedMessage(reqBytes.length, requestEncoding) : decode(reqBytes, desc?.input),
+      ];
+    }
     trailers = raw.responseHeaders
       .filter((h) => h.name.toLowerCase().startsWith("trailer-"))
       .map((h) => ({ name: h.name.slice("trailer-".length), value: h.value }));
@@ -58,21 +125,28 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
     if (reqBytes) {
       const { frames, rest } = parseFrames(reqBytes);
       if (rest.length) warnings.push(msg("warn.incompleteRequestFrame", { bytes: rest.length }));
-      requestMessages = frames.map((f) => decodeFrame(f, (b) => decode(b, desc?.input)));
+      requestMessages = frames.map((f) => decodeFrame(f, (b) => decode(b, desc?.input), requestEncoding));
     }
     let endStatus: CallStatus | undefined;
+    // gRPC-Web compresses the trailer frame too; it stays unreadable if decompression failed.
+    let compressedTrailers = false;
     if (resBytes) {
       const { frames, rest } = parseFrames(resBytes);
       if (rest.length) warnings.push(msg("warn.incompleteResponseFrame", { bytes: rest.length }));
       for (const f of frames) {
         if (transport === "connect-stream" && f.flags & FLAG_CONNECT_END) {
-          const end = parseConnectEnd(f.data, registry);
-          trailers = end.trailers;
-          endStatus = end.status;
+          if (f.flags & FLAG_COMPRESSED) {
+            endStatus = unknown(msg("status.compressedTrailers", { encoding: responseEncoding ?? "unknown" }));
+          } else {
+            const end = parseConnectEnd(f.data, registry);
+            trailers = end.trailers;
+            endStatus = end.status;
+          }
         } else if (transport !== "connect-stream" && f.flags & FLAG_GRPC_WEB_TRAILER) {
-          trailers = parseTrailerBlock(utf8Lossy(f.data));
+          if (f.flags & FLAG_COMPRESSED) compressedTrailers = true;
+          else trailers = parseTrailerBlock(utf8Lossy(f.data));
         } else {
-          responseMessages.push(decodeFrame(f, (b) => decode(b, desc?.output)));
+          responseMessages.push(decodeFrame(f, (b) => decode(b, desc?.output), responseEncoding));
         }
       }
     }
@@ -89,7 +163,9 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex): DecodedCall {
         grpcStatusFrom(raw.responseHeaders, registry) ??
         (raw.httpStatus !== 200
           ? { code: codeFromHttpStatus(raw.httpStatus), name: codeName(codeFromHttpStatus(raw.httpStatus)), message: `HTTP ${raw.httpStatus}` }
-          : unknown(msg(transport === "grpc" ? "status.http2TrailersUnavailable" : "status.missingGrpcStatus")));
+          : compressedTrailers
+            ? unknown(msg("status.compressedTrailers", { encoding: responseEncoding ?? "unknown" }))
+            : unknown(msg(transport === "grpc" ? "status.http2TrailersUnavailable" : "status.missingGrpcStatus")));
     }
   }
 
@@ -150,10 +226,14 @@ function decodeBase64Chunks(text: string): Uint8Array {
   return out;
 }
 
-function decodeFrame(f: Frame, decode: (b: Uint8Array) => DecodedMessage): DecodedMessage {
-  if (f.flags & FLAG_COMPRESSED) {
-    return { via: "error", value: null, size: f.data.length, error: msg("warn.compressedFrame") };
-  }
+function compressedMessage(size: number, encoding: string | undefined): DecodedMessage {
+  const error = encoding ? msg("warn.compressed", { encoding }) : msg("warn.compressedNoEncoding");
+  return { via: "error", value: null, size, error };
+}
+
+/** Frames still flagged as compressed here could not be decompressed by decompressBodies(). */
+function decodeFrame(f: Frame, decode: (b: Uint8Array) => DecodedMessage, encoding?: string): DecodedMessage {
+  if (f.flags & FLAG_COMPRESSED) return compressedMessage(f.data.length, encoding);
   return decode(f.data);
 }
 

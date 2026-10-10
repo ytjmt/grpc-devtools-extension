@@ -44,7 +44,7 @@ Each schema can be limited to request URLs with **Applies to** patterns, such as
 ## Limitations
 
 - Streams appear when they finish. A stream that never ends is not shown.
-- Compressed messages (`grpc-encoding: gzip` and similar) are not decoded yet.
+- RPC-level compression is decoded for gzip and deflate. brotli (`br`) depends on Chrome's `DecompressionStream`, which does not support it as of Chrome 156; such messages are marked as compressed.
 
 ## Development
 
@@ -82,7 +82,7 @@ The version lives in `package.json` and is written into the built manifest. To p
 - `demo.v1`: a minimal service the tests and recorded fixtures depend on.
 - `common.v1` + `shop.v1`: a realistic catalog and order API. Shared types (money, address, paging, audit) are imported across files, and the messages cover nested and recursive types, maps of messages, oneofs, proto3 `optional`, enum aliases, `reserved`, custom `json_name`, every scalar type, well-known types (`Timestamp`, `Duration`, `FieldMask`, `Struct`/`Value`, wrappers, `Any`, `Empty`), typed error details, and all four RPC kinds.
 
-Open `http://localhost:8080/?auto=shop` to run the shop scenario over Connect (binary, JSON, and GET) and gRPC-Web. Client and bidi streaming cannot run in a browser; try them against the native gRPC port:
+Open `http://localhost:8080/?auto=shop` to run the shop scenario over Connect (binary, JSON, and GET) and gRPC-Web, or `?auto=compression` for gzip- and brotli-compressed calls. Client and bidi streaming cannot run in a browser; try them against the native gRPC port:
 
 ```bash
 grpcurl -plaintext -protoset example/descriptor.binpb \
