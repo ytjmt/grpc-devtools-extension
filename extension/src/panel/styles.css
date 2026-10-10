@@ -835,17 +835,16 @@ table.headers td {
 .method-types {
   margin-top: 2px;
   font-family: ui-monospace, Menlo, monospace;
-  overflow-wrap: anywhere;
 }
 
 .method-item .comment {
   margin: 2px 0 0;
 }
 
-/* Long type names in field tables may break, keeping columns within the pane. */
-.decl-table .type-link,
-.decl-table .mono {
-  overflow-wrap: anywhere;
+/* Type names wrap after dots (QualifiedName); only unbroken segments may break anywhere. */
+.decl-table .mono,
+.method-types {
+  overflow-wrap: break-word;
 }
 
 .visually-hidden {

@@ -11,6 +11,7 @@ import {
   concat,
   demoCalls,
   frame,
+  shopCalls,
   greetReq,
   greetRes,
   raw,
@@ -148,6 +149,10 @@ describe("golden: recorded and synthetic fixtures", () => {
 
   it("decodes recorded demo calls without a schema", () => {
     expect(demoCalls.map(decodeForSnapshot(SchemaIndex.empty))).toMatchSnapshot();
+  });
+
+  it("decodes recorded shop calls with the schema", () => {
+    expect(shopCalls.map(decodeForSnapshot(schemas))).toMatchSnapshot();
   });
 
   it("decodes synthetic calls", () => {

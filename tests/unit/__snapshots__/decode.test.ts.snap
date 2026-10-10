@@ -776,6 +776,1042 @@ exports[`golden: recorded and synthetic fixtures > decodes recorded demo calls w
 ]
 `;
 
+exports[`golden: recorded and synthetic fixtures > decodes recorded shop calls with the schema 1`] = `
+[
+  {
+    "codec": "proto",
+    "method": "ListProducts",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/ListProducts",
+    "requestMessages": [
+      {
+        "size": 17,
+        "typeName": "shop.v1.ListProductsRequest",
+        "value": {
+          "maxPrice": {
+            "currencyCode": "JPY",
+            "units": "5000",
+          },
+          "page": {
+            "pageSize": 2,
+          },
+          "statuses": [
+            "PRODUCT_STATUS_PUBLISHED",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 761,
+        "typeName": "shop.v1.ListProductsResponse",
+        "value": {
+          "page": {
+            "totalSize": "2",
+          },
+          "products": [
+            {
+              "attributes": {
+                "fit": "relaxed",
+                "material": "organic cotton",
+              },
+              "audit": {
+                "createTime": "2026-01-15T09:30:00Z",
+                "creator": "users/merch-7",
+                "revision": "7",
+                "updateTime": "2026-01-15T11:00:00Z",
+              },
+              "barcode": "4901234567894",
+              "category": {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "displayName": "T-shirts",
+                        "id": "tees",
+                      },
+                    ],
+                    "displayName": "Tops",
+                    "id": "tops",
+                  },
+                ],
+                "displayName": "Apparel",
+                "id": "apparel",
+              },
+              "description": "Heavyweight 6.2oz tee, garment dyed.",
+              "inStockQuantity": 15,
+              "label": "Bestseller",
+              "metadata": {
+                "campaigns": [
+                  "spring-sale",
+                  "eco-week",
+                ],
+                "limited": true,
+                "retired": null,
+                "season": "SS26",
+                "weightGrams": {
+                  "l": 215,
+                  "m": 200,
+                  "s": 180,
+                },
+              },
+              "name": "products/tee-001",
+              "price": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "regionalPrices": {
+                "JP": {
+                  "currencyCode": "JPY",
+                  "units": "3300",
+                },
+                "US": {
+                  "currencyCode": "USD",
+                  "nanos": 990000000,
+                  "units": "24",
+                },
+              },
+              "stats": {
+                "contentHash": "18369614221190020847",
+                "featured": true,
+                "imageCrc": 3735928559,
+                "ledgerBalance": "-9007199254740993",
+                "popularity": 0.873,
+                "rankDelta": -3,
+                "rating": 4.599999904632568,
+                "reviewCount": 128,
+                "stockDelta": "-120",
+                "temperatureOffset": -2,
+                "thumbnail": "iVBORw0KGgo=",
+                "viewCount": "9007199254740993",
+              },
+              "status": "PRODUCT_STATUS_PUBLISHED",
+              "statusHistory": [
+                "PRODUCT_STATUS_DRAFT",
+                "PRODUCT_STATUS_PUBLISHED",
+              ],
+              "tags": [
+                "organic",
+                "bestseller",
+              ],
+              "title": "Organic Cotton Tee",
+              "variants": [
+                {
+                  "color": "COLOR_BLACK",
+                  "size": "SIZE_M",
+                  "sku": "TEE-001-BLK-M",
+                  "stock": 12,
+                },
+                {
+                  "color": "COLOR_WHITE",
+                  "priceDelta": {
+                    "currencyCode": "JPY",
+                    "units": "200",
+                  },
+                  "size": "SIZE_L",
+                  "sku": "TEE-001-WHT-L",
+                },
+                {
+                  "color": "COLOR_INDIGO",
+                  "priceDelta": {
+                    "currencyCode": "JPY",
+                    "units": "-300",
+                  },
+                  "size": "SIZE_S",
+                  "sku": "TEE-001-IND-S",
+                  "stock": 3,
+                },
+              ],
+            },
+            {
+              "audit": {
+                "createTime": "2026-01-15T09:30:00Z",
+                "creator": "users/merch-7",
+                "revision": "1",
+                "updateTime": "2026-01-15T11:00:00Z",
+              },
+              "label": "Made to order",
+              "madeToOrder": true,
+              "name": "products/poster-003",
+              "price": {
+                "currencyCode": "JPY",
+                "units": "4500",
+              },
+              "status": "PRODUCT_STATUS_PUBLISHED",
+              "title": "Risograph Poster",
+            },
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 18,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/tee-001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 649,
+        "typeName": "shop.v1.GetProductResponse",
+        "value": {
+          "product": {
+            "attributes": {
+              "fit": "relaxed",
+              "material": "organic cotton",
+            },
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "7",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "barcode": "4901234567894",
+            "category": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "displayName": "T-shirts",
+                      "id": "tees",
+                    },
+                  ],
+                  "displayName": "Tops",
+                  "id": "tops",
+                },
+              ],
+              "displayName": "Apparel",
+              "id": "apparel",
+            },
+            "description": "Heavyweight 6.2oz tee, garment dyed.",
+            "inStockQuantity": 15,
+            "label": "Bestseller",
+            "metadata": {
+              "campaigns": [
+                "spring-sale",
+                "eco-week",
+              ],
+              "limited": true,
+              "retired": null,
+              "season": "SS26",
+              "weightGrams": {
+                "l": 215,
+                "m": 200,
+                "s": 180,
+              },
+            },
+            "name": "products/tee-001",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "regionalPrices": {
+              "JP": {
+                "currencyCode": "JPY",
+                "units": "3300",
+              },
+              "US": {
+                "currencyCode": "USD",
+                "nanos": 990000000,
+                "units": "24",
+              },
+            },
+            "stats": {
+              "contentHash": "18369614221190020847",
+              "featured": true,
+              "imageCrc": 3735928559,
+              "ledgerBalance": "-9007199254740993",
+              "popularity": 0.873,
+              "rankDelta": -3,
+              "rating": 4.599999904632568,
+              "reviewCount": 128,
+              "stockDelta": "-120",
+              "temperatureOffset": -2,
+              "thumbnail": "iVBORw0KGgo=",
+              "viewCount": "9007199254740993",
+            },
+            "status": "PRODUCT_STATUS_PUBLISHED",
+            "statusHistory": [
+              "PRODUCT_STATUS_DRAFT",
+              "PRODUCT_STATUS_PUBLISHED",
+            ],
+            "tags": [
+              "organic",
+              "bestseller",
+            ],
+            "title": "Organic Cotton Tee",
+            "variants": [
+              {
+                "color": "COLOR_BLACK",
+                "size": "SIZE_M",
+                "sku": "TEE-001-BLK-M",
+                "stock": 12,
+              },
+              {
+                "color": "COLOR_WHITE",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "200",
+                },
+                "size": "SIZE_L",
+                "sku": "TEE-001-WHT-L",
+              },
+              {
+                "color": "COLOR_INDIGO",
+                "priceDelta": {
+                  "currencyCode": "JPY",
+                  "units": "-300",
+                },
+                "size": "SIZE_S",
+                "sku": "TEE-001-IND-S",
+                "stock": 3,
+              },
+            ],
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 48,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/mug-002",
+          "readMask": "title,price,restockTime",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 54,
+        "typeName": "shop.v1.GetProductResponse",
+        "value": {
+          "product": {
+            "name": "products/mug-002",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "1800",
+            },
+            "restockTime": "2026-01-29T09:30:00Z",
+            "title": "Stoneware Mug",
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "json",
+    "method": "UpdateProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/UpdateProduct",
+    "requestMessages": [
+      {
+        "size": 153,
+        "typeName": "shop.v1.UpdateProductRequest",
+        "value": {
+          "expectedRevision": "1",
+          "product": {
+            "description": "A2, two colors",
+            "name": "products/poster-003",
+            "tags": [
+              "art",
+              "limited",
+            ],
+          },
+          "updateMask": "tags,description",
+        },
+        "via": "json",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 373,
+        "typeName": "shop.v1.UpdateProductResponse",
+        "value": {
+          "product": {
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "2",
+              "updateTime": "2026-01-15T11:30:00Z",
+            },
+            "description": "A2, two colors",
+            "label": "Made to order",
+            "madeToOrder": true,
+            "name": "products/poster-003",
+            "price": {
+              "currencyCode": "JPY",
+              "units": "4500",
+            },
+            "status": "PRODUCT_STATUS_PUBLISHED",
+            "tags": [
+              "art",
+              "limited",
+            ],
+            "title": "Risograph Poster",
+          },
+        },
+        "via": "json",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "DeleteProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/DeleteProduct",
+    "requestMessages": [
+      {
+        "size": 21,
+        "typeName": "shop.v1.DeleteProductRequest",
+        "value": {
+          "name": "products/poster-003",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 0,
+        "typeName": "shop.v1.DeleteProductResponse",
+        "value": {},
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetProduct",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/GetProduct",
+    "requestMessages": [
+      {
+        "size": 15,
+        "typeName": "shop.v1.GetProductRequest",
+        "value": {
+          "name": "products/nope",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 5,
+      "details": undefined,
+      "message": "products/nope not found",
+      "name": "NOT_FOUND",
+    },
+    "trailers": [
+      {
+        "name": "grpc-message",
+        "value": "products%2Fnope%20not%20found",
+      },
+      {
+        "name": "grpc-status",
+        "value": "5",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "WatchInventory",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.CatalogService/WatchInventory",
+    "requestMessages": [
+      {
+        "size": 22,
+        "typeName": "shop.v1.WatchInventoryRequest",
+        "value": {
+          "interval": "0.100s",
+          "skus": [
+            "TEE-001-BLK-M",
+          ],
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 27,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:31:00Z",
+          "stockChanged": {
+            "sku": "TEE-001-BLK-M",
+            "stock": 11,
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 45,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:32:00Z",
+          "priceChanged": {
+            "newPrice": {
+              "currencyCode": "JPY",
+              "units": "2970",
+            },
+            "oldPrice": {
+              "currencyCode": "JPY",
+              "units": "3300",
+            },
+            "sku": "TEE-001-BLK-M",
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 27,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "eventTime": "2026-01-15T09:33:00Z",
+          "stockChanged": {
+            "sku": "TEE-001-BLK-M",
+            "stock": 10,
+          },
+        },
+        "via": "schema",
+      },
+      {
+        "size": 26,
+        "typeName": "shop.v1.WatchInventoryResponse",
+        "value": {
+          "archivedProduct": "products/mug-002",
+          "eventTime": "2026-01-15T09:34:00Z",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.CatalogService",
+    "status": {
+      "code": 0,
+      "details": undefined,
+      "message": undefined,
+      "name": "OK",
+    },
+    "trailers": [
+      {
+        "name": "grpc-status",
+        "value": "0",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "CreateOrder",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.OrderService/CreateOrder",
+    "requestMessages": [
+      {
+        "size": 176,
+        "typeName": "shop.v1.CreateOrderRequest",
+        "value": {
+          "card": {
+            "brand": "visa",
+            "last4": "4242",
+          },
+          "extensions": [
+            {
+              "@type": "type.googleapis.com/shop.v1.GiftWrap",
+              "message": "Enjoy!",
+              "paper": "kraft",
+            },
+          ],
+          "items": [
+            {
+              "quantity": 2,
+              "sku": "TEE-001-BLK-M",
+            },
+          ],
+          "requestId": "req-7f3a",
+          "shippingAddress": {
+            "addressLines": [
+              "Jingumae 1-2-3",
+              "Room 405",
+            ],
+            "administrativeArea": "Tokyo",
+            "locality": "Shibuya-ku",
+            "postalCode": "150-0001",
+            "recipients": [
+              "Hanako Yamada",
+            ],
+            "regionCode": "JP",
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 329,
+        "typeName": "shop.v1.CreateOrderResponse",
+        "value": {
+          "order": {
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "1",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "card": {
+              "brand": "visa",
+              "last4": "4242",
+            },
+            "deliveryEstimate": "172800s",
+            "extensions": [
+              {
+                "@type": "type.googleapis.com/shop.v1.GiftWrap",
+                "message": "Enjoy!",
+                "paper": "kraft",
+              },
+            ],
+            "items": [
+              {
+                "quantity": 2,
+                "sku": "TEE-001-BLK-M",
+                "unitPrice": {
+                  "currencyCode": "JPY",
+                  "units": "3300",
+                },
+              },
+            ],
+            "labels": {
+              "channel": "web",
+              "coupons": [
+                "SPRING10",
+              ],
+              "giftable": true,
+              "priority": 2,
+            },
+            "name": "orders/1001",
+            "shippingAddress": {
+              "addressLines": [
+                "Jingumae 1-2-3",
+                "Room 405",
+              ],
+              "administrativeArea": "Tokyo",
+              "locality": "Shibuya-ku",
+              "postalCode": "150-0001",
+              "recipients": [
+                "Hanako Yamada",
+              ],
+              "regionCode": "JP",
+            },
+            "state": "ORDER_STATE_PAID",
+            "total": {
+              "currencyCode": "JPY",
+              "units": "6600",
+            },
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.OrderService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "json",
+    "method": "CreateOrder",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.OrderService/CreateOrder",
+    "requestMessages": [
+      {
+        "size": 28,
+        "typeName": "shop.v1.CreateOrderRequest",
+        "value": {
+          "items": [
+            {
+              "sku": "NOPE-1",
+            },
+          ],
+        },
+        "via": "json",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.OrderService",
+    "status": {
+      "code": 3,
+      "details": [
+        {
+          "type": "shop.v1.ValidationError",
+          "value": {
+            "violations": [
+              {
+                "description": "must be positive",
+                "field": "items[0].quantity",
+              },
+              {
+                "description": "unknown SKU NOPE-1",
+                "field": "items[0].sku",
+              },
+              {
+                "description": "is required",
+                "field": "shipping_address",
+              },
+            ],
+          },
+        },
+      ],
+      "message": "order is invalid",
+      "name": "INVALID_ARGUMENT",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "CreateOrder",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.OrderService/CreateOrder",
+    "requestMessages": [
+      {
+        "size": 97,
+        "typeName": "shop.v1.CreateOrderRequest",
+        "value": {
+          "cashOnDelivery": {},
+          "items": [
+            {
+              "quantity": 1,
+              "sku": "TEE-001-WHT-L",
+            },
+          ],
+          "shippingAddress": {
+            "addressLines": [
+              "Jingumae 1-2-3",
+              "Room 405",
+            ],
+            "administrativeArea": "Tokyo",
+            "locality": "Shibuya-ku",
+            "postalCode": "150-0001",
+            "recipients": [
+              "Hanako Yamada",
+            ],
+            "regionCode": "JP",
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.OrderService",
+    "status": {
+      "code": 9,
+      "details": [
+        {
+          "type": "shop.v1.OutOfStock",
+          "value": {
+            "requested": 1,
+            "sku": "TEE-001-WHT-L",
+          },
+        },
+      ],
+      "message": "not enough stock for TEE-001-WHT-L",
+      "name": "FAILED_PRECONDITION",
+    },
+    "trailers": [
+      {
+        "name": "grpc-message",
+        "value": "not%20enough%20stock%20for%20TEE-001-WHT-L",
+      },
+      {
+        "name": "grpc-status",
+        "value": "9",
+      },
+      {
+        "name": "grpc-status-details-bin",
+        "value": "CAkSIm5vdCBlbm91Z2ggc3RvY2sgZm9yIFRFRS0wMDEtV0hULUwaOwomdHlwZS5nb29nbGVhcGlzLmNvbS9zaG9wLnYxLk91dE9mU3RvY2sSEQoNVEVFLTAwMS1XSFQtTBAB",
+      },
+    ],
+    "transport": "grpc-web",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "GetOrder",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.OrderService/GetOrder",
+    "requestMessages": [
+      {
+        "size": 13,
+        "typeName": "shop.v1.GetOrderRequest",
+        "value": {
+          "name": "orders/2001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 297,
+        "typeName": "shop.v1.GetOrderResponse",
+        "value": {
+          "order": {
+            "audit": {
+              "createTime": "2026-01-15T09:30:00Z",
+              "creator": "users/merch-7",
+              "revision": "4",
+              "updateTime": "2026-01-15T11:00:00Z",
+            },
+            "bankTransfer": {
+              "bankCode": "0001",
+              "dueTime": "2026-01-18T09:30:00Z",
+            },
+            "deliveryEstimate": "129600s",
+            "extensions": [
+              {
+                "@type": "type.googleapis.com/shop.v1.GiftWrap",
+                "message": "Happy birthday!",
+                "paper": "kraft",
+              },
+            ],
+            "items": [
+              {
+                "quantity": 2,
+                "sku": "TEE-001-BLK-M",
+                "unitPrice": {
+                  "currencyCode": "JPY",
+                  "units": "3300",
+                },
+              },
+            ],
+            "labels": {
+              "channel": "app",
+              "priority": 1,
+            },
+            "name": "orders/2001",
+            "shippingAddress": {
+              "addressLines": [
+                "Jingumae 1-2-3",
+                "Room 405",
+              ],
+              "administrativeArea": "Tokyo",
+              "locality": "Shibuya-ku",
+              "postalCode": "150-0001",
+              "recipients": [
+                "Hanako Yamada",
+              ],
+              "regionCode": "JP",
+            },
+            "state": "ORDER_STATE_SHIPPED",
+            "total": {
+              "currencyCode": "JPY",
+              "units": "6600",
+            },
+          },
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.OrderService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect",
+    "warnings": [],
+  },
+  {
+    "codec": "proto",
+    "method": "TrackOrder",
+    "outOfScopeSchemas": [],
+    "path": "/shop.v1.OrderService/TrackOrder",
+    "requestMessages": [
+      {
+        "size": 13,
+        "typeName": "shop.v1.TrackOrderRequest",
+        "value": {
+          "name": "orders/2001",
+        },
+        "via": "schema",
+      },
+    ],
+    "responseMessages": [
+      {
+        "size": 105,
+        "typeName": "shop.v1.TrackOrderResponse",
+        "value": {
+          "eventTime": "2026-01-15T10:30:00Z",
+          "location": {
+            "facility": "Payment confirmed",
+            "lat": 35.6812,
+            "lng": 139.7671,
+            "order": "orders/2001",
+          },
+          "state": "ORDER_STATE_PAID",
+        },
+        "via": "schema",
+      },
+      {
+        "size": 97,
+        "typeName": "shop.v1.TrackOrderResponse",
+        "value": {
+          "eventTime": "2026-01-15T11:30:00Z",
+          "location": {
+            "facility": "Tokyo hub",
+            "lat": 35.691199999999995,
+            "lng": 139.7671,
+            "order": "orders/2001",
+          },
+          "state": "ORDER_STATE_SHIPPED",
+        },
+        "via": "schema",
+      },
+      {
+        "size": 110,
+        "typeName": "shop.v1.TrackOrderResponse",
+        "value": {
+          "eventTime": "2026-01-15T12:30:00Z",
+          "location": {
+            "facility": "Delivered to recipient",
+            "lat": 35.7012,
+            "lng": 139.7671,
+            "order": "orders/2001",
+          },
+          "state": "ORDER_STATE_DELIVERED",
+        },
+        "via": "schema",
+      },
+    ],
+    "schemaFound": true,
+    "schemaId": "schema-0",
+    "schemaName": "schema-0",
+    "service": "shop.v1.OrderService",
+    "status": {
+      "code": 0,
+      "name": "OK",
+    },
+    "trailers": [],
+    "transport": "connect-stream",
+    "warnings": [],
+  },
+]
+`;
+
 exports[`golden: recorded and synthetic fixtures > decodes synthetic calls 1`] = `
 {
   "compressedFrame": {

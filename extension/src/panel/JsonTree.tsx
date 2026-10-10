@@ -5,18 +5,25 @@ export function JsonTree({
   value,
   name,
   depth = 0,
+  level = 0,
   path = [],
   describe,
 }: {
   value: unknown;
   name?: string;
+  /** Indentation depth. */
   depth?: number;
+  /**
+   * Nesting that counts toward auto-expansion. Single-key wrappers such as
+   * `{ product: {...} }` (common response style) do not add a level.
+   */
+  level?: number;
   /** Keys from the root to this value. */
   path?: string[];
   /** Tooltip for a key, e.g. the schema field it maps to. */
   describe?: (path: string[]) => string | undefined;
 }) {
-  const [open, setOpen] = useState(depth < 2);
+  const [open, setOpen] = useState(level < 2);
   const info = name !== undefined ? describe?.(path) : undefined;
   const label =
     name !== undefined ? (
@@ -47,7 +54,15 @@ export function JsonTree({
       </div>
       {open &&
         entries.map(([k, v]) => (
-          <JsonTree key={k} name={k} value={v} depth={depth + 1} path={[...path, k]} describe={describe} />
+          <JsonTree
+            key={k}
+            name={k}
+            value={v}
+            depth={depth + 1}
+            level={entries.length === 1 ? level : level + 1}
+            path={[...path, k]}
+            describe={describe}
+          />
         ))}
     </>
   );

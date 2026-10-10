@@ -12,6 +12,7 @@ import {
 } from "./framing";
 import type { SchemaIndex } from "./schema";
 import { decodeSchemaless } from "./schemaless";
+import { decodeDetail, decodeStatusDetails, type ErrorDetail } from "./rpcStatus";
 import { findUnknownFields } from "./unknownFields";
 import { codeFromConnectString, codeFromHttpStatus, codeName } from "./status";
 import type { CallStatus, Codec, DecodedCall, DecodedMessage, Frame, Header, RawCall } from "./types";
@@ -211,10 +212,13 @@ function grpcStatusFrom(headers: Header[], registry: Registry): CallStatus | und
   const code = Number(raw);
   const message = headerValue(headers, "grpc-message");
   const detailsBin = headerValue(headers, "grpc-status-details-bin");
-  let details: unknown;
+  let details: ErrorDetail[] | undefined;
   if (detailsBin) {
-    const type = registry.getMessage("google.rpc.Status");
-    details = decodeMessage(base64ToBytes(detailsBin), "proto", type, registry).value;
+    try {
+      details = decodeStatusDetails(base64ToBytes(detailsBin), registry);
+    } catch {
+      // Not a google.rpc.Status; leave details out rather than guess.
+    }
   }
   return {
     code,
@@ -240,11 +244,12 @@ interface ConnectErrorJson {
 
 function connectErrorFromJson(err: ConnectErrorJson, registry: Registry): CallStatus {
   const code = err.code ? codeFromConnectString(err.code) : 2;
-  const details = err.details?.map((d) => {
-    if (d.debug !== undefined || !d.value) return d;
-    const type = d.type ? registry.getMessage(d.type) : undefined;
-    return { type: d.type, value: decodeMessage(base64UrlToBytes(d.value), "proto", type, registry).value };
-  });
+  // Prefer decoding the bytes with the schema; the server's debug JSON is only a fallback.
+  const details = err.details?.map((d): ErrorDetail =>
+    d.value
+      ? decodeDetail(d.type ?? "", base64UrlToBytes(d.value), registry, d.debug)
+      : { type: d.type ?? "", value: d.debug },
+  );
   return { code, name: codeName(code), message: err.message, details };
 }
 

@@ -1,5 +1,5 @@
 import type { DescEnum, DescField, DescMessage, DescOneof, DescService, FileRegistry } from "@bufbuild/protobuf";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { getComment } from "../core/comments";
 import { fieldLabel, fieldTypeName, fieldTypeRef } from "../core/fields";
 import { buildTree, buildUsages, filterTree, findType, type TreeNode, type UsageRef } from "../core/schemaTree";
@@ -240,8 +240,27 @@ function TypeLink({ typeName, link }: { typeName: string; link: (t: string) => (
         link(typeName)();
       }}
     >
-      {typeName}
+      <QualifiedName name={typeName} />
     </a>
+  );
+}
+
+/** A dotted name that may wrap only after its dots, never inside a segment. */
+function QualifiedName({ name }: { name: string }) {
+  const parts = name.split(".");
+  return (
+    <>
+      {parts.map((part, i) => (
+        <Fragment key={i}>
+          {part}
+          {i < parts.length - 1 && (
+            <>
+              .<wbr />
+            </>
+          )}
+        </Fragment>
+      ))}
+    </>
   );
 }
 

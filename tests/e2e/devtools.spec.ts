@@ -143,3 +143,33 @@ test("clears on navigation unless Preserve log is checked", async ({ app, devtoo
   await expect(rows).toHaveCount(6);
   await expect(panel.locator(".statusbar")).toHaveText("6 / 6 requests");
 });
+
+test("decodes the shop scenario with a realistic multi-file schema", async ({ app, devtools }) => {
+  await app.goto(`${DEMO_ORIGIN}/?auto=shop`);
+  await expect(app).toHaveTitle("done", { timeout: 30_000 });
+  const panel = await devtools.openPanel();
+  await uploadSchema(panel);
+
+  await expect(panel.locator(".list tbody tr")).toHaveCount(12);
+  await expect(panel.locator(".badge.warn")).toHaveCount(0);
+
+  await test.step("nested messages, maps and Struct", async () => {
+    await row(panel, "GetProduct", "grpc-web").first().click();
+    await expect(detail(panel)).toContainText('title: "Organic Cotton Tee"');
+    await expect(detail(panel)).toContainText('season: "SS26"');
+  });
+
+  await test.step("gRPC-Web error details from grpc-status-details-bin", async () => {
+    await row(panel, "CreateOrder", "grpc-web").click();
+    await expect(panel.locator(".status-box.failed")).toContainText("9 FAILED_PRECONDITION");
+    await expect(panel.locator(".status-box.failed")).toContainText('type: "shop.v1.OutOfStock"');
+    await expect(panel.locator(".status-box.failed")).toContainText('sku: "TEE-001-WHT-L"');
+  });
+
+  await test.step("all four method kinds in the schema browser", async () => {
+    await panel.getByRole("button", { name: "Schemas (1)" }).click();
+    await panel.getByRole("treeitem", { name: "OrderService", exact: true }).click();
+    await expect(panel.locator(".method-list")).toContainText("client streaming");
+    await expect(panel.locator(".method-list")).toContainText("bidi streaming");
+  });
+});
