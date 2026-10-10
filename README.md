@@ -9,6 +9,9 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 - Decodes gRPC-Web (binary and text) and Connect (unary, GET, and server streaming), with proto or JSON encoding
 - Shows request and response messages, headers, trailers, gRPC status, and error details
 - Decodes messages by field name with your schema, or by field number without one
+- Browses registered schemas: services, messages, enums, `.proto` comments, type links, and where each type is used
+- Explains fields on hover in decoded messages, and warns when a response has fields the schema does not define
+- Copies a call as a `buf curl` or `grpcurl` command (`grpcurl` needs the server to speak native gRPC)
 - Filters by method or errors only, keeps the log across navigations, copies messages as JSON
 
 ## Install
@@ -24,7 +27,7 @@ Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, 
 
 ## Schemas
 
-Without a schema, messages are shown by field number. To see field names, generate a FileDescriptorSet from your `.proto` files and add it under **Schemas**:
+Without a schema, messages are shown by field number. To see field names, generate a FileDescriptorSet from your `.proto` files and add it under **Schemas → Manage**. `buf build` keeps `.proto` comments for the schema browser; with `protoc`, add `--include_source_info`.
 
 ```bash
 buf build -o descriptor.binpb
@@ -58,7 +61,7 @@ pnpm test:e2e          # Playwright: real Chrome + DevTools + demo server
 pnpm test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
 pnpm fixtures:record   # re-record tests/fixtures/demo-calls.json from the demo app
 pnpm example:gen       # regenerate example code and descriptor sets
-pnpm example:build && pnpm example:serve   # demo app at http://localhost:8080
+pnpm example:build && pnpm example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
 pnpm package           # build and zip into release/
 ```
 

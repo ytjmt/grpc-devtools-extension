@@ -1,6 +1,11 @@
+import type { DescMessage } from "@bufbuild/protobuf";
 import { useState } from "react";
-import { renderText, t } from "../i18n";
+import { getComment } from "../core/comments";
+import { toBufCurl, toGrpcurl, type SchemaRef } from "../core/curl";
+import { fieldAt, fieldLabel, fieldTypeName } from "../core/fields";
 import type { DecodedCall, DecodedMessage, Header, RawCall } from "../core/types";
+import { renderText, t } from "../i18n";
+import { copyText } from "./clipboard";
 import { JsonTree } from "./JsonTree";
 import type { CallRow } from "./useDecodedRows";
 
@@ -8,27 +13,37 @@ type Tab = "headers" | "request" | "response" | "trailers";
 
 export function CallDetail({
   row,
+  schemaRef,
   onClose,
   onOpenSchemas,
+  onOpenType,
 }: {
   row: CallRow;
+  /** The schema that decoded this call, for "Copy as" commands. */
+  schemaRef?: SchemaRef;
   onClose: () => void;
   onOpenSchemas: () => void;
+  /** Opens a type of the call's schema in the schema browser. */
+  onOpenType?: (typeName: string) => void;
 }) {
   const [tab, setTab] = useState<Tab>("response");
   const { raw, call } = row;
 
   return (
     <div className="detail">
-      <div className="tabs">
-        <button className="close" title={t("detail.close")} aria-label={t("detail.close")} onClick={onClose}>
-          ✕
-        </button>
-        {(["headers", "request", "response", "trailers"] as const).map((tabName) => (
-          <button key={tabName} className={tab === tabName ? "active" : ""} onClick={() => setTab(tabName)}>
-            {t(`detail.tab.${tabName}`)}
+      <div className="detail-bar">
+        <div className="tabs">
+          <button className="close" title={t("detail.close")} aria-label={t("detail.close")} onClick={onClose}>
+            ✕
           </button>
-        ))}
+          {(["headers", "request", "response", "trailers"] as const).map((tabName) => (
+            <button key={tabName} className={tab === tabName ? "active" : ""} onClick={() => setTab(tabName)}>
+              {t(`detail.tab.${tabName}`)}
+            </button>
+          ))}
+        </div>
+        {/* Outside .tabs: its horizontal scrolling would clip the menu. */}
+        {call && <CopyAsMenu call={call} schemaRef={schemaRef} />}
       </div>
       <div className="tab-body">
         {!call ? (
@@ -51,11 +66,11 @@ export function CallDetail({
               </div>
             )}
             {tab === "headers" && <HeadersTab raw={raw} call={call} />}
-            {tab === "request" && <Messages messages={call.requestMessages} />}
+            {tab === "request" && <Messages messages={call.requestMessages} onOpenType={onOpenType} />}
             {tab === "response" && (
               <>
                 {call.status.code !== 0 && <StatusBox call={call} />}
-                <Messages messages={call.responseMessages} />
+                <Messages messages={call.responseMessages} onOpenType={onOpenType} />
               </>
             )}
             {tab === "trailers" && (
@@ -111,42 +126,89 @@ function StatusBox({ call }: { call: DecodedCall }) {
   );
 }
 
-function Messages({ messages }: { messages: DecodedMessage[] }) {
+function Messages({ messages, onOpenType }: { messages: DecodedMessage[]; onOpenType?: (typeName: string) => void }) {
   if (messages.length === 0) return <div className="empty">{t("detail.noMessages")}</div>;
   return (
     <>
       {messages.map((m, i) => (
-        <MessageView key={i} index={i} count={messages.length} message={m} />
+        <MessageView key={i} index={i} count={messages.length} message={m} onOpenType={onOpenType} />
       ))}
     </>
   );
 }
 
-function MessageView({ message, index, count }: { message: DecodedMessage; index: number; count: number }) {
+/** Tooltip text for JSON keys: field number, name, type, and the .proto comment. */
+function fieldDescriber(type: DescMessage) {
+  return (path: string[]) => {
+    const field = fieldAt(type, path);
+    if (!field) return undefined;
+    const label = fieldLabel(field);
+    return [
+      t("detail.fieldInfo", {
+        number: field.number,
+        name: field.name,
+        type: `${label ? `${label} ` : ""}${fieldTypeName(field)}`,
+      }),
+      field.deprecated ? t("browse.deprecated") : undefined,
+      getComment(field),
+    ]
+      .filter(Boolean)
+      .join("\n");
+  };
+}
+
+function MessageView({
+  message,
+  index,
+  count,
+  onOpenType,
+}: {
+  message: DecodedMessage;
+  index: number;
+  count: number;
+  onOpenType?: (typeName: string) => void;
+}) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
-    // navigator.clipboard is blocked in DevTools panels; use a textarea fallback.
-    const ta = document.createElement("textarea");
-    ta.value = JSON.stringify(message.value, null, 2);
-    document.body.append(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
+    copyText(JSON.stringify(message.value, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
   };
+  const { type } = message;
   return (
     <div className="message">
       <div className="message-header">
         {count > 1 && <span className="index">#{index + 1}</span>}
-        <span className="type">{message.typeName ?? t("detail.unknownType")}</span>
+        {type && onOpenType ? (
+          <a
+            href="#"
+            className="type type-link"
+            title={t("detail.openType", { type: type.typeName })}
+            onClick={(e) => {
+              e.preventDefault();
+              onOpenType(type.typeName);
+            }}
+          >
+            {type.typeName}
+          </a>
+        ) : (
+          <span className="type">{message.typeName ?? t("detail.unknownType")}</span>
+        )}
         <span className={`badge via-${message.via}`}>{message.via}</span>
         <span className="size">{message.size} B</span>
         <span className="spacer" />
         <button onClick={copy}>{copied ? t("detail.copied") : t("detail.copyJson")}</button>
       </div>
       {message.error !== undefined && <div className="warning" role="note">{renderText(message.error)}</div>}
-      <JsonTree value={message.value} />
+      {message.unknownFields && (
+        <div className="warning" role="note">
+          {t("detail.unknownFields", {
+            type: message.typeName ?? "",
+            fields: message.unknownFields.map((u) => (u.path ? `${u.path} #${u.number}` : `#${u.number}`)).join(", "),
+          })}
+        </div>
+      )}
+      <JsonTree value={message.value} describe={type ? fieldDescriber(type) : undefined} />
     </div>
   );
 }
@@ -173,5 +235,47 @@ function HeaderTable({ headers }: { headers: Header[] }) {
         ))}
       </tbody>
     </table>
+  );
+}
+
+function CopyAsMenu({ call, schemaRef }: { call: DecodedCall; schemaRef?: SchemaRef }) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const items = [
+    { label: t("detail.copyBufCurl"), command: toBufCurl(call, schemaRef) },
+    { label: t("detail.copyGrpcurl"), command: toGrpcurl(call, schemaRef) },
+  ];
+  return (
+    <div
+      className="copy-as"
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
+      }}
+      onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+    >
+      <button aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}>
+        {copied ? t("detail.copied") : t("detail.copyAs")}
+      </button>
+      {open && (
+        <div className="menu" role="menu">
+          {items.map((item) => (
+            <button
+              key={item.label}
+              role="menuitem"
+              disabled={!item.command}
+              title={item.command ? undefined : t("detail.copyUnavailable")}
+              onClick={() => {
+                copyText(item.command!);
+                setOpen(false);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1000);
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

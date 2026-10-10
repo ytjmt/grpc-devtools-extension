@@ -1,9 +1,29 @@
 import { useState } from "react";
 
 /** Collapsible JSON viewer in the style of the DevTools preview pane. */
-export function JsonTree({ value, name, depth = 0 }: { value: unknown; name?: string; depth?: number }) {
+export function JsonTree({
+  value,
+  name,
+  depth = 0,
+  path = [],
+  describe,
+}: {
+  value: unknown;
+  name?: string;
+  depth?: number;
+  /** Keys from the root to this value. */
+  path?: string[];
+  /** Tooltip for a key, e.g. the schema field it maps to. */
+  describe?: (path: string[]) => string | undefined;
+}) {
   const [open, setOpen] = useState(depth < 2);
-  const label = name !== undefined ? <span className="jt-key">{name}: </span> : null;
+  const info = name !== undefined ? describe?.(path) : undefined;
+  const label =
+    name !== undefined ? (
+      <span className={`jt-key ${info ? "has-info" : ""}`} title={info}>
+        {name}:{" "}
+      </span>
+    ) : null;
 
   if (value === null || typeof value !== "object") {
     return (
@@ -25,7 +45,10 @@ export function JsonTree({ value, name, depth = 0 }: { value: unknown; name?: st
         {label}
         <span className="jt-summary">{summary}</span>
       </div>
-      {open && entries.map(([k, v]) => <JsonTree key={k} name={k} value={v} depth={depth + 1} />)}
+      {open &&
+        entries.map(([k, v]) => (
+          <JsonTree key={k} name={k} value={v} depth={depth + 1} path={[...path, k]} describe={describe} />
+        ))}
     </>
   );
 }

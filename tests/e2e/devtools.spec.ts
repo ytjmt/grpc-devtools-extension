@@ -88,6 +88,22 @@ test("decodes every protocol with an uploaded schema", async ({ app, devtools },
     }
   });
 
+  await test.step("message type opens in the schema browser", async () => {
+    await row(panel, "Greet", "grpc-web").click();
+    await tab(panel, "Response").click();
+    await panel.getByRole("link", { name: "demo.v1.GreetResponse" }).click();
+    await expect(panel.getByRole("heading", { name: "demo.v1.GreetResponse" })).toBeVisible();
+    await expect(panel.locator(".type-detail")).toContainText("Response for DemoService.Greet.");
+    await panel.getByRole("button", { name: "Schemas (1)" }).click();
+  });
+
+  await test.step("copy as buf curl", async () => {
+    await row(panel, "Greet", "grpc-web").click();
+    await panel.getByRole("button", { name: "Copy as…" }).click();
+    await panel.getByRole("menuitem", { name: "Copy as buf curl" }).click();
+    await expect(panel.getByRole("button", { name: "Copied" })).toBeVisible();
+  });
+
   await test.step("Connect unary with JSON codec", async () => {
     await row(panel, "Greet", "connect").and(panel.locator('[data-codec="json"]')).click();
     await expect(panel.locator(".message .badge")).toHaveText("json");
@@ -100,7 +116,8 @@ test("disabling a schema falls back to schemaless", async ({ app, devtools }) =>
   const panel = await devtools.openPanel();
   await uploadSchema(panel);
 
-  await panel.getByRole("button", { name: /^Schemas/ }).click();
+  await panel.getByRole("button", { name: "Schemas (1)" }).click();
+  await panel.getByRole("tab", { name: "Manage" }).click();
   // The checkbox reflects IndexedDB state, so it flips after the async write.
   const enabled = panel.locator(".schema-header input[type=checkbox]");
   await enabled.click();

@@ -1,11 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { demoCalls } from "../fixtures/builders";
+import { demoCalls, syntheticCalls } from "../fixtures/builders";
 import { loadDescriptor } from "../support/fakeSchemaBackend";
 import { demoSchemaSource, descriptorUrl, renderPanel } from "../support/renderPanel";
 
 const rowCount = () => document.querySelectorAll(".list tbody tr").length;
 const schemasButton = (n: number) => page.getByRole("button", { name: `Schemas (${n})` });
+/** "Schemas (n)" opens Browse when schemas exist; management lives under the Manage tab. */
+async function openManage(n: number) {
+  await schemasButton(n).click();
+  if (n > 0) await page.getByRole("tab", { name: "Manage" }).click();
+}
 
 describe("Panel", () => {
   it("filters by method and by errors", async () => {
@@ -84,7 +89,7 @@ describe("Panel", () => {
     const { sources } = await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
     await expect.element(schemasButton(1)).toBeVisible();
 
-    await schemasButton(1).click();
+    await openManage(1);
     await page.getByRole("checkbox").last().click();
     await expect.element(schemasButton(0)).toBeVisible();
     expect(sources.get("demo")?.enabled).toBe(false);
@@ -121,7 +126,7 @@ describe("schema scopes", () => {
 
   it("edits scopes and keeps the editor open on invalid input", async () => {
     const { sources } = await renderPanel({ sources: [await demoSchemaSource()] });
-    await page.getByRole("button", { name: "Schemas (1)" }).click();
+    await openManage(1);
     expect(scopesText()).toContain("All requests");
 
     await page.getByRole("button", { name: "Edit" }).click();
@@ -164,7 +169,7 @@ describe("schema scopes", () => {
     await expect.element(page.getByText("b-local.binpb", { exact: true })).toBeVisible();
     expect(document.querySelectorAll('[role="note"]')).toHaveLength(0);
 
-    await page.getByRole("button", { name: "Schemas (2)" }).click();
+    await openManage(2);
     expect(document.querySelectorAll('[role="note"]')).toHaveLength(0);
   });
 
@@ -182,9 +187,77 @@ describe("schema scopes", () => {
       .element(page.getByRole("note"))
       .toMatchTextContent("demo.v1.DemoService is also defined in b.binpb; decoded with a.binpb");
 
-    await page.getByRole("button", { name: "Schemas (2)" }).click();
+    await openManage(2);
     await expect
       .element(page.getByRole("note").first())
       .toMatchTextContent("b.binpb also defines demo.v1.DemoService for the same requests");
+  });
+});
+
+describe("calls and schemas together", () => {
+  const selectGrpcWebGreet = () =>
+    page.elementLocator(document.querySelector('tr[data-method="Greet"][data-transport="grpc-web"]')!).click();
+
+  it("opens a message type from the call detail in the browser", async () => {
+    await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
+    await expect.element(schemasButton(1)).toBeVisible();
+    await selectGrpcWebGreet();
+    await page.getByRole("link", { name: "demo.v1.GreetResponse" }).click();
+    await expect.element(page.getByRole("tab", { name: "Browse" })).toHaveAttribute("aria-selected", "true");
+    await expect.element(page.getByRole("heading", { name: "demo.v1.GreetResponse" })).toBeVisible();
+  });
+
+  it("describes JSON keys with their schema field", async () => {
+    await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
+    await expect.element(schemasButton(1)).toBeVisible();
+    await selectGrpcWebGreet();
+    await page.getByRole("button", { name: "Request", exact: true }).click();
+    const key = [...document.querySelectorAll(".jt-key")].find((k) => k.textContent === "bigNumber: ");
+    expect(key?.getAttribute("title")).toBe("#2 big_number: int64\nAbove 2^53, to check that int64 stays exact in JSON.");
+    const tags = [...document.querySelectorAll(".jt-key")].find((k) => k.textContent === "tags: ");
+    expect(tags?.getAttribute("title")).toBe("#4 tags: repeated string");
+  });
+
+  it("warns when the response has fields the schema lacks", async () => {
+    await renderPanel({ calls: [syntheticCalls.unknownFields()], sources: [await demoSchemaSource()] });
+    await expect.element(schemasButton(1)).toBeVisible();
+    await page.elementLocator(document.querySelector("tbody tr")!).click();
+    await expect
+      .element(page.getByRole("note"))
+      .toMatchTextContent("Field numbers not defined in demo.v1.GreetResponse: #9. The registered schema may be older");
+  });
+
+  it("copies the call as buf curl or grpcurl", async () => {
+    const execCommand = vi.spyOn(document, "execCommand");
+    let copied = "";
+    const original = HTMLTextAreaElement.prototype.select;
+    HTMLTextAreaElement.prototype.select = function () {
+      copied = this.value;
+      original.call(this);
+    };
+    try {
+      await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
+      await expect.element(schemasButton(1)).toBeVisible();
+      await selectGrpcWebGreet();
+      await page.getByRole("button", { name: "Copy as…" }).click();
+      await page.getByRole("menuitem", { name: "Copy as buf curl" }).click();
+      expect(execCommand).toHaveBeenCalledWith("copy");
+      expect(copied).toMatch(/^buf curl \\\n {2}--schema 'descriptor\.binpb' \\\n {2}--protocol grpcweb/);
+      await expect.element(page.getByRole("button", { name: "Copied" })).toBeVisible();
+
+      await page.getByRole("button", { name: /Copy as…|Copied/ }).click();
+      await page.getByRole("menuitem", { name: "Copy as grpcurl" }).click();
+      expect(copied).toContain("demo.v1.DemoService/Greet");
+    } finally {
+      HTMLTextAreaElement.prototype.select = original;
+    }
+  });
+
+  it("disables copy commands when the request has no schema", async () => {
+    await renderPanel({ calls: demoCalls });
+    await selectGrpcWebGreet();
+    await page.getByRole("button", { name: "Copy as…" }).click();
+    await expect.element(page.getByRole("menuitem", { name: "Copy as buf curl" })).toBeDisabled();
+    await expect.element(page.getByRole("menuitem", { name: "Copy as grpcurl" })).toBeDisabled();
   });
 });

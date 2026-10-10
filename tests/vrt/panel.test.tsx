@@ -42,6 +42,12 @@ const selectRow = (method: string, transport?: string) => async () => {
   await page.elementLocator(document.querySelector(selector)!).click();
 };
 const openTab = (name: string) => page.getByRole("button", { name, exact: true }).click();
+const openManage = async (n: number) => {
+  await page.getByRole("button", { name: `Schemas (${n})` }).click();
+  await page.getByRole("tab", { name: "Manage" }).click();
+};
+const openBrowse = (n: number) => page.getByRole("button", { name: `Schemas (${n})` }).click();
+const openTree = (name: string) => page.getByRole("treeitem", { name, exact: true }).click();
 
 describe.each<Theme>(["light", "dark"])("%s theme", (theme) => {
   test("call list", () => shot("list", { theme }));
@@ -51,12 +57,31 @@ describe.each<Theme>(["light", "dark"])("%s theme", (theme) => {
 
   test("error status", () => shot("detail-error", { theme, act: selectRow("Fail") }));
 
+  test("schema browser: service", () => shot("browse-service", { theme, act: () => openBrowse(1) }));
+
+  test("schema browser: message", () =>
+    shot("browse-message", {
+      theme,
+      size: { width: 900, height: 520 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("GreetRequest");
+      },
+    }));
+
+  test("call detail with copy menu", () =>
+    shot("detail-copy-menu", {
+      theme,
+      act: async () => {
+        await selectRow("Greet", "grpc-web")();
+        await page.getByRole("button", { name: "Copy as…" }).click();
+      },
+    }));
+
   test("schemas view", () =>
     shot("schemas", {
       theme,
-      act: async () => {
-        await page.getByRole("button", { name: "Schemas (1)" }).click();
-      },
+      act: () => openManage(1),
     }));
 });
 
@@ -105,6 +130,37 @@ describe("light theme details", () => {
 
   test("empty state", () => shot("empty", { theme, calls: [] }));
 
+  test("schema browser: enum and usages", () =>
+    shot("browse-enum", {
+      theme,
+      act: async () => {
+        await openBrowse(1);
+        await openTree("Mood");
+      },
+    }));
+
+  test("schema browser: search", () =>
+    shot("browse-search", {
+      theme,
+      act: async () => {
+        await openBrowse(1);
+        await page.getByRole("searchbox").fill("name");
+      },
+    }));
+
+  test("schema browser: narrow pane", () =>
+    shot("browse-narrow", {
+      theme,
+      size: { width: 420, height: 640 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("GreetResponse");
+      },
+    }));
+
+  test("unknown fields warning", () =>
+    shot("detail-unknown-fields", { theme, calls: [syntheticCalls.unknownFields()], act: selectRow("Greet") }));
+
   test("schemas scoped per environment", async () => {
     const stgUrl = "https://stg.example.com/_devtools/descriptor.binpb";
     return shot("schemas-scoped", {
@@ -120,7 +176,7 @@ describe("light theme details", () => {
         }),
       ],
       urls: { [stgUrl]: await loadDescriptor(descriptorUrl) },
-      act: () => page.getByRole("button", { name: "Schemas (2)" }).click(),
+      act: () => openManage(2),
     });
   });
 
@@ -131,14 +187,14 @@ describe("light theme details", () => {
         await demoSchemaSource({ id: "a", name: "api-v1.binpb" }),
         await demoSchemaSource({ id: "b", name: "api-v1-old.binpb" }),
       ],
-      act: () => page.getByRole("button", { name: "Schemas (2)" }).click(),
+      act: () => openManage(2),
     }));
 
   test("scope editor", () =>
     shot("schemas-scope-editor", {
       theme,
       act: async () => {
-        await page.getByRole("button", { name: "Schemas (1)" }).click();
+        await openManage(1);
         await page.getByRole("button", { name: "Edit" }).click();
         await page.getByLabelText("Applies to").fill("http://localhost:8080/*\nhttps://*.stg.example.com/*");
       },

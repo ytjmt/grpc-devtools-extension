@@ -76,6 +76,8 @@ input[type="url"],
 }
 
 .app {
+  /* Layout adapts to the panel's own width (container queries below). */
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -487,4 +489,275 @@ table.headers td {
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 3px 6px;
+}
+
+/* Schemas view: Browse / Manage */
+.schemas-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.schemas-view > .schemas {
+  flex: 1;
+}
+
+/* Schema browser */
+.browser {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.browser-nav {
+  flex: 0 0 clamp(180px, 32%, 320px);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  min-height: 0;
+}
+
+.browser-nav .filter {
+  margin: 6px;
+  flex: none;
+  width: auto;
+}
+
+.tree {
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 8px;
+}
+
+.tree-schema {
+  padding: 4px 8px;
+  font-weight: 600;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tree-row:hover {
+  background: var(--bg-alt);
+}
+
+.tree-row.selected {
+  background: var(--bg-selected);
+}
+
+.tree-kind {
+  flex: none;
+  width: 14px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.tree-row.kind-package .tree-label {
+  font-weight: 600;
+}
+
+.tree-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tree-hint {
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.browser-detail {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.type-detail {
+  flex: 1;
+  overflow: auto;
+  padding: 8px 12px;
+}
+
+.type-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.type-header h2 {
+  margin: 0;
+  font: 600 14px ui-monospace, Menlo, monospace;
+}
+
+.type-kind {
+  color: var(--json-key);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.comment {
+  margin: 6px 0 10px;
+  white-space: pre-wrap;
+  color: var(--muted);
+}
+
+.decl-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0 12px;
+}
+
+.decl-table th {
+  text-align: left;
+  font-weight: normal;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  padding: 3px 8px 3px 0;
+}
+
+.decl-table td {
+  vertical-align: top;
+  padding: 3px 8px 3px 0;
+  border-bottom: 1px solid var(--bg-alt);
+}
+
+.decl-table .num {
+  width: 32px;
+  text-align: right;
+  padding-right: 12px;
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.decl-table .mono,
+.decl-table td:nth-child(2) {
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.decl-table tr.in-oneof td:nth-child(2) {
+  padding-left: 14px;
+}
+
+.decl-table tr.oneof-row td {
+  border-bottom: none;
+  padding-top: 6px;
+}
+
+.decl-table tr.highlight td {
+  background: var(--bg-selected);
+}
+
+.decl-table tr.comment-row td {
+  color: var(--muted);
+  font-family: inherit;
+  padding-left: 12px;
+}
+
+.deprecated {
+  text-decoration: line-through;
+}
+
+.decl-section h3 {
+  margin: 8px 0 4px;
+  font-size: 12px;
+}
+
+.decl-section ul {
+  margin: 0;
+  padding-left: 18px;
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.type-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.type-link:hover {
+  text-decoration: underline;
+}
+
+/* JSON keys that map to a schema field show their info on hover. */
+.jt-key.has-info {
+  cursor: help;
+  text-decoration: underline dotted var(--muted);
+  text-underline-offset: 2px;
+}
+
+/* Copy as… menu in the detail tab bar */
+.copy-as {
+  position: relative;
+  align-self: center;
+  margin-right: 6px;
+}
+
+.copy-as > button {
+  white-space: nowrap;
+}
+
+.copy-as .menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 2px);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 170px;
+  padding: 4px 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+}
+
+.copy-as .menu button {
+  border: none;
+  border-radius: 0;
+  background: none;
+  text-align: left;
+  padding: 4px 12px;
+}
+
+.copy-as .menu button:hover:not(:disabled) {
+  background: var(--bg-selected);
+}
+
+.copy-as .menu button:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+
+.detail-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+
+.detail-bar .tabs {
+  flex: 1;
+  min-width: 0;
+  border-bottom: none;
+}
+
+@container (max-width: 600px) {
+  .browser {
+    flex-direction: column;
+  }
+
+  .browser-nav {
+    flex: 0 0 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
 }

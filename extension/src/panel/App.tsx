@@ -1,7 +1,9 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
 import type { CaptureStore } from "../capture";
 import { t } from "../i18n";
+import type { SchemaRef } from "../core/curl";
 import { CallDetail } from "./CallDetail";
+import { SchemaBrowser, type BrowseSchema, type BrowseSelection } from "./SchemaBrowser";
 import { CallList } from "./CallList";
 import type { SchemaBackend } from "./schemaBackend";
 import { SchemasView } from "./SchemasView";
@@ -23,6 +25,20 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
   const [filter, setFilter] = useState("");
   const [errorsOnly, setErrorsOnly] = useState(false);
   const [view, setView] = useState<"calls" | "schemas">("calls");
+  const [schemasTab, setSchemasTab] = useState<"browse" | "manage">("browse");
+  const [browseSelection, setBrowseSelection] = useState<BrowseSelection>();
+  const openSchemas = (tab: "browse" | "manage", selection?: BrowseSelection) => {
+    setView("schemas");
+    setSchemasTab(tab);
+    if (selection) setBrowseSelection(selection);
+  };
+  const browseSchemas = useMemo<BrowseSchema[]>(
+    () =>
+      schemas.entries.flatMap(({ source, loaded }) =>
+        source.enabled && loaded ? [{ id: source.id, name: source.name, registry: loaded.registry }] : [],
+      ),
+    [schemas.entries],
+  );
 
   const visible = useMemo(() => {
     const q = filter.trim().toLowerCase();
@@ -32,6 +48,10 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
     });
   }, [rows, filter, errorsOnly]);
   const selected = rows.find((r) => r.raw.id === selectedId);
+  const schemaRefOf = (id: string | undefined): SchemaRef | undefined => {
+    const source = schemas.entries.find((e) => e.source.id === id)?.source;
+    return source && { kind: source.kind, name: source.name, url: source.url };
+  };
   const enabledSchemas = schemas.entries.filter((e) => e.source.enabled && e.loaded).length;
 
   return (
@@ -58,14 +78,35 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
         <span className="spacer" />
         <button
           className={view === "schemas" ? "active" : ""}
-          onClick={() => setView(view === "schemas" ? "calls" : "schemas")}
+          onClick={() =>
+            view === "schemas" ? setView("calls") : openSchemas(browseSchemas.length ? "browse" : "manage")
+          }
         >
           {t("toolbar.schemas", { count: enabledSchemas })}
         </button>
       </div>
 
       {view === "schemas" ? (
-        <SchemasView schemas={schemas} />
+        <div className="schemas-view">
+          <div className="tabs" role="tablist">
+            {(["browse", "manage"] as const).map((tab) => (
+              <button
+                key={tab}
+                role="tab"
+                aria-selected={schemasTab === tab}
+                className={schemasTab === tab ? "active" : ""}
+                onClick={() => setSchemasTab(tab)}
+              >
+                {t(`schemas.tab.${tab}`)}
+              </button>
+            ))}
+          </div>
+          {schemasTab === "browse" ? (
+            <SchemaBrowser schemas={browseSchemas} selection={browseSelection} onSelect={setBrowseSelection} />
+          ) : (
+            <SchemasView schemas={schemas} />
+          )}
+        </div>
       ) : (
         <div className={`main ${selected ? "with-detail" : ""}`}>
           <CallList
@@ -75,7 +116,17 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
             empty={rows.length === 0}
           />
           {selected && (
-            <CallDetail row={selected} onClose={() => setSelectedId(undefined)} onOpenSchemas={() => setView("schemas")} />
+            <CallDetail
+              row={selected}
+              schemaRef={schemaRefOf(selected.call?.schemaId)}
+              onClose={() => setSelectedId(undefined)}
+              onOpenSchemas={() => openSchemas("manage")}
+              onOpenType={
+                selected.call?.schemaId
+                  ? (typeName) => openSchemas("browse", { schemaId: selected.call!.schemaId!, typeName })
+                  : undefined
+              }
+            />
           )}
         </div>
       )}
