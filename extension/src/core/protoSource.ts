@@ -29,6 +29,7 @@ import {
 } from "@bufbuild/protobuf/wkt";
 import { locate, sourceLocation } from "./comments";
 import { fieldTypeName, fieldTypeRef } from "./fields";
+import type { TypeDesc } from "./schemaTree";
 
 /**
  * Reconstructs .proto source text from descriptors, for reading a schema in its
@@ -51,8 +52,6 @@ export interface ProtoSource {
   ranges: Map<string, { start: number; end: number }>;
 }
 
-export type TopLevelDesc = DescMessage | DescEnum | DescService;
-
 /** The whole file: syntax, package, imports, options, and every declaration. */
 export function fileSource(file: DescFile): ProtoSource {
   const w = new Writer(file);
@@ -61,7 +60,7 @@ export function fileSource(file: DescFile): ProtoSource {
 }
 
 /** One message, enum, or service with everything nested in it. */
-export function typeSource(desc: TopLevelDesc): ProtoSource {
+export function typeSource(desc: TypeDesc): ProtoSource {
   const w = new Writer(desc.file);
   if (desc.kind === "message") w.message(desc);
   else if (desc.kind === "enum") w.enum(desc);
@@ -222,8 +221,8 @@ class Writer {
 
   file() {
     const p = this.f.proto;
-    const items: Item[] = [];
-    items.push(
+    const header: Item[] = [];
+    header.push(
       this.editions()
         ? {
             ...this.at([FILE_EDITION]),
@@ -238,7 +237,7 @@ class Writer {
           },
     );
     if (p.package) {
-      items.push({
+      header.push({
         ...this.at([FILE_PACKAGE]),
         group: "package",
         write: () => this.decl([FILE_PACKAGE], [kw("package"), " ", p.package]),
@@ -246,21 +245,26 @@ class Writer {
     }
     p.dependency.forEach((dep, i) => {
       const modifier = p.publicDependency.includes(i) ? "public" : p.weakDependency.includes(i) ? "weak" : undefined;
-      items.push({
+      header.push({
         ...this.at([FILE_DEPENDENCY, i]),
         group: "import",
         write: () => this.decl([FILE_DEPENDENCY, i], [kw("import"), " ", ...(modifier ? [kw(modifier), " "] : []), str(dep)]),
       });
     });
-    items.push(...this.optionItems(FileOptionsSchema, p.options, [FILE_OPTIONS]));
-    items.push(...this.typeItems(this.f.enums, this.f.messages, this.f.services));
-    items.push(...this.extendItems(this.f.extensions, FILE_EXTENSION, []));
-    // Keep the header order (syntax, package, imports, options) even without source info.
-    this.items(items.map((item, i) => (item.line === UNKNOWN_LINE && item.group !== BLOCK ? { ...item, line: i - items.length } : item)));
+    header.push(...this.optionItems(FileOptionsSchema, p.options, [FILE_OPTIONS]));
+    // Without source info, keep the header statements first and in their usual order.
+    header.forEach((item, i) => {
+      if (item.line === UNKNOWN_LINE) item.line = i - header.length;
+    });
+    this.items([
+      ...header,
+      ...this.typeItems(this.f.enums, this.f.messages, this.f.services),
+      ...this.extendItems(this.f.extensions, FILE_EXTENSION, []),
+    ]);
   }
 
   private typeItems(enums: DescEnum[], messages: DescMessage[], services: DescService[] = []): Item[] {
-    const all: (DescEnum | DescMessage | DescService)[] = [...enums, ...messages, ...services];
+    const all: TypeDesc[] = [...enums, ...messages, ...services];
     return all.map((d) => ({
       ...this.at(locate(d).path),
       group: BLOCK,
@@ -285,7 +289,7 @@ class Writer {
       ...m.members.map((member) =>
         member.kind === "oneof"
           ? { ...this.at(locate(member).path), group: BLOCK, write: () => this.oneof(member) }
-          : { ...this.at(locate(member).path), group: "field", write: () => this.field(member, m.typeName) },
+          : { ...this.at(locate(member).path), group: "field", write: () => this.field(member, m.typeName, locate(member).path) },
       ),
       ...this.extendItems(m.nestedExtensions, MESSAGE_EXTENSION, path),
     ];
@@ -300,7 +304,7 @@ class Writer {
         ...o.fields.map((f) => ({
           ...this.at(locate(f).path),
           group: "field",
-          write: () => this.field(f, o.parent.typeName),
+          write: () => this.field(f, o.parent.typeName, locate(f).path),
         })),
       ]),
     );
@@ -311,7 +315,7 @@ class Writer {
     return this.f.edition === Edition.EDITION_PROTO2 && f.proto.type === FieldDescriptorProto_Type.GROUP;
   }
 
-  private field(f: DescField | DescExtension, scope: string, path = locate(f as DescField).path) {
+  private field(f: DescField | DescExtension, scope: string, path: number[]) {
     const label = this.label(f);
     const head: Part[] = label ? [kw(label), " "] : [];
     const options = this.fieldOptions(f);
@@ -335,8 +339,8 @@ class Writer {
   }
 
   private typeParts(f: DescField | DescExtension, scope: string): Part[] {
-    const name = fieldTypeName(f as DescField);
-    const ref = fieldTypeRef(f as DescField);
+    const name = fieldTypeName(f);
+    const ref = fieldTypeRef(f);
     if (!ref) return [{ text: name, kind: f.fieldKind === "map" ? undefined : "scalar" }];
     const at = name.lastIndexOf(ref);
     return [name.slice(0, at), { text: this.relativeName(ref, scope), ref }, name.slice(at + ref.length)];

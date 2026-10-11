@@ -5,7 +5,7 @@ import { toBufCurl, toGrpcurl, type SchemaRef } from "../core/curl";
 import { fieldAt, fieldLabel, fieldTypeName } from "../core/fields";
 import type { DecodedCall, DecodedMessage, Header, RawCall } from "../core/types";
 import { renderText, t } from "../i18n";
-import { copyText } from "./clipboard";
+import { useCopy } from "./clipboard";
 import { JsonTree } from "./JsonTree";
 import type { CallRow } from "./useDecodedRows";
 
@@ -168,12 +168,8 @@ function MessageView({
   count: number;
   onOpenType?: (typeName: string) => void;
 }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    copyText(JSON.stringify(message.value, null, 2));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
-  };
+  const [copied, copyNow] = useCopy();
+  const copy = () => copyNow(JSON.stringify(message.value, null, 2));
   const { type } = message;
   return (
     <div className="message">
@@ -240,7 +236,7 @@ function HeaderTable({ headers }: { headers: Header[] }) {
 
 function CopyAsMenu({ call, schemaRef }: { call: DecodedCall; schemaRef?: SchemaRef }) {
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, copy] = useCopy();
   const items = [
     { label: t("detail.copyBufCurl"), command: toBufCurl(call, schemaRef) },
     { label: t("detail.copyGrpcurl"), command: toGrpcurl(call, schemaRef) },
@@ -265,10 +261,8 @@ function CopyAsMenu({ call, schemaRef }: { call: DecodedCall; schemaRef?: Schema
               disabled={!item.command}
               title={item.command ? undefined : t("detail.copyUnavailable")}
               onClick={() => {
-                copyText(item.command!);
+                copy(item.command!);
                 setOpen(false);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 1000);
               }}
             >
               {item.label}

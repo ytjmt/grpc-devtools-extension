@@ -5,7 +5,7 @@ import { fieldLabel, fieldTypeName, fieldTypeRef } from "../core/fields";
 import { fileSource, sourceText, typeSource, type ProtoSource } from "../core/protoSource";
 import { buildTree, buildUsages, filterTree, findType, type TreeNode, type UsageRef } from "../core/schemaTree";
 import { t } from "../i18n";
-import { copyText } from "./clipboard";
+import { useCopy } from "./clipboard";
 import { methodKey, type MethodStats } from "./methodStats";
 
 export interface BrowseSchema {
@@ -277,17 +277,9 @@ function TypeDetail({
 }
 
 function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
+  const [copied, copy] = useCopy();
   return (
-    <button
-      type="button"
-      className="copy-source"
-      onClick={() => {
-        copyText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1000);
-      }}
-    >
+    <button type="button" className="copy-source" onClick={() => copy(text)}>
       {copied ? t("detail.copied") : t("browse.copySource")}
     </button>
   );

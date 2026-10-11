@@ -1,4 +1,4 @@
-import { ScalarType, type DescField, type DescMessage } from "@bufbuild/protobuf";
+import { ScalarType, type DescExtension, type DescField, type DescMessage } from "@bufbuild/protobuf";
 
 /** proto source spelling of a scalar type, e.g. ScalarType.INT64 → "int64". */
 export function scalarName(t: ScalarType): string {
@@ -6,7 +6,7 @@ export function scalarName(t: ScalarType): string {
 }
 
 /** The field's type as written in .proto, without the label: "string", "demo.v1.Mood", "map<string, int32>". */
-export function fieldTypeName(field: DescField): string {
+export function fieldTypeName(field: DescField | DescExtension): string {
   switch (field.fieldKind) {
     case "scalar":
       return scalarName(field.scalar);
@@ -33,7 +33,7 @@ export function fieldTypeName(field: DescField): string {
 }
 
 /** The message or enum a field refers to, for linking. Maps link to their value type. */
-export function fieldTypeRef(field: DescField): string | undefined {
+export function fieldTypeRef(field: DescField | DescExtension): string | undefined {
   return field.message?.typeName ?? field.enum?.typeName;
 }
 

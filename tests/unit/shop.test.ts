@@ -12,7 +12,7 @@ import { shopCalls } from "../fixtures/builders";
 const loaded = loadDescriptorSet(readFileSync(new URL("../../example/descriptor.binpb", import.meta.url)));
 const schemas = SchemaIndex.of(loaded);
 const decoded = shopCalls.map((c) => decodeCall(c, schemas));
-const [list, getTee, getMugMasked, update, del, notFound, watch, create, invalid, outOfStock, getOrder, track] = decoded;
+const [, getTee, getMugMasked, update, del, notFound, watch, create, invalid, outOfStock, getOrder, track] = decoded;
 const response = (i = 0) => (m: { responseMessages: DecodedMessage[] }) => m.responseMessages[i].value as any;
 const { registry } = loaded;
 
