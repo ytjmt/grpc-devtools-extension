@@ -19,6 +19,7 @@
     "test:unit": "vp test run --project unit",
     "test:component": "vp test run --project component",
     "test:vrt": "docker compose up -d --wait playwright && vp test run --project vrt",
+    "prepare": "vp config --no-agent",
     "package": "scripts/package.sh",
     "release": "scripts/release.sh"
   },
