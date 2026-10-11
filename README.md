@@ -17,7 +17,7 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 
 ## Install
 
-Requires Node.js and pnpm (the version is pinned in `package.json`).
+Requires Node.js and pnpm, pinned in `.node-version` and `mise.toml`. With [mise](https://mise.jdx.dev/), `mise install` sets up both (plus `buf` and `protoc` for the example).
 
 ```bash
 pnpm install
@@ -51,7 +51,6 @@ Each schema can be limited to request URLs with **Applies to** patterns, such as
 Additional tools:
 
 - Playwright's Chromium for component and E2E tests: `pnpm exec playwright install chromium`
-- [mise](https://mise.jdx.dev/) for `buf` and `protoc` when regenerating the example: `mise install`
 - Docker for visual regression tests
 
 ```bash
