@@ -1,5 +1,5 @@
 import "../../extension/src/panel/styles.css";
-import { afterEach } from "vitest";
+import { afterEach } from "vite-plus/test";
 
 afterEach(() => {
   document.documentElement.classList.remove("dark");

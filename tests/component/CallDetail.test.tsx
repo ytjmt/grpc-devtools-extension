@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-react";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";
 import { CallDetail } from "../../extension/src/panel/CallDetail";

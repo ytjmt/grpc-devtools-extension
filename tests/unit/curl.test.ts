@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { toBufCurl, toGrpcurl } from "../../extension/src/core/curl";
 import { decodeCall } from "../../extension/src/core/decode";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";

@@ -8,7 +8,7 @@ import {
   FileDescriptorSetSchema,
 } from "@bufbuild/protobuf/wkt";
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { fileSource, sourceText, typeSource } from "../../extension/src/core/protoSource";
 import { loadDescriptorSet } from "../../extension/src/core/schema";
 

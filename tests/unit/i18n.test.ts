@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { errorText, LocalizedError, msg, renderText, t } from "../../extension/src/i18n";
 
 describe("i18n", () => {

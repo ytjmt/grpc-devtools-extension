@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { describe, expect, it, vi } from "vite-plus/test";
+import { page, userEvent } from "vite-plus/test/browser";
 import { compressionCalls, demoCalls, syntheticCalls } from "../fixtures/builders";
 import { loadDescriptor } from "../support/fakeSchemaBackend";
 import { demoSchemaSource, descriptorUrl, renderPanel } from "../support/renderPanel";

@@ -1,7 +1,10 @@
 import react from "@vitejs/plugin-react";
-import { playwright } from "@vitest/browser-playwright";
 import { join } from "node:path";
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite-plus";
+import { playwright } from "vite-plus/test/browser-playwright";
+
+// Root config for Vite+: tests, formatting, and linting. The extension and the
+// example client build with their own configs (extension/, example/client/).
 
 const browser = (viewport: { width: number; height: number }) => ({
   enabled: true,
@@ -56,5 +59,14 @@ export default defineConfig({
         },
       },
     ],
+  },
+  fmt: {
+    // The code base was written at this width.
+    printWidth: 120,
+  },
+  lint: {
+    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
+    rules: { "vite-plus/prefer-vite-plus-imports": "error" },
+    options: { typeAware: true, typeCheck: true },
   },
 });

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { deflateSync, gzipSync } from "node:zlib";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { decompressBodies, isCompressed } from "../../extension/src/core/compression";
 import { decodeCall } from "../../extension/src/core/decode";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";

@@ -1,33 +1,28 @@
 {
   "name": "grpc-devtools-extension",
   "version": "0.1.0",
+  "private": true,
   "description": "Chrome DevTools extension for inspecting gRPC-Web / Connect traffic",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "vite build -c extension/vite.config.ts",
-    "dev": "vite build -c extension/vite.config.ts --watch",
+    "build": "vp build -c extension/vite.config.ts",
+    "dev": "vp build -c extension/vite.config.ts --watch",
     "typecheck": "tsc -p .",
-    "test": "vitest run --project unit --project component",
+    "check": "vp check",
+    "fmt": "vp fmt",
+    "test": "vp test run --project unit --project component",
     "test:e2e": "pnpm build && playwright test",
     "example:gen": "mise run example:gen",
-    "example:build": "vite build -c example/client/vite.config.ts",
+    "example:build": "vp build -c example/client/vite.config.ts",
     "example:serve": "tsx example/server/server.ts",
     "fixtures:record": "pnpm build && RECORD_FIXTURES=1 playwright test record-fixtures",
-    "test:unit": "vitest run --project unit",
-    "test:component": "vitest run --project component",
-    "test:vrt": "docker compose up -d --wait playwright && vitest run --project vrt",
+    "test:unit": "vp test run --project unit",
+    "test:component": "vp test run --project component",
+    "test:vrt": "docker compose up -d --wait playwright && vp test run --project vrt",
     "package": "scripts/package.sh",
     "release": "scripts/release.sh"
   },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "12.9.1",
-      "onFail": "download"
-    }
-  },
-  "packageManager": "pnpm@12.9.1",
-  "type": "module",
   "dependencies": {
     "@bufbuild/protobuf": "^2.16.0",
     "react": "^19.3.0",
@@ -44,13 +39,21 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
-    "@vitest/browser-playwright": "^5.0.3",
+    "@vitest/browser-playwright": "catalog:",
     "fake-indexeddb": "^6.2.5",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.2",
-    "vitest": "^5.0.3",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
     "vitest-browser-react": "^2.3.0"
   },
-  "private": true
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.9.1",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.9.1"
 }

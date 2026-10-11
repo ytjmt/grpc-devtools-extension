@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { create, toBinary } from "@bufbuild/protobuf";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { GreetRequestSchema, GreetResponseSchema } from "../../example/gen/demo/v1/demo_pb";
 import { decodeCall } from "../../extension/src/core/decode";
 import { detectProtocol } from "../../extension/src/core/framing";

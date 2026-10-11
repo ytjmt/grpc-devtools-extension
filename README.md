@@ -56,6 +56,7 @@ Additional tools:
 ```bash
 pnpm dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
 pnpm typecheck
+pnpm check             # format check, lint, and type check (Vite+); `pnpm fmt` formats
 pnpm test              # unit + component tests (Vitest; components run in browser mode)
 pnpm test:e2e          # Playwright: real Chrome + DevTools + demo server
 pnpm test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)

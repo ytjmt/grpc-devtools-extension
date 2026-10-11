@@ -1,5 +1,5 @@
-import { describe, expect, test } from "vitest";
-import { page } from "vitest/browser";
+import { describe, expect, test } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import type { SchemaSource } from "../../extension/src/core/storage";
 import type { RawCall } from "../../extension/src/core/types";
 import { demoCalls, shopCalls, syntheticCalls } from "../fixtures/builders";

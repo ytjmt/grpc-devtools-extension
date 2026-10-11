@@ -21,6 +21,8 @@
   "include": [
     "extension",
     "example",
-    "tests"
+    "tests",
+    "vite.config.ts",
+    "playwright.config.ts"
   ]
 }
