@@ -90,4 +90,32 @@ describe("SchemaBrowser", () => {
     await treeItem("google.protobuf").click();
     await expect.element(treeItem("Timestamp")).toBeVisible();
   });
+
+  it("shows a type as .proto and within its whole file", async () => {
+    await render(<Harness />);
+    await treeItem("GreetResponse").click();
+    await page.getByRole("button", { name: ".proto" }).click();
+    await expect.element(page.getByRole("button", { name: ".proto" })).toHaveAttribute("aria-pressed", "true");
+    const source = () => (document.querySelector(".proto-source") as HTMLElement).innerText;
+    expect(source()).toMatch(/^\/\/ Response for DemoService.Greet.\nmessage GreetResponse \{\n/);
+    expect(source()).toContain("  Mood mood = 2;");
+
+    // Type names link to their definitions, staying in the .proto view.
+    await page.getByRole("link", { name: "Mood", exact: true }).click();
+    await expect.element(page.getByRole("heading", { name: "demo.v1.Mood" })).toBeVisible();
+    expect(source()).toMatch(/^\/\/ .*\nenum Mood \{/);
+
+    // The file view shows the whole file and highlights the selected type.
+    await page.getByRole("button", { name: "File" }).click();
+    expect(source()).toMatch(/^syntax = "proto3";\n/);
+    expect(source()).toContain("service DemoService {");
+    const marked = [...document.querySelectorAll(".proto-line.highlight")].map((l) => l.textContent);
+    expect(marked).toContain("enum Mood {");
+    expect(marked).not.toContain("message GreetRequest {");
+    await expect.element(page.getByRole("button", { name: "Copy" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Table" }).click();
+    expect(document.querySelector(".proto-source")).toBeNull();
+    expect(detail().innerText).toContain("MOOD_SLEEPY");
+  });
 });

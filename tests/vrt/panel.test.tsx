@@ -69,6 +69,17 @@ describe.each<Theme>(["light", "dark"])("%s theme", (theme) => {
       },
     }));
 
+  test("schema browser: .proto view", () =>
+    shot("browse-proto", {
+      theme,
+      size: { width: 900, height: 520 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("GreetRequest");
+        await page.getByRole("button", { name: ".proto" }).click();
+      },
+    }));
+
   test("call detail with copy menu", () =>
     shot("detail-copy-menu", {
       theme,
@@ -200,6 +211,19 @@ describe("light theme details", () => {
       act: async () => {
         await openBrowse(1);
         await openTree("OrderService");
+      },
+    }));
+
+  test("shop: nested type highlighted in its whole file", () =>
+    shot("shop-browse-file", {
+      theme,
+      calls: shopCalls,
+      size: { width: 900, height: 640 },
+      act: async () => {
+        await openBrowse(1);
+        await openTree("Product");
+        await page.getByRole("button", { name: "File" }).click();
+        await page.getByRole("link", { name: "Variant", exact: true }).click();
       },
     }));
 

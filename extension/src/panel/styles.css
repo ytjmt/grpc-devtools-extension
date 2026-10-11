@@ -598,6 +598,16 @@ table.headers td {
   padding: 8px 12px;
 }
 
+/* Keeps the type name and the view switch visible while the detail scrolls. */
+.type-detail-head {
+  position: sticky;
+  top: -8px;
+  z-index: 1;
+  margin: -8px -12px 0;
+  padding: 8px 12px 0;
+  background: var(--bg);
+}
+
 .type-header {
   display: flex;
   align-items: baseline;
@@ -613,6 +623,78 @@ table.headers td {
 .type-kind {
   color: var(--json-key);
   font-family: var(--font-mono);
+}
+
+/* Table / .proto / File switch in the type detail */
+.view-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+
+.view-switch {
+  display: inline-flex;
+}
+
+.view-switch button {
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.view-switch button:first-child {
+  border-radius: 3px 0 0 3px;
+  margin-left: 0;
+}
+
+.view-switch button:last-child {
+  border-radius: 0 3px 3px 0;
+}
+
+.view-switch button[aria-pressed="true"] {
+  position: relative;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.proto-source {
+  margin: 0 0 12px;
+  padding: 6px 0;
+  overflow-x: auto;
+  border: 1px solid var(--bg-alt);
+  border-radius: 3px;
+  line-height: 1.5;
+}
+
+.proto-line {
+  display: block;
+  padding: 0 8px;
+  border-left: 2px solid transparent;
+}
+
+.proto-line.highlight {
+  background: var(--bg-alt);
+  border-left-color: var(--accent);
+}
+
+.tok-keyword {
+  color: var(--json-key);
+}
+
+.tok-string {
+  color: var(--json-string);
+}
+
+.tok-number {
+  color: var(--json-number);
+}
+
+.tok-scalar {
+  color: var(--json-bool);
+}
+
+.tok-comment {
+  color: var(--muted);
 }
 
 .comment {

@@ -2,8 +2,10 @@ import type { DescEnum, DescField, DescMessage, DescOneof, DescService, FileRegi
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { getComment } from "../core/comments";
 import { fieldLabel, fieldTypeName, fieldTypeRef } from "../core/fields";
+import { fileSource, sourceText, typeSource, type ProtoSource } from "../core/protoSource";
 import { buildTree, buildUsages, filterTree, findType, type TreeNode, type UsageRef } from "../core/schemaTree";
 import { t } from "../i18n";
+import { copyText } from "./clipboard";
 import { methodKey, type MethodStats } from "./methodStats";
 
 export interface BrowseSchema {
@@ -37,6 +39,7 @@ export function SchemaBrowser({
   calls?: CallLinks;
 }) {
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<DetailView>("table");
   const trees = useMemo(() => schemas.map((s) => ({ schema: s, nodes: buildTree(s.registry) })), [schemas]);
   const filtered = useMemo(
     () =>
@@ -86,7 +89,14 @@ export function SchemaBrowser({
       </div>
       <div className="browser-detail">
         {current && selectedSchema ? (
-          <TypeDetail schema={selectedSchema} selection={current} onSelect={onSelect} calls={calls} />
+          <TypeDetail
+            schema={selectedSchema}
+            selection={current}
+            onSelect={onSelect}
+            calls={calls}
+            view={view}
+            onViewChange={setView}
+          />
         ) : (
           <div className="empty">{t("browse.selectType")}</div>
         )}
@@ -187,42 +197,160 @@ function kindIcon(kind: TreeNode["kind"]): string {
   return { package: "📦", service: "S", method: "ƒ", message: "M", enum: "E" }[kind];
 }
 
+/** How a type is shown: as tables, as reconstructed .proto, or within its whole .proto file. */
+export type DetailView = "table" | "proto" | "file";
+
+const VIEWS = [
+  ["table", "browse.viewTable"],
+  ["proto", "browse.viewProto"],
+  ["file", "browse.viewFile"],
+] as const;
+
 function TypeDetail({
   schema,
   selection,
   onSelect,
   calls,
+  view,
+  onViewChange,
 }: {
   schema: BrowseSchema;
   selection: BrowseSelection;
   onSelect: (s: BrowseSelection) => void;
   calls?: CallLinks;
+  view: DetailView;
+  onViewChange: (view: DetailView) => void;
 }) {
   const desc = findType(schema.registry, selection.typeName);
   const usages = useMemo(() => buildUsages(schema.registry), [schema.registry]);
   const link = (typeName: string) => () => onSelect({ schemaId: schema.id, typeName });
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    ref.current?.scrollTo({ top: 0 });
-  }, [selection.typeName]);
+    // The file view scrolls to the selected type itself.
+    if (view !== "file") ref.current?.scrollTo({ top: 0 });
+  }, [selection.typeName, view]);
+  const source = useMemo(
+    () => (desc && view !== "table" ? (view === "file" ? fileSource(desc.file) : typeSource(desc)) : undefined),
+    [desc, view],
+  );
 
   if (!desc) return <div className="empty">{t("browse.notFound", { type: selection.typeName })}</div>;
   return (
     <div ref={ref} className="type-detail">
-      <div className="type-header">
-        <span className="type-kind">{desc.kind === "service" ? "service" : desc.kind}</span>{" "}
-        <h2>{desc.typeName}</h2>
-        {desc.deprecated && <span className="badge warn">{t("browse.deprecated")}</span>}
-        <span className="muted"> · {desc.file.proto.name}</span>
+      <div className="type-detail-head">
+        <div className="type-header">
+          <span className="type-kind">{desc.kind === "service" ? "service" : desc.kind}</span>{" "}
+          <h2>{desc.typeName}</h2>
+          {desc.deprecated && <span className="badge warn">{t("browse.deprecated")}</span>}
+          <span className="muted"> · {desc.file.proto.name}</span>
+        </div>
+        <div className="view-bar">
+          <div className="view-switch" role="group" aria-label={t("browse.view")}>
+            {VIEWS.map(([v, label]) => (
+              <button key={v} type="button" aria-pressed={view === v} onClick={() => onViewChange(v)}>
+                {t(label)}
+              </button>
+            ))}
+          </div>
+          {source && <CopyButton text={sourceText(source)} />}
+        </div>
       </div>
-      <Comment text={getComment(desc)} />
-      {desc.kind === "service" && (
-        <ServiceBody service={desc} member={selection.member} link={link} schemaId={schema.id} calls={calls} />
+      {source ? (
+        <ProtoView
+          source={source}
+          highlight={view === "file" ? source.ranges.get(desc.typeName) : undefined}
+          link={link}
+        />
+      ) : (
+        <>
+          <Comment text={getComment(desc)} />
+          {desc.kind === "service" && (
+            <ServiceBody service={desc} member={selection.member} link={link} schemaId={schema.id} calls={calls} />
+          )}
+          {desc.kind === "message" && <MessageBody message={desc} link={link} />}
+          {desc.kind === "enum" && <EnumBody en={desc} />}
+        </>
       )}
-      {desc.kind === "message" && <MessageBody message={desc} link={link} />}
-      {desc.kind === "enum" && <EnumBody en={desc} />}
-      {desc.kind !== "service" && <Usages refs={usages.get(desc.typeName) ?? []} link={link} />}
+      {desc.kind !== "service" && view !== "file" && <Usages refs={usages.get(desc.typeName) ?? []} link={link} />}
     </div>
+  );
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      className="copy-source"
+      onClick={() => {
+        copyText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1000);
+      }}
+    >
+      {copied ? t("detail.copied") : t("browse.copySource")}
+    </button>
+  );
+}
+
+/** Reconstructed .proto text; type names link to their definitions, and `highlight` marks (and scrolls to) a type. */
+function ProtoView({
+  source,
+  highlight,
+  link,
+}: {
+  source: ProtoSource;
+  highlight?: { start: number; end: number };
+  link: (t: string) => () => void;
+}) {
+  const first = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    // Scroll only the detail pane, keeping the line below its sticky header.
+    const line = first.current;
+    const scroller = line?.closest(".type-detail");
+    if (!line || !scroller) return;
+    const head = scroller.querySelector(".type-detail-head")?.getBoundingClientRect().height ?? 0;
+    scroller.scrollTop += line.getBoundingClientRect().top - scroller.getBoundingClientRect().top - head - 8;
+  }, [highlight?.start, source]);
+  return (
+    <pre className="proto-source" aria-label={t("browse.protoSource")}>
+      <code>
+        {source.lines.map((line, i) => {
+          const marked = highlight && i >= highlight.start && i < highlight.end;
+          return (
+            <span
+              key={i}
+              ref={i === highlight?.start ? first : undefined}
+              className={`proto-line ${marked ? "highlight" : ""}`}
+            >
+              {line.length === 0
+                ? " "
+                : line.map((token, j) =>
+                    token.ref ? (
+                      <a
+                        key={j}
+                        href="#"
+                        className="type-link"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          link(token.ref!)();
+                        }}
+                      >
+                        {token.text}
+                      </a>
+                    ) : token.kind ? (
+                      <span key={j} className={`tok-${token.kind}`}>
+                        {token.text}
+                      </span>
+                    ) : (
+                      token.text
+                    ),
+                  )}
+            </span>
+          );
+        })}
+      </code>
+    </pre>
   );
 }
 

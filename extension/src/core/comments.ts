@@ -1,4 +1,5 @@
 import type { DescEnum, DescEnumValue, DescField, DescFile, DescMessage, DescMethod, DescOneof, DescService } from "@bufbuild/protobuf";
+import type { SourceCodeInfo_Location } from "@bufbuild/protobuf/wkt";
 
 export type Commentable = DescMessage | DescEnum | DescEnumValue | DescField | DescOneof | DescService | DescMethod;
 
@@ -13,7 +14,8 @@ const MESSAGE_ONEOF_DECL = 8;
 const ENUM_VALUE = 2;
 const SERVICE_METHOD = 2;
 
-function locate(desc: Commentable): { file: DescFile; path: number[] } {
+/** The SourceCodeInfo path of a declaration, e.g. [4, 0, 2, 1] for the second field of the first message. */
+export function locate(desc: Commentable): { file: DescFile; path: number[] } {
   switch (desc.kind) {
     case "message":
       return desc.parent
@@ -41,15 +43,20 @@ function child(parent: Commentable, fieldNumber: number, index: number) {
   return { file, path: [...path, fieldNumber, index] };
 }
 
+/** The source location recorded for a path, when the descriptor set has source info. */
+export function sourceLocation(file: DescFile, path: readonly number[]): SourceCodeInfo_Location | undefined {
+  return file.proto.sourceCodeInfo?.location.find(
+    (l) => l.path.length === path.length && l.path.every((n, i) => n === path[i]),
+  );
+}
+
 /**
  * The comment attached to a declaration in the .proto source, if the descriptor
  * set was built with source info (`buf build` does; protoc needs --include_source_info).
  */
 export function getComment(desc: Commentable): string | undefined {
   const { file, path } = locate(desc);
-  const location = file.proto.sourceCodeInfo?.location.find(
-    (l) => l.path.length === path.length && l.path.every((n, i) => n === path[i]),
-  );
+  const location = sourceLocation(file, path);
   const text = location?.leadingComments || location?.trailingComments;
   if (!text) return undefined;
   // Comments keep the space after `//` on each line; strip it and surrounding blank lines.

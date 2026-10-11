@@ -9,7 +9,7 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 - Decodes gRPC-Web (binary and text) and Connect (unary, GET, and server streaming), with proto or JSON encoding
 - Shows request and response messages, headers, trailers, gRPC status, and error details
 - Decodes messages by field name with your schema, or by field number without one
-- Browses registered schemas: services, messages, enums, `.proto` comments, type links, and where each type is used
+- Browses registered schemas: services, messages, enums, `.proto` comments, type links, and where each type is used, as tables or as reconstructed `.proto` source (one type or the whole file)
 - Shows how many calls each method has recorded and their latest status, and filters the log to a method
 - Explains fields on hover in decoded messages, and warns when a response has fields the schema does not define
 - Copies a call as a `buf curl` or `grpcurl` command (`grpcurl` needs the server to speak native gRPC)
@@ -28,7 +28,7 @@ Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, 
 
 ## Schemas
 
-Without a schema, messages are shown by field number. To see field names, generate a FileDescriptorSet from your `.proto` files and add it under **Schemas → Manage**. `buf build` keeps `.proto` comments for the schema browser; with `protoc`, add `--include_source_info`.
+Without a schema, messages are shown by field number. To see field names, generate a FileDescriptorSet from your `.proto` files and add it under **Schemas → Manage**. `buf build` keeps `.proto` comments and declaration order for the schema browser; with `protoc`, add `--include_source_info`.
 
 ```bash
 buf build -o descriptor.binpb
