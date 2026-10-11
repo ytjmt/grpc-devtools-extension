@@ -36,7 +36,7 @@ if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
 fi
 gh auth status >/dev/null 2>&1 || fail "gh is not authenticated; run: gh auth login"
 
-pnpm typecheck
+pnpm check
 pnpm test
 ASSET=$(scripts/package.sh)
 

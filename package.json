@@ -8,7 +8,6 @@
   "scripts": {
     "build": "vp build -c extension/vite.config.ts",
     "dev": "vp build -c extension/vite.config.ts --watch",
-    "typecheck": "tsc -p .",
     "check": "vp check",
     "fmt": "vp fmt",
     "test": "vp test run --project unit --project component",

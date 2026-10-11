@@ -55,7 +55,6 @@ Additional tools:
 
 ```bash
 pnpm dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
-pnpm typecheck
 pnpm check             # format check, lint, and type check (Vite+); `pnpm fmt` formats
 pnpm test              # unit + component tests (Vitest; components run in browser mode)
 pnpm test:e2e          # Playwright: real Chrome + DevTools + demo server
@@ -71,7 +70,7 @@ pnpm package           # build and zip into release/
 The version lives in `package.json` and is written into the built manifest. To publish to GitHub Releases with `gh`:
 
 1. Bump `version` in `package.json` (1-4 numbers, e.g. `0.2.0`), commit, and push to `main`.
-2. Run `pnpm release`. It checks that `main` matches `origin/main` and the tag is new, runs typecheck and tests, then creates the `v<version>` release with the zipped build and generated notes.
+2. Run `pnpm release`. It checks that `main` matches `origin/main` and the tag is new, runs `pnpm check` and tests, then creates the `v<version>` release with the zipped build and generated notes.
 
 `pnpm release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
 

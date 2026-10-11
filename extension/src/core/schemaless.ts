@@ -88,6 +88,7 @@ function parseFields(b: Uint8Array): Field[] | undefined {
 
 /** No control characters other than tab/newline: almost certainly a string field. */
 function isCleanText(s: string): boolean {
+  // oxlint-disable-next-line no-control-regex -- matching control characters is the point.
   return !/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(s);
 }
 

@@ -235,12 +235,9 @@ describe("calls and schemas together", () => {
 
   it("copies the call as buf curl or grpcurl", async () => {
     const execCommand = vi.spyOn(document, "execCommand");
-    let copied = "";
-    const original = HTMLTextAreaElement.prototype.select;
-    HTMLTextAreaElement.prototype.select = function () {
-      copied = this.value;
-      original.call(this);
-    };
+    // The panel copies through a temporary textarea; read what it selected.
+    const select = vi.spyOn(HTMLTextAreaElement.prototype, "select");
+    const copied = () => (select.mock.contexts.at(-1) as HTMLTextAreaElement).value;
     try {
       await renderPanel({ calls: demoCalls, sources: [await demoSchemaSource()] });
       await expect.element(schemasButton(1)).toBeVisible();
@@ -248,14 +245,15 @@ describe("calls and schemas together", () => {
       await page.getByRole("button", { name: "Copy as…" }).click();
       await page.getByRole("menuitem", { name: "Copy as buf curl" }).click();
       expect(execCommand).toHaveBeenCalledWith("copy");
-      expect(copied).toMatch(/^buf curl \\\n {2}--schema 'descriptor\.binpb' \\\n {2}--protocol grpcweb/);
+      expect(copied()).toMatch(/^buf curl \\\n {2}--schema 'descriptor\.binpb' \\\n {2}--protocol grpcweb/);
       await expect.element(page.getByRole("button", { name: "Copied" })).toBeVisible();
 
       await page.getByRole("button", { name: /Copy as…|Copied/ }).click();
       await page.getByRole("menuitem", { name: "Copy as grpcurl" }).click();
-      expect(copied).toContain("demo.v1.DemoService/Greet");
+      expect(copied()).toContain("demo.v1.DemoService/Greet");
     } finally {
-      HTMLTextAreaElement.prototype.select = original;
+      select.mockRestore();
+      execCommand.mockRestore();
     }
   });
 

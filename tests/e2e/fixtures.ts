@@ -43,6 +43,8 @@ async function waitForAsync<T>(fn: () => Promise<T | undefined>, what: string, t
 }
 
 export const test = base.extend<Fixtures & { userDataDir: string; cdp: Browser }>({
+  // Playwright reads the fixtures a fixture needs from its destructuring pattern, so an empty one is required.
+  // oxlint-disable-next-line no-empty-pattern
   userDataDir: async ({}, use) => {
     const dir = await mkdtemp(join(tmpdir(), "grpc-devtools-e2e-"));
     await use(dir);

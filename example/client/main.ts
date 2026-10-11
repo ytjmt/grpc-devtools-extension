@@ -66,7 +66,7 @@ for (const [scenario, calls] of Object.entries(scenarios)) {
 const auto = new URLSearchParams(location.search).get("auto");
 if (auto !== null) {
   const calls = auto in scenarios ? scenarios[auto as keyof typeof scenarios] : demoCalls;
-  (async () => {
+  void (async () => {
     for (const name of Object.keys(calls)) await run(calls, name);
     document.title = "done";
   })();

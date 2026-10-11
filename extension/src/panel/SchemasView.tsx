@@ -20,7 +20,8 @@ export function SchemasView({ schemas }: { schemas: ReturnType<typeof useSchemas
         onDrop={(e) => {
           e.preventDefault();
           setDragging(false);
-          schemas.addFiles([...e.dataTransfer.files]);
+          // Schema actions never reject; failures show up in schemas.error.
+          void schemas.addFiles([...e.dataTransfer.files]);
         }}
       >
         <p>
@@ -38,7 +39,7 @@ protoc -I proto --include_imports --descriptor_set_out=descriptor.binpb proto/**
           multiple
           hidden
           onChange={(e) => {
-            schemas.addFiles([...(e.target.files ?? [])]);
+            void schemas.addFiles([...(e.target.files ?? [])]);
             e.target.value = "";
           }}
         />
@@ -48,7 +49,7 @@ protoc -I proto --include_imports --descriptor_set_out=descriptor.binpb proto/**
         className="url-form"
         onSubmit={(e) => {
           e.preventDefault();
-          if (url.trim()) schemas.addUrl(url.trim()).then((ok) => ok && setUrl(""));
+          if (url.trim()) void schemas.addUrl(url.trim()).then((ok) => ok && setUrl(""));
         }}
       >
         <input
@@ -76,7 +77,7 @@ protoc -I proto --include_imports --descriptor_set_out=descriptor.binpb proto/**
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f && replaceTarget.current) schemas.replaceFile(replaceTarget.current, f);
+          if (f && replaceTarget.current) void schemas.replaceFile(replaceTarget.current, f);
           e.target.value = "";
         }}
       />

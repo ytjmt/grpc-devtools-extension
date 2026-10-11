@@ -36,7 +36,7 @@ test("records RPCs and keeps binary request bodies byte-exact", async ({ app, de
   ]);
   // The demo sends blob = [00 ff fe 80 c3 28 7f]; HAR keeps it as Latin-1.
   const binary = calls.find((c) => c.body?.startsWith("\u0000"))!.body!;
-  expect([...binary].every((ch) => ch.charCodeAt(0) <= 0xff)).toBe(true);
+  expect(binary.split("").every((ch) => ch.charCodeAt(0) <= 0xff)).toBe(true);
   expect(binary).toContain("\u0000ÿþ\u0080Ã(\u007f");
 });
 
