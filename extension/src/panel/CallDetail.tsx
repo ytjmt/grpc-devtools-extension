@@ -47,7 +47,9 @@ export function CallDetail({
       </div>
       <div className="tab-body">
         {!call ? (
-          <div className="error" role="alert">{t("detail.decodeFailed", { error: row.error ?? "" })}</div>
+          <div className="error" role="alert">
+            {t("detail.decodeFailed", { error: row.error ?? "" })}
+          </div>
         ) : (
           <>
             {call.warnings.map((w, i) => (
@@ -195,7 +197,11 @@ function MessageView({
         <span className="spacer" />
         <button onClick={copy}>{copied ? t("detail.copied") : t("detail.copyJson")}</button>
       </div>
-      {message.error !== undefined && <div className="warning" role="note">{renderText(message.error)}</div>}
+      {message.error !== undefined && (
+        <div className="warning" role="note">
+          {renderText(message.error)}
+        </div>
+      )}
       {message.unknownFields && (
         <div className="warning" role="note">
           {t("detail.unknownFields", {

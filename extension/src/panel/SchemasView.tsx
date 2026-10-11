@@ -63,7 +63,8 @@ protoc -I proto --include_imports --descriptor_set_out=descriptor.binpb proto/**
 
       {schemas.error && (
         <div className="error" role="alert">
-          {schemas.error} <button aria-label={t("schemas.dismissError")} title={t("schemas.dismissError")} onClick={schemas.clearError}>
+          {schemas.error}{" "}
+          <button aria-label={t("schemas.dismissError")} title={t("schemas.dismissError")} onClick={schemas.clearError}>
             ✕
           </button>
         </div>
@@ -118,12 +119,13 @@ function SchemaCard({
     const theirs = o.source.scopes ?? [];
     return scopes.length === 0 ? theirs.length === 0 : theirs.some((p) => scopes.includes(p));
   };
-  const duplicates = source.enabled && loaded
-    ? others.filter(sameRequests).flatMap((o) => {
-        const shared = loaded.services.filter((svc) => o.loaded?.services.includes(svc));
-        return shared.length ? [{ name: o.source.name, shared }] : [];
-      })
-    : [];
+  const duplicates =
+    source.enabled && loaded
+      ? others.filter(sameRequests).flatMap((o) => {
+          const shared = loaded.services.filter((svc) => o.loaded?.services.includes(svc));
+          return shared.length ? [{ name: o.source.name, shared }] : [];
+        })
+      : [];
 
   return (
     <div className={`schema ${source.enabled ? "" : "disabled"}`}>

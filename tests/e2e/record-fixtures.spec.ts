@@ -32,7 +32,8 @@ for (const { scenario, query, file } of [
 
 function normalizeHeader(h: { name: string; value: string }) {
   if (/^date$/i.test(h.name)) return { name: h.name, value: "Thu, 01 Jan 2026 00:00:00 GMT" };
-  if (/^(origin|referer|host)$/i.test(h.name)) return { name: h.name, value: h.value.replace(/localhost:\d+/, "localhost:8080") };
+  if (/^(origin|referer|host)$/i.test(h.name))
+    return { name: h.name, value: h.value.replace(/localhost:\d+/, "localhost:8080") };
   if (/^user-agent$/i.test(h.name)) return { name: h.name, value: "Mozilla/5.0 (fixture)" };
   return h;
 }

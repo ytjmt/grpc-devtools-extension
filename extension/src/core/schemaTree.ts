@@ -35,7 +35,13 @@ export function buildTree(registry: FileRegistry): TreeNode[] {
     typeName: m.typeName,
     children: [...m.nestedMessages.map(messageNode), ...m.nestedEnums.map(enumNode)],
   });
-  const enumNode = (e: DescEnum): TreeNode => ({ key: e.typeName, kind: "enum", label: e.name, typeName: e.typeName, children: [] });
+  const enumNode = (e: DescEnum): TreeNode => ({
+    key: e.typeName,
+    kind: "enum",
+    label: e.name,
+    typeName: e.typeName,
+    children: [],
+  });
 
   for (const file of registry.files) {
     const node = pkg(file.proto.package);
@@ -64,7 +70,8 @@ export function buildTree(registry: FileRegistry): TreeNode[] {
   }
   // Well-known types (google.*) are references, not the user's API: list them last.
   return [...packages.values()].sort(
-    (a, b) => Number(a.label.startsWith("google.")) - Number(b.label.startsWith("google.")) || a.label.localeCompare(b.label),
+    (a, b) =>
+      Number(a.label.startsWith("google.")) - Number(b.label.startsWith("google.")) || a.label.localeCompare(b.label),
   );
 }
 
@@ -78,13 +85,15 @@ export function filterTree(nodes: TreeNode[], query: string, registry: FileRegis
   const out: TreeNode[] = [];
   for (const node of nodes) {
     const children = filterTree(node.children, q, registry);
-    const selfMatch = node.label.toLowerCase().includes(q) || (node.key.toLowerCase().includes(q) && node.kind !== "package");
+    const selfMatch =
+      node.label.toLowerCase().includes(q) || (node.key.toLowerCase().includes(q) && node.kind !== "package");
     let hint: string | undefined;
     if (!selfMatch && node.kind === "message") {
       const field = registry.getMessage(node.key)?.fields.find((f) => f.name.toLowerCase().includes(q));
       if (field) hint = field.name;
     }
-    if (selfMatch || hint || children.length) out.push({ ...node, children: selfMatch ? node.children : children, hint });
+    if (selfMatch || hint || children.length)
+      out.push({ ...node, children: selfMatch ? node.children : children, hint });
   }
   return out;
 }

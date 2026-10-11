@@ -89,7 +89,11 @@ export const test = base.extend<Fixtures & { userDataDir: string; cdp: Browser }
   devtools: async ({ cdp, app }, use) => {
     void app; // ensure the inspected tab (and so its DevTools) exists
     const window = await waitFor(
-      () => cdp.contexts().flatMap((c) => c.pages()).find((p) => p.url().startsWith("devtools://")),
+      () =>
+        cdp
+          .contexts()
+          .flatMap((c) => c.pages())
+          .find((p) => p.url().startsWith("devtools://")),
       "DevTools window",
     );
     const frameBy = (suffix: string) => window.frames().find((f) => f.url().endsWith(suffix));

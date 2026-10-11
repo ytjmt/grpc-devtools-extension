@@ -61,7 +61,10 @@ export const greetReq = toBinary(
     contact: { case: "email", value: "x@example.com" },
   }),
 );
-export const greetRes = toBinary(GreetResponseSchema, create(GreetResponseSchema, { greeting: "hi", mood: Mood.HAPPY }));
+export const greetRes = toBinary(
+  GreetResponseSchema,
+  create(GreetResponseSchema, { greeting: "hi", mood: Mood.HAPPY }),
+);
 export const countRes = (n: number) => toBinary(CountResponseSchema, create(CountResponseSchema, { n }));
 
 let nextId = 1000;
@@ -86,8 +89,7 @@ export function raw(
   };
 }
 
-const trailers = (lines: Header[]) =>
-  frame(0x80, utf8(lines.map((h) => `${h.name}: ${h.value}\r\n`).join("")));
+const trailers = (lines: Header[]) => frame(0x80, utf8(lines.map((h) => `${h.name}: ${h.value}\r\n`).join("")));
 
 /** Cases the demo server cannot produce, built by hand. */
 export const syntheticCalls = {
@@ -128,7 +130,15 @@ export const syntheticCalls = {
       resBody: concat(
         frame(0, countRes(1)),
         frame(0, countRes(2)),
-        frame(2, utf8(JSON.stringify({ error: { code: "unavailable", message: "server shutting down" }, metadata: { "x-request-id": ["abc"] } }))),
+        frame(
+          2,
+          utf8(
+            JSON.stringify({
+              error: { code: "unavailable", message: "server shutting down" },
+              metadata: { "x-request-id": ["abc"] },
+            }),
+          ),
+        ),
       ),
       time: 900,
     }),

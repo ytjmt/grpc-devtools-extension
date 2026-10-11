@@ -5,7 +5,9 @@ import { decodeCall } from "../../extension/src/core/decode";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";
 import { demoCalls, frame, greetReq, raw } from "../fixtures/builders";
 
-const schemas = SchemaIndex.of(loadDescriptorSet(readFileSync(new URL("../../example/descriptor.binpb", import.meta.url))));
+const schemas = SchemaIndex.of(
+  loadDescriptorSet(readFileSync(new URL("../../example/descriptor.binpb", import.meta.url))),
+);
 const [connectGreet, , grpcWebGreet] = demoCalls.map((c) => decodeCall(c, schemas));
 const fileSchema = { kind: "file" as const, name: "descriptor.binpb" };
 const urlSchema = { kind: "url" as const, name: "x", url: "http://localhost:8080/_devtools/descriptor.binpb" };
@@ -60,9 +62,14 @@ describe("toBufCurl", () => {
 describe("toGrpcurl", () => {
   it("targets host:port with the service/method and a local protoset", () => {
     expect(toGrpcurl(grpcWebGreet, urlSchema)).toBe(
-      ["grpcurl", "-plaintext", "-protoset 'descriptor.binpb'", DATA, "localhost:8080", "demo.v1.DemoService/Greet"].join(
-        " \\\n  ",
-      ),
+      [
+        "grpcurl",
+        "-plaintext",
+        "-protoset 'descriptor.binpb'",
+        DATA,
+        "localhost:8080",
+        "demo.v1.DemoService/Greet",
+      ].join(" \\\n  "),
     );
   });
 

@@ -3,12 +3,14 @@ import { LocalizedError } from "../../extension/src/i18n";
 import type { SchemaBackend } from "../../extension/src/panel/schemaBackend";
 
 /** In-memory SchemaBackend with a fixed clock and sequential ids. */
-export function fakeSchemaBackend(options: {
-  sources?: SchemaSource[];
-  /** URL → descriptor bytes served by fetchDescriptor. */
-  urls?: Record<string, ArrayBuffer>;
-  grantPermission?: boolean;
-} = {}) {
+export function fakeSchemaBackend(
+  options: {
+    sources?: SchemaSource[];
+    /** URL → descriptor bytes served by fetchDescriptor. */
+    urls?: Record<string, ArrayBuffer>;
+    grantPermission?: boolean;
+  } = {},
+) {
   const sources = new Map((options.sources ?? []).map((s) => [s.id, s]));
   let id = 0;
   const backend: SchemaBackend = {

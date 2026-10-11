@@ -150,7 +150,9 @@ describe("schema scopes", () => {
     await page.elementLocator(document.querySelector('tr[data-method="Greet"][data-transport="grpc-web"]')!).click();
     await expect
       .element(page.getByRole("note"))
-      .toMatchTextContent("demo.v1.DemoService is defined in stg.binpb, but its scope does not include this request URL.");
+      .toMatchTextContent(
+        "demo.v1.DemoService is defined in stg.binpb, but its scope does not include this request URL.",
+      );
     await page.getByRole("link", { name: "Edit scopes" }).click();
     await expect.element(page.getByText("https://*.stg.example.com/*", { exact: true })).toBeVisible();
   });
@@ -215,7 +217,9 @@ describe("calls and schemas together", () => {
     await selectGrpcWebGreet();
     await page.getByRole("button", { name: "Request", exact: true }).click();
     const key = [...document.querySelectorAll(".jt-key")].find((k) => k.textContent === "bigNumber: ");
-    expect(key?.getAttribute("title")).toBe("#2 big_number: int64\nAbove 2^53, to check that int64 stays exact in JSON.");
+    expect(key?.getAttribute("title")).toBe(
+      "#2 big_number: int64\nAbove 2^53, to check that int64 stays exact in JSON.",
+    );
     const tags = [...document.querySelectorAll(".jt-key")].find((k) => k.textContent === "tags: ");
     expect(tags?.getAttribute("title")).toBe("#4 tags: repeated string");
   });
@@ -289,7 +293,9 @@ describe("recorded calls in the schema browser", () => {
     await renderPanel({ calls: [demoCalls[3]], sources: [await demoSchemaSource()] });
     await schemasButton(1).click();
     const greet = () =>
-      [...document.querySelectorAll(".method-item")].find((m) => m.querySelector(".method-name")?.textContent === "Greet");
+      [...document.querySelectorAll(".method-item")].find(
+        (m) => m.querySelector(".method-name")?.textContent === "Greet",
+      );
     await expect.poll(() => greet()?.querySelector(".method-calls")?.textContent).toBe("no calls");
   });
 });

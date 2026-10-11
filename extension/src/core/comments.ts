@@ -1,4 +1,13 @@
-import type { DescEnum, DescEnumValue, DescField, DescFile, DescMessage, DescMethod, DescOneof, DescService } from "@bufbuild/protobuf";
+import type {
+  DescEnum,
+  DescEnumValue,
+  DescField,
+  DescFile,
+  DescMessage,
+  DescMethod,
+  DescOneof,
+  DescService,
+} from "@bufbuild/protobuf";
 import type { SourceCodeInfo_Location } from "@bufbuild/protobuf/wkt";
 
 export type Commentable = DescMessage | DescEnum | DescEnumValue | DescField | DescOneof | DescService | DescMethod;

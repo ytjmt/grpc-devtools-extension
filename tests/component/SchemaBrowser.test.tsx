@@ -26,7 +26,9 @@ describe("SchemaBrowser", () => {
     await render(<Harness />);
     await expect.element(page.getByRole("heading", { name: "demo.v1.DemoService" })).toBeVisible();
     await expect.element(page.getByText("Demo service used by the example app and the tests.")).toBeVisible();
-    const count = [...detail().querySelectorAll(".method-item")].find((m) => m.querySelector(".method-name")?.textContent === "Count");
+    const count = [...detail().querySelectorAll(".method-item")].find(
+      (m) => m.querySelector(".method-name")?.textContent === "Count",
+    );
     expect(count?.querySelector(".method-kind")?.textContent).toBe("server streaming");
     expect([...count!.querySelectorAll(".type-link")].map((a) => a.textContent)).toEqual([
       "demo.v1.CountRequest",

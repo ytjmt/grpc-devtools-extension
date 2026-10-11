@@ -7,7 +7,10 @@ import { shopCalls } from "./shop";
 
 const baseUrl = location.origin;
 const connect = createClient(DemoService, createConnectTransport({ baseUrl, useBinaryFormat: true }));
-const connectJson = createClient(DemoService, createConnectTransport({ baseUrl, jsonOptions: { registry: createRegistry(NoteSchema) } }));
+const connectJson = createClient(
+  DemoService,
+  createConnectTransport({ baseUrl, jsonOptions: { registry: createRegistry(NoteSchema) } }),
+);
 const grpcWeb = createClient(DemoService, createGrpcWebTransport({ baseUrl }));
 
 const logEl = document.getElementById("log")!;

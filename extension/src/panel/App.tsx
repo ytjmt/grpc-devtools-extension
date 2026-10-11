@@ -67,7 +67,11 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
   return (
     <div className="app">
       <div className="toolbar">
-        <button title={t("toolbar.clear")} aria-label={t("toolbar.clear")} onClick={() => (store.clear(), setSelectedId(undefined))}>
+        <button
+          title={t("toolbar.clear")}
+          aria-label={t("toolbar.clear")}
+          onClick={() => (store.clear(), setSelectedId(undefined))}
+        >
           ⊘
         </button>
         <input
@@ -136,12 +140,7 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
         </div>
       ) : (
         <div className={`main ${selected ? "with-detail" : ""}`}>
-          <CallList
-            rows={visible}
-            selectedId={selected?.raw.id}
-            onSelect={setSelectedId}
-            empty={rows.length === 0}
-          />
+          <CallList rows={visible} selectedId={selected?.raw.id} onSelect={setSelectedId} empty={rows.length === 0} />
           {selected && (
             <CallDetail
               row={selected}

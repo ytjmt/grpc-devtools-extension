@@ -56,8 +56,22 @@ describe(".proto reconstruction", () => {
           name: "Paint",
           enumType: [{ name: "Color", value: [{ name: "PAINT_COLOR_UNSPECIFIED", number: 0 }] }],
           field: [
-            { name: "outer", number: 1, label: Label.OPTIONAL, type: Type.ENUM, typeName: ".a.b.Color", jsonName: "outer" },
-            { name: "inner", number: 2, label: Label.OPTIONAL, type: Type.ENUM, typeName: ".a.b.Paint.Color", jsonName: "inner" },
+            {
+              name: "outer",
+              number: 1,
+              label: Label.OPTIONAL,
+              type: Type.ENUM,
+              typeName: ".a.b.Color",
+              jsonName: "outer",
+            },
+            {
+              name: "inner",
+              number: 2,
+              label: Label.OPTIONAL,
+              type: Type.ENUM,
+              typeName: ".a.b.Paint.Color",
+              jsonName: "inner",
+            },
           ],
         },
       ],
@@ -76,8 +90,22 @@ describe(".proto reconstruction", () => {
           name: "Req",
           field: [
             { name: "id", number: 1, label: Label.REQUIRED, type: Type.INT64, jsonName: "id" },
-            { name: "name", number: 2, label: Label.OPTIONAL, type: Type.STRING, defaultValue: 'a "b"', jsonName: "name" },
-            { name: "result", number: 3, label: Label.REPEATED, type: Type.GROUP, typeName: ".p.Req.Result", jsonName: "result" },
+            {
+              name: "name",
+              number: 2,
+              label: Label.OPTIONAL,
+              type: Type.STRING,
+              defaultValue: 'a "b"',
+              jsonName: "name",
+            },
+            {
+              name: "result",
+              number: 3,
+              label: Label.REPEATED,
+              type: Type.GROUP,
+              typeName: ".p.Req.Result",
+              jsonName: "result",
+            },
           ],
           nestedType: [
             {
@@ -85,7 +113,10 @@ describe(".proto reconstruction", () => {
               field: [{ name: "url", number: 4, label: Label.OPTIONAL, type: Type.STRING, jsonName: "url" }],
             },
           ],
-          extensionRange: [{ start: 100, end: 200 }, { start: 1000, end: 536870912 }],
+          extensionRange: [
+            { start: 100, end: 200 },
+            { start: 1000, end: 536870912 },
+          ],
           reservedRange: [{ start: 10, end: 11 }],
         },
       ],

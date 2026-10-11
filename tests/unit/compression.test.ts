@@ -6,9 +6,13 @@ import { decodeCall } from "../../extension/src/core/decode";
 import { loadDescriptorSet, SchemaIndex } from "../../extension/src/core/schema";
 import { compressionCalls, concat, frame, greetReq, greetRes, raw, utf8 } from "../fixtures/builders";
 
-const schemas = SchemaIndex.of(loadDescriptorSet(readFileSync(new URL("../../example/descriptor.binpb", import.meta.url))));
-const decodeDecompressed = async (c: (typeof compressionCalls)[number]) => decodeCall(c, schemas, await decompressBodies(c));
-const vias = (call: ReturnType<typeof decodeCall>) => [...call.requestMessages, ...call.responseMessages].map((m) => m.via);
+const schemas = SchemaIndex.of(
+  loadDescriptorSet(readFileSync(new URL("../../example/descriptor.binpb", import.meta.url))),
+);
+const decodeDecompressed = async (c: (typeof compressionCalls)[number]) =>
+  decodeCall(c, schemas, await decompressBodies(c));
+const vias = (call: ReturnType<typeof decodeCall>) =>
+  [...call.requestMessages, ...call.responseMessages].map((m) => m.via);
 const grpcWeb = (headers: { name: string; value: string }[], reqBody: Uint8Array, resBody?: Uint8Array) =>
   raw({ contentType: "application/grpc-web+proto", requestHeaders: headers, reqBody, resBody });
 
@@ -47,12 +51,7 @@ describe("recorded compressed traffic", () => {
 
 describe("decompressBodies", () => {
   it("inflates deflate (zlib) frames", async () => {
-    const call = grpcWeb(
-      [
-        { name: "grpc-encoding", value: "deflate" },
-      ],
-      frame(1, deflateSync(greetReq)),
-    );
+    const call = grpcWeb([{ name: "grpc-encoding", value: "deflate" }], frame(1, deflateSync(greetReq)));
     const decoded = decodeCall(call, schemas, await decompressBodies(call));
     expect(decoded.requestMessages[0]).toMatchObject({ via: "schema", value: { name: "ytjmt" } });
   });
@@ -81,7 +80,10 @@ describe("decompressBodies", () => {
   });
 
   it("keeps corrupt data compressed instead of failing the whole call", async () => {
-    const call = grpcWeb([{ name: "grpc-encoding", value: "gzip" }], concat(frame(1, utf8("not gzip")), frame(1, gzipSync(greetReq))));
+    const call = grpcWeb(
+      [{ name: "grpc-encoding", value: "gzip" }],
+      concat(frame(1, utf8("not gzip")), frame(1, gzipSync(greetReq))),
+    );
     const decoded = decodeCall(call, schemas, await decompressBodies(call));
     expect(decoded.requestMessages.map((m) => m.via)).toEqual(["error", "schema"]);
   });

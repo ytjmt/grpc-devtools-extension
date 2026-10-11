@@ -11,7 +11,10 @@ const schema = (id: string, scopes: string[] = []): IndexedSchema => ({ id, name
 describe("collectMethodStats", () => {
   it("counts calls per method with the latest status", () => {
     const stats = collectMethodStats(demoCalls.map((c) => decodeRow(c, new SchemaIndex([schema("demo")]))));
-    expect(stats.get(methodKey("demo", "/demo.v1.DemoService/Greet"))).toEqual({ count: 3, last: { code: 0, name: "OK" } });
+    expect(stats.get(methodKey("demo", "/demo.v1.DemoService/Greet"))).toEqual({
+      count: 3,
+      last: { code: 0, name: "OK" },
+    });
     expect(stats.get(methodKey("demo", "/demo.v1.DemoService/Fail"))).toMatchObject({
       count: 1,
       last: { code: 7, name: "PERMISSION_DENIED" },

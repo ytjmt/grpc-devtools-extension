@@ -59,19 +59,23 @@ export const en = {
   "schemas.replace": "Replace",
   "schemas.delete": "Delete",
   "schemas.noServices": "No service definitions",
-  "schemas.skipped": "Files skipped because their imports could not be resolved: {files} (generate with --include_imports)",
+  "schemas.skipped":
+    "Files skipped because their imports could not be resolved: {files} (generate with --include_imports)",
   "schemas.fetchFailed": "Failed to fetch {url} (HTTP {status})",
   "schemas.permissionDenied": "Access to {origin} was not granted",
   "schemas.dismissError": "Dismiss",
   "schemas.enable": "Enable {name}",
   "schemas.scopes": "Applies to",
   "schemas.scopesAll": "All requests",
-  "schemas.scopesPlaceholder": "Request URL patterns, one per line (e.g. http://localhost:8080/*). Empty = all requests.",
+  "schemas.scopesPlaceholder":
+    "Request URL patterns, one per line (e.g. http://localhost:8080/*). Empty = all requests.",
   "schemas.editScopes": "Edit",
   "schemas.saveScopes": "Save",
   "schemas.cancel": "Cancel",
-  "schemas.invalidScope": "Invalid URL pattern: {scopes}. Use e.g. https://api.example.com/* or http://localhost:8080/*",
-  "schemas.duplicateServices": "{schemas} also defines {services} for the same requests; the schema listed first is used. Give them different scopes to choose per URL.",
+  "schemas.invalidScope":
+    "Invalid URL pattern: {scopes}. Use e.g. https://api.example.com/* or http://localhost:8080/*",
+  "schemas.duplicateServices":
+    "{schemas} also defines {services} for the same requests; the schema listed first is used. Give them different scopes to choose per URL.",
 
   // Schemas view tabs and browser
   "schemas.tab.browse": "Browse",
@@ -114,7 +118,8 @@ export const en = {
   // Call detail: schema links, field info, copy as command
   "detail.openType": "Show {type} in the schema browser",
   "detail.fieldInfo": "#{number} {name}: {type}",
-  "detail.unknownFields": "Field numbers not defined in {type}: {fields}. The registered schema may be older than the server.",
+  "detail.unknownFields":
+    "Field numbers not defined in {type}: {fields}. The registered schema may be older than the server.",
   "detail.copyAs": "Copy as…",
   "detail.copyBufCurl": "Copy as buf curl",
   "detail.copyGrpcurl": "Copy as grpcurl",
@@ -122,7 +127,7 @@ export const en = {
 
   // Core: schema loading
   "error.emptyDescriptorSet": "The FileDescriptorSet contains no files",
-  "error.importNotFound": "Import \"{name}\" not found",
+  "error.importNotFound": 'Import "{name}" not found',
   "error.allFilesFailed": "Failed to load every file: {files}",
 
   // Core: decoding

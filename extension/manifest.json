@@ -5,7 +5,5 @@
   "default_locale": "en",
   "minimum_chrome_version": "116",
   "devtools_page": "devtools.html",
-  "optional_host_permissions": [
-    "<all_urls>"
-  ]
+  "optional_host_permissions": ["<all_urls>"]
 }

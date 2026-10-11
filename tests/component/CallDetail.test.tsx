@@ -14,7 +14,11 @@ const [, connectJson, grpcWebGreet, fail, connectCount] = demoCalls;
 function renderDetail(raw: (typeof demoCalls)[number], index = schemas) {
   const onOpenSchemas = vi.fn();
   const onClose = vi.fn();
-  return { onOpenSchemas, onClose, render: render(<CallDetail row={decodeRow(raw, index)} onClose={onClose} onOpenSchemas={onOpenSchemas} />) };
+  return {
+    onOpenSchemas,
+    onClose,
+    render: render(<CallDetail row={decodeRow(raw, index)} onClose={onClose} onOpenSchemas={onOpenSchemas} />),
+  };
 }
 const tab = (name: string) => page.getByRole("button", { name, exact: true });
 
@@ -68,11 +72,15 @@ describe("CallDetail", () => {
 
   it("renders decoder warnings and per-message errors", async () => {
     await renderDetail(syntheticCalls.truncatedResponse()).render;
-    await expect.element(page.getByRole("note")).toMatchTextContent("10 trailing bytes of an incomplete frame in the response");
+    await expect
+      .element(page.getByRole("note"))
+      .toMatchTextContent("10 trailing bytes of an incomplete frame in the response");
 
     await renderDetail(syntheticCalls.compressedFrame()).render;
     await tab("Request").last().click();
-    await expect.element(page.getByRole("note").last()).toMatchTextContent("Marked as compressed, but no header says which encoding was used");
+    await expect
+      .element(page.getByRole("note").last())
+      .toMatchTextContent("Marked as compressed, but no header says which encoding was used");
   });
 
   it("copies a message as JSON", async () => {

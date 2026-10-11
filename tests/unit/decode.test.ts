@@ -124,7 +124,9 @@ describe("decodeCall", () => {
     expect(detectProtocol("http://x/api/users", "POST", json)).toBeUndefined();
     // JSON to an RPC-shaped path is only Connect when the protocol header is present.
     expect(detectProtocol("http://x/a.B/C", "POST", json)).toBeUndefined();
-    expect(detectProtocol("http://x/a.B/C", "POST", [...json, { name: "Connect-Protocol-Version", value: "1" }])).toEqual({
+    expect(
+      detectProtocol("http://x/a.B/C", "POST", [...json, { name: "Connect-Protocol-Version", value: "1" }]),
+    ).toEqual({
       transport: "connect",
       codec: "json",
     });
@@ -161,7 +163,11 @@ describe("golden: recorded and synthetic fixtures", () => {
     const decoded = await Promise.all(
       compressionCalls.map(async (c) => {
         const { raw: _raw, ...d } = decodeCall(c, schemas, await decompressBodies(c));
-        return { ...d, requestMessages: withoutType(d.requestMessages), responseMessages: withoutType(d.responseMessages) };
+        return {
+          ...d,
+          requestMessages: withoutType(d.requestMessages),
+          responseMessages: withoutType(d.responseMessages),
+        };
       }),
     );
     expect(decoded).toMatchSnapshot();
@@ -204,7 +210,10 @@ describe("decodeSchemaless", () => {
     const { NoteSchema } = await import("../../example/gen/demo/v1/demo_pb");
     const bytes = toBinary(
       GreetResponseSchema,
-      create(GreetResponseSchema, { greeting: "hi", extra: anyPack(NoteSchema, create(NoteSchema, { text: "tags=a,b" })) }),
+      create(GreetResponseSchema, {
+        greeting: "hi",
+        extra: anyPack(NoteSchema, create(NoteSchema, { text: "tags=a,b" })),
+      }),
     );
     expect(decodeSchemaless(bytes)).toEqual({
       1: "hi",
@@ -220,7 +229,7 @@ describe("decodeSchemaless", () => {
   it("never throws anything but a LocalizedError on random input", async () => {
     const { LocalizedError } = await import("../../extension/src/i18n");
     let seed = 42;
-    const rand = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+    const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
     for (let i = 0; i < 2000; i++) {
       const bytes = Uint8Array.from({ length: Math.floor(rand() * 64) }, () => Math.floor(rand() * 256));
       try {
@@ -231,4 +240,3 @@ describe("decodeSchemaless", () => {
     }
   });
 });
-

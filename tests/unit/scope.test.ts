@@ -49,19 +49,31 @@ describe("SchemaIndex.resolve", () => {
       shadowed: [],
       outOfScope: [],
     });
-    expect(index.resolve(STG, "demo.v1.DemoService", "Greet")).toMatchObject({ schema: { name: "global" }, shadowed: [] });
+    expect(index.resolve(STG, "demo.v1.DemoService", "Greet")).toMatchObject({
+      schema: { name: "global" },
+      shadowed: [],
+    });
   });
 
   it("reports ambiguity only within the same priority", () => {
     const unscoped = new SchemaIndex([schema("a"), schema("b")]);
-    expect(unscoped.resolve(LOCAL, "demo.v1.DemoService", "Greet")).toMatchObject({ schema: { name: "a" }, shadowed: ["b"] });
+    expect(unscoped.resolve(LOCAL, "demo.v1.DemoService", "Greet")).toMatchObject({
+      schema: { name: "a" },
+      shadowed: ["b"],
+    });
 
     const disjoint = new SchemaIndex([
       schema("local", ["http://localhost:8080/*"]),
       schema("stg", ["https://*.stg.example.com/*"]),
     ]);
-    expect(disjoint.resolve(LOCAL, "demo.v1.DemoService", "Greet")).toMatchObject({ schema: { name: "local" }, shadowed: [] });
-    expect(disjoint.resolve(STG, "demo.v1.DemoService", "Greet")).toMatchObject({ schema: { name: "stg" }, shadowed: [] });
+    expect(disjoint.resolve(LOCAL, "demo.v1.DemoService", "Greet")).toMatchObject({
+      schema: { name: "local" },
+      shadowed: [],
+    });
+    expect(disjoint.resolve(STG, "demo.v1.DemoService", "Greet")).toMatchObject({
+      schema: { name: "stg" },
+      shadowed: [],
+    });
   });
 
   it("reports schemas that define the service but are out of scope", () => {

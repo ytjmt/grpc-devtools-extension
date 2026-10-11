@@ -107,7 +107,9 @@ export function SchemaBrowser({
 
 /** The first service in any package (packages like common.v1 may hold only messages), else the first type. */
 function firstService(trees: { schema: BrowseSchema; nodes: TreeNode[] }[]): BrowseSelection | undefined {
-  const all = trees.flatMap(({ schema, nodes }) => nodes.flatMap((pkg) => pkg.children.map((node) => ({ schema, node }))));
+  const all = trees.flatMap(({ schema, nodes }) =>
+    nodes.flatMap((pkg) => pkg.children.map((node) => ({ schema, node }))),
+  );
   const pick = all.find(({ node }) => node.kind === "service") ?? all.find(({ node }) => node.typeName);
   return pick && { schemaId: pick.schema.id, typeName: pick.node.typeName! };
 }
@@ -239,8 +241,7 @@ function TypeDetail({
     <div ref={ref} className="type-detail">
       <div className="type-detail-head">
         <div className="type-header">
-          <span className="type-kind">{desc.kind === "service" ? "service" : desc.kind}</span>{" "}
-          <h2>{desc.typeName}</h2>
+          <span className="type-kind">{desc.kind === "service" ? "service" : desc.kind}</span> <h2>{desc.typeName}</h2>
           {desc.deprecated && <span className="badge warn">{t("browse.deprecated")}</span>}
           <span className="muted"> · {desc.file.proto.name}</span>
         </div>

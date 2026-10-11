@@ -52,7 +52,10 @@ function compressionOf(raw: RawCall, transport: Transport): { request?: string; 
       const encoding = pick(raw.requestHeaders, "content-encoding");
       const body = raw.requestBodyText ?? "";
       const gzipMagic = body.charCodeAt(0) === 0x1f && body.charCodeAt(1) === 0x8b;
-      const zlibHeader = body.length > 1 && (body.charCodeAt(0) & 0x0f) === 8 && ((body.charCodeAt(0) << 8) | body.charCodeAt(1)) % 31 === 0;
+      const zlibHeader =
+        body.length > 1 &&
+        (body.charCodeAt(0) & 0x0f) === 8 &&
+        ((body.charCodeAt(0) << 8) | body.charCodeAt(1)) % 31 === 0;
       const stillCompressed = (encoding === "gzip" && gzipMagic) || (encoding === "deflate" && zlibHeader);
       return { request: stillCompressed ? encoding : undefined };
     }
@@ -95,8 +98,7 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex, bodies: Bodies = 
       msg("warn.schemaShadowed", { service, used: resolution.schema!.name, others: resolution.shadowed.join(", ") }),
     );
   }
-  const decode = (bytes: Uint8Array, type: DescMessage | undefined) =>
-    decodeMessage(bytes, codec, type, registry);
+  const decode = (bytes: Uint8Array, type: DescMessage | undefined) => decodeMessage(bytes, codec, type, registry);
 
   const { request: reqBytes, response: resBytes, requestEncoding, responseEncoding } = bodies;
 
@@ -162,7 +164,11 @@ export function decodeCall(raw: RawCall, schemas: SchemaIndex, bodies: Bodies = 
         grpcStatusFrom(trailers, registry) ??
         grpcStatusFrom(raw.responseHeaders, registry) ??
         (raw.httpStatus !== 200
-          ? { code: codeFromHttpStatus(raw.httpStatus), name: codeName(codeFromHttpStatus(raw.httpStatus)), message: `HTTP ${raw.httpStatus}` }
+          ? {
+              code: codeFromHttpStatus(raw.httpStatus),
+              name: codeName(codeFromHttpStatus(raw.httpStatus)),
+              message: `HTTP ${raw.httpStatus}`,
+            }
           : compressedTrailers
             ? unknown(msg("status.compressedTrailers", { encoding: responseEncoding ?? "unknown" }))
             : unknown(msg(transport === "grpc" ? "status.http2TrailersUnavailable" : "status.missingGrpcStatus")));

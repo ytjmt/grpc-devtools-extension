@@ -1,5 +1,9 @@
 import { create, toBinary } from "@bufbuild/protobuf";
-import { GetProductRequestSchema, ListProductsRequestSchema, WatchInventoryRequestSchema } from "../gen/shop/v1/catalog_pb";
+import {
+  GetProductRequestSchema,
+  ListProductsRequestSchema,
+  WatchInventoryRequestSchema,
+} from "../gen/shop/v1/catalog_pb";
 
 // connect-web does not compress, so these calls are hand-rolled with fetch, as a
 // client that supports RPC-level compression would send them.
@@ -18,7 +22,10 @@ function frame(flags: number, data: Uint8Array): Uint8Array {
 }
 
 const base64Url = (b: Uint8Array) =>
-  btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  btoa(String.fromCharCode(...b))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 
 async function post(path: string, headers: Record<string, string>, body: Uint8Array) {
   const res = await fetch(path, { method: "POST", headers, body: body as BodyInit });

@@ -13,7 +13,10 @@ const loaded = loadDescriptorSet(readFileSync(new URL("../../example/descriptor.
 const schemas = SchemaIndex.of(loaded);
 const decoded = shopCalls.map((c) => decodeCall(c, schemas));
 const [, getTee, getMugMasked, update, del, notFound, watch, create, invalid, outOfStock, getOrder, track] = decoded;
-const response = (i = 0) => (m: { responseMessages: DecodedMessage[] }) => m.responseMessages[i].value as any;
+const response =
+  (i = 0) =>
+  (m: { responseMessages: DecodedMessage[] }) =>
+    m.responseMessages[i].value as any;
 const { registry } = loaded;
 
 describe("shop scenario decoding", () => {
@@ -113,7 +116,9 @@ describe("shop scenario decoding", () => {
 
   it("expands Any, Value maps and Durations in orders", () => {
     const order = response()(create).order;
-    expect(order.extensions).toEqual([{ "@type": "type.googleapis.com/shop.v1.GiftWrap", paper: "kraft", message: "Enjoy!" }]);
+    expect(order.extensions).toEqual([
+      { "@type": "type.googleapis.com/shop.v1.GiftWrap", paper: "kraft", message: "Enjoy!" },
+    ]);
     expect(order.labels).toEqual({ channel: "web", priority: 2, giftable: true, coupons: ["SPRING10"] });
     expect(order.deliveryEstimate).toBe("172800s");
     expect(order.card).toEqual({ brand: "visa", last4: "4242" });
@@ -134,7 +139,9 @@ describe("shop scenario decoding", () => {
       },
     ]);
     // gRPC-Web sends a google.rpc.Status in grpc-status-details-bin.
-    expect(outOfStock.status.details).toEqual([{ type: "shop.v1.OutOfStock", value: { sku: "TEE-001-WHT-L", requested: 1 } }]);
+    expect(outOfStock.status.details).toEqual([
+      { type: "shop.v1.OutOfStock", value: { sku: "TEE-001-WHT-L", requested: 1 } },
+    ]);
   });
 
   it("falls back to a schemaless guess for details whose type is not registered", () => {
@@ -168,9 +175,17 @@ describe("shop schema introspection", () => {
   });
 
   it("lists shared types where they are used across files", () => {
-    const usages = buildUsages(registry).get("common.v1.Money")!.map((u) => u.label);
+    const usages = buildUsages(registry)
+      .get("common.v1.Money")!
+      .map((u) => u.label);
     expect(usages).toEqual(
-      expect.arrayContaining(["Product.price", "Product.regional_prices", "Variant.price_delta", "LineItem.unit_price", "Order.total"]),
+      expect.arrayContaining([
+        "Product.price",
+        "Product.regional_prices",
+        "Variant.price_delta",
+        "LineItem.unit_price",
+        "Order.total",
+      ]),
     );
   });
 

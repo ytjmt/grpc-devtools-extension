@@ -54,8 +54,20 @@ function seedProducts(): Map<string, Product> {
       attributes: { material: "organic cotton", fit: "relaxed" },
       variants: [
         { sku: "TEE-001-BLK-M", color: Product_Color.BLACK, size: Product_Variant_Size.M, stock: 12 },
-        { sku: "TEE-001-WHT-L", color: Product_Color.WHITE, size: Product_Variant_Size.L, stock: 0, priceDelta: money(200n) },
-        { sku: "TEE-001-IND-S", color: Product_Color.INDIGO, size: Product_Variant_Size.S, stock: 3, priceDelta: money(-300n) },
+        {
+          sku: "TEE-001-WHT-L",
+          color: Product_Color.WHITE,
+          size: Product_Variant_Size.L,
+          stock: 0,
+          priceDelta: money(200n),
+        },
+        {
+          sku: "TEE-001-IND-S",
+          color: Product_Color.INDIGO,
+          size: Product_Variant_Size.S,
+          stock: 3,
+          priceDelta: money(-300n),
+        },
       ],
       tags: ["organic", "bestseller"],
       statusHistory: [ProductStatus.DRAFT, ProductStatus.ACTIVE],

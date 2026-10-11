@@ -39,10 +39,16 @@ async function collect<T>(stream: AsyncIterable<T>): Promise<number> {
 export const shopCalls: Record<string, () => Promise<unknown>> = {
   "catalog: ListProducts (connect)": () =>
     catalog("connect")
-      .listProducts({ page: { pageSize: 2 }, statuses: [ProductStatus.ACTIVE], maxPrice: { currencyCode: "JPY", units: 5000n } })
+      .listProducts({
+        page: { pageSize: 2 },
+        statuses: [ProductStatus.ACTIVE],
+        maxPrice: { currencyCode: "JPY", units: 5000n },
+      })
       .then((r) => r.products.map((p) => p.name)),
   "catalog: GetProduct (grpc-web)": () =>
-    catalog("grpcWeb").getProduct({ name: "products/tee-001" }).then((r) => r.product?.title),
+    catalog("grpcWeb")
+      .getProduct({ name: "products/tee-001" })
+      .then((r) => r.product?.title),
   "catalog: GetProduct with read_mask (connect GET)": () =>
     catalog("connectGet")
       .getProduct({ name: "products/mug-002", readMask: { paths: ["title", "price", "restock_time"] } })
@@ -77,6 +83,9 @@ export const shopCalls: Record<string, () => Promise<unknown>> = {
       shippingAddress: address,
       payment: { case: "cashOnDelivery", value: {} },
     }),
-  "orders: GetOrder (connect GET)": () => orders("connectGet").getOrder({ name: "orders/2001" }).then((r) => r.order?.state),
+  "orders: GetOrder (connect GET)": () =>
+    orders("connectGet")
+      .getOrder({ name: "orders/2001" })
+      .then((r) => r.order?.state),
   "orders: TrackOrder (connect stream)": () => collect(orders("connect").trackOrder({ name: "orders/2001" })),
 };

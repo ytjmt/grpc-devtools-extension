@@ -73,7 +73,8 @@ export function loadDescriptorSet(bytes: Uint8Array): LoadedSchema {
       }
     };
     for (const f of set.file) build(f, new Set());
-    if (built.size === 0) throw new LocalizedError({ key: "error.allFilesFailed", params: { files: skipped.join(", ") } });
+    if (built.size === 0)
+      throw new LocalizedError({ key: "error.allFilesFailed", params: { files: skipped.join(", ") } });
     registry = createFileRegistry(...regs);
   }
 
@@ -156,7 +157,9 @@ export class SchemaIndex {
       shadowed: shadowed.map((s) => s.name),
       outOfScope: winner
         ? []
-        : this.schemas.filter((s) => !applicable.includes(s) && s.loaded.registry.getService(service)).map((s) => s.name),
+        : this.schemas
+            .filter((s) => !applicable.includes(s) && s.loaded.registry.getService(service))
+            .map((s) => s.name),
     };
   }
 

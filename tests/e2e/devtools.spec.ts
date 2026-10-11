@@ -23,9 +23,9 @@ async function uploadSchema(panel: Frame) {
 
 test("records RPCs and keeps binary request bodies byte-exact", async ({ app, devtools }) => {
   await runDemo(app);
-  const calls = await devtools.devtoolsPage().evaluate(() =>
-    window.__grpcDevtoolsStore!.calls.map((c) => ({ url: c.url, body: c.requestBodyText })),
-  );
+  const calls = await devtools
+    .devtoolsPage()
+    .evaluate(() => window.__grpcDevtoolsStore!.calls.map((c) => ({ url: c.url, body: c.requestBodyText })));
   expect(calls.map((c) => new URL(c.url).pathname)).toEqual([
     "/demo.v1.DemoService/Greet",
     "/demo.v1.DemoService/Greet",

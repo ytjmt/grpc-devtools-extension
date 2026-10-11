@@ -227,13 +227,17 @@ class Writer {
         ? {
             ...this.at([FILE_EDITION]),
             group: "syntax",
-            write: () => this.decl([FILE_EDITION], [kw("edition"), " = ", str(Edition[this.f.edition].replace("EDITION_", ""))]),
+            write: () =>
+              this.decl([FILE_EDITION], [kw("edition"), " = ", str(Edition[this.f.edition].replace("EDITION_", ""))]),
           }
         : {
             ...this.at([FILE_SYNTAX]),
             group: "syntax",
             write: () =>
-              this.decl([FILE_SYNTAX], [kw("syntax"), " = ", str(this.f.edition === Edition.EDITION_PROTO2 ? "proto2" : "proto3")]),
+              this.decl(
+                [FILE_SYNTAX],
+                [kw("syntax"), " = ", str(this.f.edition === Edition.EDITION_PROTO2 ? "proto2" : "proto3")],
+              ),
           },
     );
     if (p.package) {
@@ -248,7 +252,8 @@ class Writer {
       header.push({
         ...this.at([FILE_DEPENDENCY, i]),
         group: "import",
-        write: () => this.decl([FILE_DEPENDENCY, i], [kw("import"), " ", ...(modifier ? [kw(modifier), " "] : []), str(dep)]),
+        write: () =>
+          this.decl([FILE_DEPENDENCY, i], [kw("import"), " ", ...(modifier ? [kw(modifier), " "] : []), str(dep)]),
       });
     });
     header.push(...this.optionItems(FileOptionsSchema, p.options, [FILE_OPTIONS]));
@@ -289,7 +294,11 @@ class Writer {
       ...m.members.map((member) =>
         member.kind === "oneof"
           ? { ...this.at(locate(member).path), group: BLOCK, write: () => this.oneof(member) }
-          : { ...this.at(locate(member).path), group: "field", write: () => this.field(member, m.typeName, locate(member).path) },
+          : {
+              ...this.at(locate(member).path),
+              group: "field",
+              write: () => this.field(member, m.typeName, locate(member).path),
+            },
       ),
       ...this.extendItems(m.nestedExtensions, MESSAGE_EXTENSION, path),
     ];
@@ -453,7 +462,11 @@ class Writer {
       write: () =>
         this.decl(
           undefined,
-          [kw("extend"), " ", { text: this.relativeName(run[0].extendee.typeName, scope), ref: run[0].extendee.typeName }],
+          [
+            kw("extend"),
+            " ",
+            { text: this.relativeName(run[0].extendee.typeName, scope), ref: run[0].extendee.typeName },
+          ],
           () => {
             for (const x of run) this.field(x, scope, pathOf(x));
           },

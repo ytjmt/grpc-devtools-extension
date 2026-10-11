@@ -88,7 +88,8 @@ export function toGrpcurl(call: DecodedCall, schema?: SchemaRef): string | undef
   const parts = ["grpcurl"];
   if (url.protocol === "http:") parts.push("-plaintext");
   // grpcurl reads descriptor sets from local files only.
-  if (schema) parts.push(`-protoset ${shellQuote(schema.kind === "url" && schema.url ? basename(schema.url) : schema.name)}`);
+  if (schema)
+    parts.push(`-protoset ${shellQuote(schema.kind === "url" && schema.url ? basename(schema.url) : schema.name)}`);
   for (const h of forwardedHeaders(call.raw.requestHeaders)) parts.push(`-H ${shellQuote(`${h.name}: ${h.value}`)}`);
   parts.push(`-d ${shellQuote(data)}`);
   parts.push(`${url.hostname}:${port}`);

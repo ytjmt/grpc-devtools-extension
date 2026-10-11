@@ -59,11 +59,7 @@ export function headerValue(headers: Header[], name: string): string | undefined
  * Decides whether an HTTP exchange is an RPC and which wire protocol it uses.
  * Returns undefined for ordinary traffic.
  */
-export function detectProtocol(
-  url: string,
-  httpMethod: string,
-  requestHeaders: Header[],
-): Detected | undefined {
+export function detectProtocol(url: string, httpMethod: string, requestHeaders: Header[]): Detected | undefined {
   const ct = (headerValue(requestHeaders, "content-type") ?? "").split(";")[0].trim().toLowerCase();
   const codecOf = (suffix: string | undefined): Codec => (suffix === "json" ? "json" : "proto");
 

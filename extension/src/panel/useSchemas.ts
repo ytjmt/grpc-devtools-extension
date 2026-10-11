@@ -109,7 +109,8 @@ export function useSchemas(backend: SchemaBackend) {
       setScopes: (source: SchemaSource, scopes: string[]) =>
         run(async () => {
           const invalid = scopes.filter((s) => !isValidScope(s));
-          if (invalid.length) throw new LocalizedError({ key: "schemas.invalidScope", params: { scopes: invalid.join(", ") } });
+          if (invalid.length)
+            throw new LocalizedError({ key: "schemas.invalidScope", params: { scopes: invalid.join(", ") } });
           await backend.put({ ...source, scopes });
         }),
       toggle: (source: SchemaSource) => run(() => backend.put({ ...source, enabled: !source.enabled })),
