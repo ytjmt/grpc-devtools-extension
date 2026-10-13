@@ -120,4 +120,35 @@ describe("SchemaBrowser", () => {
     expect(document.querySelector(".proto-source")).toBeNull();
     expect(detail().innerText).toContain("MOOD_SLEEPY");
   });
+
+  it("resizes the type list by dragging the splitter, within limits, and remembers the width", async () => {
+    await render(<Harness />);
+    const splitter = page.getByRole("separator", { name: "Resize type list" });
+    await expect.element(splitter).toBeInTheDocument(); // zero-width; its grab area is a pseudo-element
+    const el = splitter.element() as HTMLElement;
+    const nav = () => document.querySelector(".browser-nav")!.getBoundingClientRect().width;
+    const drag = (dx: number) => {
+      const x = el.getBoundingClientRect().left;
+      const init = { pointerId: 1, button: 0, bubbles: true };
+      el.dispatchEvent(new PointerEvent("pointerdown", { ...init, clientX: x }));
+      el.dispatchEvent(new PointerEvent("pointermove", { ...init, buttons: 1, clientX: x + dx }));
+      el.dispatchEvent(new PointerEvent("pointerup", { ...init, clientX: x + dx }));
+    };
+
+    const before = nav();
+    drag(60);
+    await expect.poll(nav).toBe(before + 60);
+    expect(localStorage.getItem("grpc-devtools.schemaNavWidth")).toBe(String(before + 60));
+
+    drag(-10_000);
+    await expect.poll(nav).toBe(180);
+    drag(10_000);
+    await expect.poll(nav).toBe(document.querySelector(".browser")!.clientWidth - 240);
+  });
+
+  it("restores the saved type list width", async () => {
+    localStorage.setItem("grpc-devtools.schemaNavWidth", "300");
+    await render(<Harness />);
+    await expect.poll(() => document.querySelector(".browser-nav")!.getBoundingClientRect().width).toBe(300);
+  });
 });

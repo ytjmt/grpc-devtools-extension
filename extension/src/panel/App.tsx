@@ -8,9 +8,13 @@ import { SchemaBrowser, type BrowseSchema, type BrowseSelection } from "./Schema
 import { CallList } from "./CallList";
 import type { SchemaBackend } from "./schemaBackend";
 import { SchemasView } from "./SchemasView";
-import { Splitter, useListWidth } from "./Splitter";
+import { Splitter, usePaneWidth } from "./Splitter";
 import { useDecodedRows } from "./useDecodedRows";
 import { useSchemas } from "./useSchemas";
+
+/** Match the min-width / max-width rules on `.main.with-detail .list` in styles.css. */
+const LIST_MIN_WIDTH = 140;
+const DETAIL_MIN_WIDTH = 240;
 
 export function App({ store, schemaBackend }: { store: CaptureStore; schemaBackend: SchemaBackend }) {
   const calls = useSyncExternalStore(
@@ -31,7 +35,7 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
   const [view, setView] = useState<"calls" | "schemas">("calls");
   const [schemasTab, setSchemasTab] = useState<"browse" | "manage">("browse");
   const [browseSelection, setBrowseSelection] = useState<BrowseSelection>();
-  const listWidth = useListWidth();
+  const listWidth = usePaneWidth("grpc-devtools.callListWidth");
   const openSchemas = (tab: "browse" | "manage", selection?: BrowseSelection) => {
     setView("schemas");
     setSchemasTab(tab);
@@ -151,7 +155,15 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
           style={listWidth.width ? ({ "--list-width": `${listWidth.width}px` } as CSSProperties) : undefined}
         >
           <CallList rows={visible} selectedId={selected?.raw.id} onSelect={setSelectedId} empty={rows.length === 0} />
-          {selected && <Splitter onResize={listWidth.setWidth} onCommit={listWidth.save} />}
+          {selected && (
+            <Splitter
+              label={t("list.resize")}
+              min={LIST_MIN_WIDTH}
+              restMin={DETAIL_MIN_WIDTH}
+              onResize={listWidth.setWidth}
+              onCommit={listWidth.save}
+            />
+          )}
           {selected && (
             <CallDetail
               row={selected}

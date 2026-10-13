@@ -565,7 +565,9 @@ table.headers td {
 }
 
 .browser-nav {
-  flex: 0 0 clamp(180px, 32%, 320px);
+  flex: 0 0 var(--nav-width, clamp(180px, 32%, 320px));
+  min-width: 180px;
+  max-width: calc(100% - 240px);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
@@ -882,8 +884,14 @@ table.headers td {
 
   .browser-nav {
     flex: 0 0 40%;
+    min-width: 0;
+    max-width: none;
     border-right: none;
     border-bottom: 1px solid var(--border);
+  }
+
+  .browser > .splitter {
+    display: none;
   }
 }
 

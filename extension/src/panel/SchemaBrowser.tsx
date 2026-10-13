@@ -1,5 +1,5 @@
 import type { DescEnum, DescField, DescMessage, DescOneof, DescService, FileRegistry } from "@bufbuild/protobuf";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getComment } from "../core/comments";
 import { fieldLabel, fieldTypeName, fieldTypeRef } from "../core/fields";
 import { fileSource, sourceText, typeSource, type ProtoSource } from "../core/protoSource";
@@ -7,6 +7,7 @@ import { buildTree, buildUsages, filterTree, findType, type TreeNode, type Usage
 import { t } from "../i18n";
 import { useCopy } from "./clipboard";
 import { methodKey, type MethodStats } from "./methodStats";
+import { Splitter, usePaneWidth } from "./Splitter";
 
 export interface BrowseSchema {
   id: string;
@@ -27,6 +28,10 @@ export interface CallLinks {
   onShowCalls: (path: string) => void;
 }
 
+/** Match the min-width / max-width rules on `.browser-nav` in styles.css. */
+const NAV_MIN_WIDTH = 180;
+const DETAIL_MIN_WIDTH = 240;
+
 export function SchemaBrowser({
   schemas,
   selection,
@@ -40,6 +45,7 @@ export function SchemaBrowser({
 }) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<DetailView>("table");
+  const navWidth = usePaneWidth("grpc-devtools.schemaNavWidth");
   const trees = useMemo(() => schemas.map((s) => ({ schema: s, nodes: buildTree(s.registry) })), [schemas]);
   const filtered = useMemo(
     () =>
@@ -56,7 +62,10 @@ export function SchemaBrowser({
   if (schemas.length === 0) return <div className="empty">{t("browse.noSchemas")}</div>;
 
   return (
-    <div className="browser">
+    <div
+      className="browser"
+      style={navWidth.width ? ({ "--nav-width": `${navWidth.width}px` } as CSSProperties) : undefined}
+    >
       <div className="browser-nav">
         <input
           className="filter"
@@ -87,6 +96,13 @@ export function SchemaBrowser({
           {filtered.length === 0 && <div className="empty">{t("browse.noMatches")}</div>}
         </div>
       </div>
+      <Splitter
+        label={t("browse.resize")}
+        min={NAV_MIN_WIDTH}
+        restMin={DETAIL_MIN_WIDTH}
+        onResize={navWidth.setWidth}
+        onCommit={navWidth.save}
+      />
       <div className="browser-detail">
         {current && selectedSchema ? (
           <TypeDetail

@@ -84,6 +84,7 @@ export const en = {
   "browse.noSchemas": "No schemas to browse. Add one under Manage.",
   "browse.search": "Search types, methods, and fields",
   "browse.tree": "Schema types",
+  "browse.resize": "Resize type list",
   "browse.noMatches": "No matches",
   "browse.selectType": "Select a type",
   "browse.notFound": "{type} is not in this schema",

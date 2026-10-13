@@ -1,17 +1,12 @@
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { t } from "../i18n";
 
-/** Matches the min-width / max-width rules on `.main.with-detail .list` in styles.css. */
-export const LIST_MIN_WIDTH = 140;
-export const DETAIL_MIN_WIDTH = 240;
-const STORAGE_KEY = "grpc-devtools.callListWidth";
 const KEY_STEP = 16;
 
-/** Call list width chosen by dragging the splitter; undefined until the user resizes it. */
-export function useListWidth() {
+/** Pane width chosen by dragging a splitter, kept under `storageKey`; undefined until the user resizes it. */
+export function usePaneWidth(storageKey: string) {
   const [width, setWidth] = useState(() => {
     try {
-      const v = Number(localStorage.getItem(STORAGE_KEY));
+      const v = Number(localStorage.getItem(storageKey));
       return v > 0 ? v : undefined;
     } catch {
       return undefined;
@@ -19,7 +14,7 @@ export function useListWidth() {
   });
   const save = (w: number) => {
     try {
-      localStorage.setItem(STORAGE_KEY, String(w));
+      localStorage.setItem(storageKey, String(w));
     } catch {
       // Storage may be unavailable; the width still applies for this session.
     }
@@ -27,18 +22,35 @@ export function useListWidth() {
   return { width, setWidth, save };
 }
 
-/** Vertical bar between the call list (previous sibling) and the detail pane. */
-export function Splitter({ onResize, onCommit }: { onResize: (w: number) => void; onCommit: (w: number) => void }) {
+/**
+ * Vertical bar that resizes the pane before it (its previous sibling).
+ * `min` and `restMin` must match the pane's min-width / max-width rules in styles.css.
+ */
+export function Splitter({
+  label,
+  min,
+  restMin,
+  onResize,
+  onCommit,
+}: {
+  label: string;
+  /** Minimum width of the resized pane. */
+  min: number;
+  /** Width the rest of the container keeps at least. */
+  restMin: number;
+  onResize: (w: number) => void;
+  onCommit: (w: number) => void;
+}) {
   // A ref, not state: pointer events can arrive before React re-renders.
   const drag = useRef<{ x: number; width: number; max: number; last: number }>(undefined);
   const [dragging, setDragging] = useState(false);
 
   const bounds = (el: HTMLElement) => {
-    const list = el.previousElementSibling as HTMLElement;
-    const max = el.parentElement!.clientWidth - DETAIL_MIN_WIDTH;
-    return { width: list.getBoundingClientRect().width, max: Math.max(LIST_MIN_WIDTH, max) };
+    const pane = el.previousElementSibling as HTMLElement;
+    const max = el.parentElement!.clientWidth - restMin;
+    return { width: pane.getBoundingClientRect().width, max: Math.max(min, max) };
   };
-  const clamp = (w: number, max: number) => Math.round(Math.min(Math.max(w, LIST_MIN_WIDTH), max));
+  const clamp = (w: number, max: number) => Math.round(Math.min(Math.max(w, min), max));
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
@@ -78,7 +90,7 @@ export function Splitter({ onResize, onCommit }: { onResize: (w: number) => void
       className={`splitter ${dragging ? "dragging" : ""}`}
       role="separator"
       aria-orientation="vertical"
-      aria-label={t("list.resize")}
+      aria-label={label}
       tabIndex={0}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
