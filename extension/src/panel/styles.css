@@ -210,6 +210,18 @@ input[type="url"],
   padding: 3px 6px;
 }
 
+/* Header buttons look like plain header text. */
+.list th button.sort {
+  all: unset;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.list th button.sort:focus-visible {
+  outline: 1px solid var(--accent);
+}
+
 .list td {
   padding: 3px 6px;
   white-space: nowrap;
@@ -219,7 +231,21 @@ input[type="url"],
 }
 
 .list td:first-child {
-  width: 45%;
+  width: 36%;
+}
+
+/* Short values get fixed widths, leaving the rest to Protocol and Status. */
+.list .col-messages {
+  width: 48px;
+}
+
+.list .col-size,
+.list .col-time {
+  width: 64px;
+}
+
+.list .col-started {
+  width: 92px;
 }
 
 .list tbody tr {

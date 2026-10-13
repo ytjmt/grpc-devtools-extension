@@ -14,6 +14,7 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 - Explains fields on hover in decoded messages, and warns when a response has fields the schema does not define
 - Copies a call as a `buf curl` or `grpcurl` command (`grpcurl` needs the server to speak native gRPC)
 - Filters by method or errors only, keeps the log across navigations, copies messages as JSON
+- Lists calls in start order with size, time, and start time; sorts by any column and moves through the list with the arrow keys
 
 ## Install
 

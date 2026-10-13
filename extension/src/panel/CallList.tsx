@@ -1,9 +1,10 @@
-import { useEffect, useRef, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { t } from "../i18n";
+import { COLUMNS, NAME_COLUMN, sortRows, type Column, type Sort } from "./listColumns";
 import type { CallRow } from "./useDecodedRows";
 
 export function CallList({
-  rows,
+  rows: recorded,
   selectedId,
   onSelect,
   empty,
@@ -15,6 +16,16 @@ export function CallList({
   empty: boolean;
 }) {
   const compact = selectedId !== undefined;
+  const [sort, setSort] = useState<Sort>();
+  const rows = useMemo(() => sortRows(recorded, sort), [recorded, sort]);
+  const header = (column: Column) => (
+    <SortHeader
+      key={column.key}
+      column={column}
+      sort={sort}
+      onSort={() => setSort({ key: column.key, descending: sort?.key === column.key ? !sort.descending : false })}
+    />
+  );
   // Arrow keys, Home, and End move the selection, as in the Network panel.
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const last = rows.length - 1;
@@ -34,15 +45,8 @@ export function CallList({
       <table>
         <thead>
           <tr>
-            <th>{t("list.name")}</th>
-            {!compact && (
-              <>
-                <th>{t("list.protocol")}</th>
-                <th>{t("list.status")}</th>
-                <th>{t("list.messages")}</th>
-                <th>{t("list.time")}</th>
-              </>
-            )}
+            {header(NAME_COLUMN)}
+            {!compact && COLUMNS.map(header)}
           </tr>
         </thead>
         <tbody>
@@ -78,7 +82,7 @@ function ListRow({
   selected: boolean;
   onSelect: () => void;
 }) {
-  const { call, raw } = row;
+  const { call } = row;
   const failed = !call || call.status.code !== 0;
   const ref = useRef<HTMLTableRowElement>(null);
   useEffect(() => {
@@ -94,7 +98,7 @@ function ListRow({
       aria-selected={selected}
       onClick={onSelect}
     >
-      <td title={call?.path ?? raw.url}>
+      <td title={NAME_COLUMN.text(row)}>
         <span className="method">{call?.method ?? "?"}</span>
         <span className="service">{call?.service}</span>
         {call && !call.schemaFound && call.codec === "proto" && (
@@ -103,14 +107,25 @@ function ListRow({
           </span>
         )}
       </td>
-      {!compact && (
-        <>
-          <td>{call ? `${call.transport}${call.codec === "json" ? " (json)" : ""}` : "-"}</td>
-          <td>{call ? `${call.status.code} ${call.status.name}` : t("list.decodeError")}</td>
-          <td>{call ? `${call.requestMessages.length} / ${call.responseMessages.length}` : "-"}</td>
-          <td>{Math.round(raw.time)} ms</td>
-        </>
-      )}
+      {!compact &&
+        COLUMNS.map((c) => (
+          <td key={c.key} className={`col-${c.key}`} title={c.text(row)}>
+            {c.text(row)}
+          </td>
+        ))}
     </tr>
+  );
+}
+
+/** Clicking sorts by the column, ascending first; clicking again reverses it. */
+function SortHeader({ column, sort, onSort }: { column: Column; sort?: Sort; onSort: () => void }) {
+  const active = sort?.key === column.key;
+  return (
+    <th className={`col-${column.key}`} aria-sort={active ? (sort.descending ? "descending" : "ascending") : undefined}>
+      <button type="button" className="sort" onClick={onSort}>
+        {t(column.label)}
+        {active && <span aria-hidden>{sort.descending ? " ▾" : " ▴"}</span>}
+      </button>
+    </th>
   );
 }

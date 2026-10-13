@@ -4,24 +4,41 @@ import { userEvent } from "vite-plus/test/browser";
 import { render } from "vitest-browser-react";
 import { SchemaIndex } from "../../extension/src/core/schema";
 import { CallList } from "../../extension/src/panel/CallList";
+import { formatClock } from "../../extension/src/panel/listColumns";
 import { decodeRow } from "../../extension/src/panel/useDecodedRows";
 import { demoCalls, syntheticCalls } from "../fixtures/builders";
 
 const rows = demoCalls.map((c) => decodeRow(c, SchemaIndex.empty));
 
 describe("CallList", () => {
-  it("shows one row per call with protocol, status, message counts and time", async () => {
+  it("shows one row per call with protocol, status, message counts, size, time and start", async () => {
     const screen = await render(<CallList rows={rows} onSelect={() => {}} empty={false} />);
     const trs = screen.container.querySelectorAll("tbody tr");
     expect(trs).toHaveLength(6);
+    // Start times are shown in local time, so the expectation goes through the same formatter.
+    const started = (s: number) => formatClock(`2026-01-01T00:00:0${s}.000Z`);
     expect([...trs].map((tr) => (tr as HTMLElement).innerText.split("\t").slice(1))).toEqual([
-      ["connect", "0 OK", "1 / 1", "13 ms"],
-      ["connect (json)", "0 OK", "1 / 1", "10 ms"],
-      ["grpc-web", "0 OK", "1 / 1", "8 ms"],
-      ["grpc-web", "7 PERMISSION_DENIED", "1 / 0", "3 ms"],
-      ["connect-stream", "0 OK", "1 / 5", "1511 ms"],
-      ["grpc-web", "0 OK", "1 / 5", "1514 ms"],
+      ["connect", "0 OK", "1 / 1", "98 B", "13 ms", started(0)],
+      ["connect (json)", "0 OK", "1 / 1", "170 B", "10 ms", started(1)],
+      ["grpc-web", "0 OK", "1 / 1", "124 B", "8 ms", started(2)],
+      ["grpc-web", "7 PERMISSION_DENIED", "1 / 0", "64 B", "3 ms", started(3)],
+      ["connect-stream", "0 OK", "1 / 5", "42 B", "1511 ms", started(4)],
+      ["grpc-web", "0 OK", "1 / 5", "56 B", "1514 ms", started(5)],
     ]);
+  });
+
+  it("sorts by a column when its header is clicked, and reverses on a second click", async () => {
+    const screen = await render(<CallList rows={rows} onSelect={() => {}} empty={false} />);
+    const times = () => [...screen.container.querySelectorAll("tbody tr td:nth-child(6)")].map((td) => td.textContent);
+    const header = screen.getByRole("button", { name: "Time" });
+
+    await header.click();
+    expect(times()).toEqual(["3 ms", "8 ms", "10 ms", "13 ms", "1511 ms", "1514 ms"]);
+    expect(screen.container.querySelector("th[aria-sort]")?.getAttribute("aria-sort")).toBe("ascending");
+
+    await header.click();
+    expect(times()).toEqual(["1514 ms", "1511 ms", "13 ms", "10 ms", "8 ms", "3 ms"]);
+    expect(screen.container.querySelector("th[aria-sort]")?.getAttribute("aria-sort")).toBe("descending");
   });
 
   it("marks failures and proto calls without a schema", async () => {
