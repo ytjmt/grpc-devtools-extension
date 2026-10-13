@@ -25,8 +25,6 @@ pnpm install   # first time only; this installs `vp`
 vp run build
 ```
 
-`mise.toml` puts `node_modules/.bin` on PATH, so `vp` runs without a global install. After the first install, use `vp install` to install or update dependencies.
-
 Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select `dist/`. Then open DevTools on your page and choose the **gRPC** tab. Only requests made while DevTools is open are recorded.
 
 ## Schemas
@@ -58,36 +56,28 @@ Additional tools:
 
 ```bash
 vp run dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
-vp check                 # format check, lint, and type check (Vite+); `vp fmt` formats
-vp run test              # unit + component tests (Vitest; components run in browser mode)
-vp run test:e2e          # Playwright: real Chrome + DevTools + demo server
-vp run test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
+vp check                 # format check, lint, and type check; `vp fmt` formats
+vp run test              # unit and component tests
+vp run test:e2e          # E2E tests in real Chrome DevTools
+vp run test:vrt          # screenshot tests in Docker (-u to update baselines)
 vp run fixtures:record   # re-record tests/fixtures/*-calls.json from the example app (-g shop for one scenario)
-vp run demo:record       # re-record docs/demo.gif, the README demo, in real DevTools (needs ffmpeg)
+vp run demo:record       # re-record docs/demo.gif (needs ffmpeg)
 vp run example:gen       # regenerate example code and descriptor sets
 vp run example:build && vp run example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
 vp run package           # build and zip into release/
 ```
 
-GitHub Actions (`.github/workflows/ci.yml`) runs `vp check`, the unit and component tests, the E2E tests, and the visual regression tests on pushes to `main` and on pull requests. Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm packages and actions.
-
-The Playwright image in `compose.yaml` takes its version from `@playwright/test` in `package.json`, so the browser server always matches the client. Start it through `vp run test:vrt`, which passes that version, rather than with `docker compose up`.
-
 ### Release
 
-The version lives in `package.json` and is written into the built manifest. To publish to GitHub Releases with `gh`:
-
 1. Bump `version` in `package.json` (1-4 numbers, e.g. `0.2.0`), commit, and push to `main`.
-2. Run `vp run release`. It checks that `main` matches `origin/main` and the tag is new, runs `vp check` and tests, then creates the `v<version>` release with the zipped build and generated notes.
-
-`vp run release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
+2. Run `vp run release` to publish to GitHub Releases with `gh` (`--dry-run` to only run the checks).
 
 ### Example app
 
 `example/` has two sets of protos served by one Connect server (`vp run example:serve`):
 
 - `demo.v1`: a minimal service the tests and recorded fixtures depend on.
-- `common.v1` + `shop.v1`: a realistic catalog and order API. Shared types (money, address, paging, audit) are imported across files, and the messages cover nested and recursive types, maps of messages, oneofs, proto3 `optional`, enum aliases, `reserved`, custom `json_name`, every scalar type, well-known types (`Timestamp`, `Duration`, `FieldMask`, `Struct`/`Value`, wrappers, `Any`, `Empty`), typed error details, and all four RPC kinds.
+- `common.v1` + `shop.v1`: a realistic catalog and order API that covers most proto features.
 
 Open `http://localhost:8080/?auto=shop` to run the shop scenario over Connect (binary, JSON, and GET) and gRPC-Web, or `?auto=compression` for gzip- and brotli-compressed calls. Client and bidi streaming cannot run in a browser; try them against the native gRPC port:
 
@@ -95,21 +85,4 @@ Open `http://localhost:8080/?auto=shop` to run the shop scenario over Connect (b
 grpcurl -plaintext -protoset example/descriptor.binpb \
   -d '{"text":"hi"} {"text":"where is my order?"}' \
   localhost:8081 shop.v1.OrderService/ChatWithSupport
-```
-
-### Layout
-
-```
-extension/          the extension (DevTools page, panel UI, decoder)
-  src/core/         protocol detection, framing, decoding, schemas
-  src/panel/        React UI
-  src/i18n/         all UI wording
-example/            demo and shop protos, Connect server, and client
-docs/               README demo (vp run demo:record)
-tests/
-  unit/             decoder, schemas, capture (Node)
-  component/        UI components (Vitest browser mode)
-  vrt/              screenshot tests and baselines
-  e2e/              Playwright against real DevTools
-  fixtures/         recorded and hand-built calls shared by the tests
 ```
