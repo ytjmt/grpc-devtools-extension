@@ -771,7 +771,6 @@ table.headers td {
 
 /* JSON keys that map to a schema field show their info on hover. */
 .jt-key.has-info {
-  cursor: help;
   text-decoration: underline dotted var(--muted);
   text-underline-offset: 2px;
 }
