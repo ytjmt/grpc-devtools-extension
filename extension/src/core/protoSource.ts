@@ -1,6 +1,5 @@
 import {
   isFieldSet,
-  ScalarType,
   type DescEnum,
   type DescExtension,
   type DescField,
@@ -11,7 +10,6 @@ import {
   type DescService,
 } from "@bufbuild/protobuf";
 import { nestedTypes, protoCamelCase } from "@bufbuild/protobuf/reflect";
-import { toText } from "@bufbuild/protobuf/txtpb";
 import {
   Edition,
   EnumOptionsSchema,
@@ -29,6 +27,8 @@ import {
 } from "@bufbuild/protobuf/wkt";
 import { locate, sourceLocation } from "./comments";
 import { fieldTypeName, fieldTypeRef } from "./fields";
+import { optionEntries } from "./protoOptions";
+import { kw, num, str, type Part, type Token } from "./protoTokens";
 import type { TypeDesc } from "./schemaTree";
 
 /**
@@ -38,13 +38,6 @@ import type { TypeDesc } from "./schemaTree";
  * normalized. Custom options are not shown (they are extensions the descriptor
  * set does not resolve here).
  */
-
-export interface Token {
-  text: string;
-  kind?: "keyword" | "comment" | "string" | "number" | "scalar";
-  /** Fully qualified name of the type this token refers to. */
-  ref?: string;
-}
 
 export interface ProtoSource {
   lines: Token[][];
@@ -71,12 +64,6 @@ export function typeSource(desc: TypeDesc): ProtoSource {
 export function sourceText(source: ProtoSource): string {
   return source.lines.map((line) => line.map((t) => t.text).join("")).join("\n") + "\n";
 }
-
-type Part = Token | string;
-
-const kw = (text: string): Token => ({ text, kind: "keyword" });
-const num = (n: number | string): Token => ({ text: String(n), kind: "number" });
-const str = (text: string): Token => ({ text: JSON.stringify(text), kind: "string" });
 
 /** An entry in a declaration body; entries are sorted by source line and separated by blank lines between groups. */
 interface Item {
@@ -591,64 +578,4 @@ function separated(prev: Item, next: Item): boolean {
 
 function commentLines(text: string): string[] {
   return text.replace(/\n$/, "").split("\n");
-}
-
-type OptionsSchema =
-  | typeof FileOptionsSchema
-  | typeof MessageOptionsSchema
-  | typeof FieldOptionsSchema
-  | typeof OneofOptionsSchema
-  | typeof EnumOptionsSchema
-  | typeof EnumValueOptionsSchema
-  | typeof ServiceOptionsSchema
-  | typeof MethodOptionsSchema;
-
-/**
- * Options set on a declaration, as `name = value` pairs. Message-valued options
- * such as `features` are flattened into dotted names (`features.field_presence`).
- */
-function optionEntries(
-  schema: OptionsSchema,
-  options: object | undefined,
-): { name: string; number: number; value: Token }[] {
-  if (!options) return [];
-  const out: { name: string; number: number; value: Token }[] = [];
-  const visit = (desc: { fields: DescField[] }, msg: object, prefix: string, number?: number) => {
-    for (const field of desc.fields) {
-      if (field.name === "uninterpreted_option") continue;
-      if (!isFieldSet(msg as never, field)) continue;
-      const value = (msg as Record<string, unknown>)[field.localName];
-      const name = prefix + field.name;
-      const n = number ?? field.number;
-      if (field.fieldKind === "message") visit(field.message, value as object, `${name}.`, n);
-      else if (field.fieldKind === "list") {
-        for (const v of value as unknown[]) out.push({ name, number: n, value: optionValue(field, v) });
-      } else out.push({ name, number: n, value: optionValue(field, value) });
-    }
-  };
-  visit(schema, options, "");
-  return out;
-}
-
-function optionValue(field: DescField, value: unknown): Token {
-  if (field.enum) return { text: field.enum.value[value as number]?.name ?? String(value) };
-  if (field.message) {
-    // Repeated message options: written as an aggregate on one line.
-    const text = toText(field.message, value as never)
-      .trim()
-      .split("\n")
-      .map((l) => l.trim())
-      .join(" ");
-    return { text: `{ ${text} }` };
-  }
-  switch (field.scalar) {
-    case ScalarType.STRING:
-      return str(value as string);
-    case ScalarType.BYTES:
-      return str(new TextDecoder().decode(value as Uint8Array));
-    case ScalarType.BOOL:
-      return kw(String(value));
-    default:
-      return num(String(value));
-  }
 }
