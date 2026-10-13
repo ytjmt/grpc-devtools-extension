@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: [["list"]],
   use: { trace: "retain-on-failure" },
   webServer: {
-    command: "vp run example:build && tsx example/server/server.ts",
+    command: "vp run example:build && vp run example:serve",
     url: `http://localhost:${DEMO_PORT}/`,
     env: { PORT: String(DEMO_PORT) },
     reuseExistingServer: true,
