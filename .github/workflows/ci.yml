@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Check and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+        with:
+          chromium: "true"
+      - run: vp check
+      - run: vp run test
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+        with:
+          chromium: "true"
+      - run: vp run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: tests/e2e/.results/
+          if-no-files-found: ignore
+
+  vrt:
+    name: Visual regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Chromium runs in the Playwright container from compose.yaml.
+      - uses: ./.github/actions/setup
+      - run: vp run test:vrt
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vrt-results
+          path: .vitest/
+          if-no-files-found: ignore

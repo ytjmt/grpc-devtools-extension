@@ -1,0 +1,25 @@
+name: Set up
+description: Install Node.js and pnpm as pinned in the repository, install dependencies, and put vp on PATH.
+
+inputs:
+  chromium:
+    description: Also install Playwright's Chromium with its system dependencies.
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    # Reads the pnpm version from packageManager in package.json.
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@v5
+      with:
+        node-version-file: .node-version
+        cache: pnpm
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+    # mise does this locally (mise.toml); vp is a local binary.
+    - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
+      shell: bash
+    - if: inputs.chromium == 'true'
+      run: vp exec playwright install --with-deps chromium
+      shell: bash
