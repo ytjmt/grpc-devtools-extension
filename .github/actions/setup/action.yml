@@ -3,7 +3,7 @@ description: Install Node.js and pnpm as pinned in the repository, install depen
 
 inputs:
   chromium:
-    description: Also install Playwright's Chromium with its system dependencies.
+    description: Also install Playwright's Chromium.
     default: "false"
 
 runs:
@@ -20,8 +20,9 @@ runs:
     # mise does this locally (mise.toml); vp is a local binary.
     - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
       shell: bash
-    # The browser download is cached per Playwright version; the system packages it
-    # needs are not, so they are installed either way.
+    # The browser download is cached per Playwright version. Its system dependencies
+    # (--with-deps) are skipped: the runner image ships Chrome and so has the libraries,
+    # and the extra fonts only matter for screenshots, which VRT takes in Docker.
     - if: inputs.chromium == 'true'
       id: playwright
       run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
@@ -33,8 +34,5 @@ runs:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
     - if: inputs.chromium == 'true' && steps.playwright-cache.outputs.cache-hit != 'true'
-      run: vp exec playwright install --with-deps chromium
-      shell: bash
-    - if: inputs.chromium == 'true' && steps.playwright-cache.outputs.cache-hit == 'true'
-      run: vp exec playwright install-deps chromium
+      run: vp exec playwright install chromium
       shell: bash
