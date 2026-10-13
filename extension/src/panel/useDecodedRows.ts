@@ -24,12 +24,21 @@ function useDecompressedBodies(calls: RawCall[]): Map<number, Bodies> {
   const [bodies, setBodies] = useState(() => new Map<number, Bodies>());
   const started = useRef(new Set<number>());
   useEffect(() => {
+    // Forget calls that were cleared or dropped by the log cap.
+    const live = new Set(calls.map((raw) => raw.id));
+    for (const id of started.current) if (!live.has(id)) started.current.delete(id);
+    setBodies((prev) => {
+      const kept = new Map([...prev].filter(([id]) => live.has(id)));
+      return kept.size === prev.size ? prev : kept;
+    });
+
     for (const raw of calls) {
       if (started.current.has(raw.id)) continue;
       started.current.add(raw.id);
       if (!isCompressed(raw)) continue;
       decompressBodies(raw).then(
-        (b) => setBodies((prev) => new Map(prev).set(raw.id, b)),
+        // Skip calls removed while decompressing.
+        (b) => started.current.has(raw.id) && setBodies((prev) => new Map(prev).set(raw.id, b)),
         () => {}, // leave it compressed; decodeCall reports why
       );
     }
@@ -45,17 +54,18 @@ export function useDecodedRows(calls: RawCall[], index: SchemaIndex): CallRow[] 
     rows: new Map(),
   });
   return useMemo(() => {
-    if (cache.current.index !== index) cache.current = { index, rows: new Map() };
-    const { rows } = cache.current;
-    return calls.map((raw) => {
+    const prev = cache.current.index === index ? cache.current.rows : new Map<number, never>();
+    // Rebuilt from `calls` each time, so cleared or capped calls are not kept alive.
+    const rows = new Map<number, { row: CallRow; bodies?: Bodies }>();
+    const result = calls.map((raw) => {
       const ready = bodies.get(raw.id);
-      let entry = rows.get(raw.id);
+      let entry = prev.get(raw.id);
       // Re-decode when decompressed bodies arrive.
-      if (!entry || entry.bodies !== ready) {
-        entry = { row: decodeRow(raw, index, ready), bodies: ready };
-        rows.set(raw.id, entry);
-      }
+      if (!entry || entry.bodies !== ready) entry = { row: decodeRow(raw, index, ready), bodies: ready };
+      rows.set(raw.id, entry);
       return entry.row;
     });
+    cache.current = { index, rows };
+    return result;
   }, [calls, index, bodies]);
 }
