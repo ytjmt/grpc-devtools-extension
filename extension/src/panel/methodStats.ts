@@ -20,7 +20,7 @@ export function collectMethodStats(rows: CallRow[]): Map<string, MethodStats> {
     if (!call?.schemaId) continue;
     const key = methodKey(call.schemaId, call.path);
     const prev = stats.get(key);
-    // Rows are in arrival order, so the last one seen is the most recent.
+    // Rows are in start order, so the last one seen started most recently.
     stats.set(key, { count: (prev?.count ?? 0) + 1, last: call.status });
   }
   return stats;

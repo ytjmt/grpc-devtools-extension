@@ -81,21 +81,39 @@ describe("startCapture", () => {
 });
 
 describe("CaptureStore", () => {
+  const call = {
+    url: "http://x/a.B/C",
+    httpMethod: "POST",
+    startedDateTime: "",
+    time: 0,
+    httpStatus: 200,
+    requestHeaders: [],
+    responseHeaders: [],
+    requestBodyText: null,
+    responseBody: { content: null, encoding: "" },
+  };
+
+  it("orders calls by start time, not by when they finish", () => {
+    const store = new CaptureStore();
+    const at = (s: number, url: string) => ({ ...call, url, startedDateTime: `2026-01-01T00:00:0${s}.000Z` });
+    store.add(at(2, "second"));
+    store.add(at(3, "third"));
+    // A stream started first but finished last.
+    store.add(at(1, "first"));
+    // Same start time: arrival order.
+    store.add(at(3, "fourth"));
+    expect(store.calls.map((c) => [c.url, c.id])).toEqual([
+      ["first", 3],
+      ["second", 1],
+      ["third", 2],
+      ["fourth", 4],
+    ]);
+  });
+
   it("notifies subscribers and caps the log at 2000 calls", () => {
     const store = new CaptureStore();
     const listener = vi.fn();
     const unsubscribe = store.subscribe(listener);
-    const call = {
-      url: "http://x/a.B/C",
-      httpMethod: "POST",
-      startedDateTime: "",
-      time: 0,
-      httpStatus: 200,
-      requestHeaders: [],
-      responseHeaders: [],
-      requestBodyText: null,
-      responseBody: { content: null, encoding: "" },
-    };
     for (let i = 0; i < 2005; i++) store.add(call);
     expect(store.calls).toHaveLength(2000);
     expect(store.calls[0].id).toBe(6);

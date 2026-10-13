@@ -23,8 +23,15 @@ export class CaptureStore {
     for (const fn of this.listeners) fn();
   }
 
+  /**
+   * Inserts a call in start order. Calls arrive when they finish and their body
+   * has been read, so a long call (a stream) lands before calls started after it.
+   */
   add(call: Omit<RawCall, "id">) {
-    this.calls = [...this.calls, { ...call, id: this.nextId++ }].slice(-MAX_CALLS);
+    const start = startTime(call);
+    let i = this.calls.length;
+    while (i > 0 && startTime(this.calls[i - 1]) > start) i--;
+    this.calls = this.calls.toSpliced(i, 0, { ...call, id: this.nextId++ }).slice(-MAX_CALLS);
     this.emit();
   }
 
@@ -37,6 +44,11 @@ export class CaptureStore {
     this.preserveLog = v;
     this.emit();
   }
+}
+
+/** Start time in ms; 0 when missing, which keeps such calls in arrival order. */
+function startTime(call: Pick<RawCall, "startedDateTime">): number {
+  return Date.parse(call.startedDateTime) || 0;
 }
 
 export function startCapture(store: CaptureStore) {
