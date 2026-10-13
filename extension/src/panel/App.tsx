@@ -70,11 +70,16 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
     <div className="app">
       <div className="toolbar">
         <button
+          className="icon-button"
           title={t("toolbar.clear")}
           aria-label={t("toolbar.clear")}
           onClick={() => (store.clear(), setSelectedId(undefined))}
         >
-          ⊘
+          {/* The "block" glyph DevTools uses for Clear network log. */}
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+            <circle cx="10" cy="10" r="6.75" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M5.25 5.25l9.5 9.5" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
         </button>
         <input
           className="filter"

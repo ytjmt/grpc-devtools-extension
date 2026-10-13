@@ -8,6 +8,7 @@
   --text: #1f1f1f;
   --muted: #5f6368;
   --accent: #1a73e8;
+  --icon: #474747;
   --error: #d93025;
   --error-bg: #fce8e6;
   --warn-bg: #fef7e0;
@@ -27,6 +28,7 @@
   --text: #e3e3e3;
   --muted: #9aa0a6;
   --accent: #8ab4f8;
+  --icon: #c7c7c7;
   --error: #f28b82;
   --error-bg: #4e1f1c;
   --warn-bg: #413511;
@@ -67,6 +69,21 @@ button {
   border-radius: 3px;
   padding: 2px 8px;
   cursor: pointer;
+}
+
+/* Borderless icon button, like the DevTools toolbar. */
+button.icon-button {
+  display: inline-flex;
+  padding: 2px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--icon);
+}
+
+button.icon-button:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
 }
 
 button.active {
