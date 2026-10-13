@@ -7,13 +7,15 @@ import { DEMO_ORIGIN, expect, test } from "./fixtures";
  * Opt-in: `vp run fixtures:record` (add `-g shop` to re-record one scenario only).
  * Volatile fields are normalized so diffs stay meaningful.
  */
+// Skipped here rather than in the test body, so Chrome is not launched just to skip.
+test.skip(!process.env.RECORD_FIXTURES, "set RECORD_FIXTURES=1 (vp run fixtures:record)");
+
 for (const { scenario, query, file } of [
   { scenario: "demo", query: "auto=1", file: "demo-calls.json" },
   { scenario: "shop", query: "auto=shop", file: "shop-calls.json" },
   { scenario: "compression", query: "auto=compression", file: "compression-calls.json" },
 ]) {
   test(`record ${scenario} calls as fixtures`, async ({ app, devtools }) => {
-    test.skip(!process.env.RECORD_FIXTURES, "set RECORD_FIXTURES=1 (vp run fixtures:record)");
     await app.goto(`${DEMO_ORIGIN}/?${query}`);
     await expect(app).toHaveTitle("done", { timeout: 30_000 });
 
