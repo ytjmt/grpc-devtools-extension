@@ -20,9 +20,11 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 Requires Node.js and pnpm, pinned in `.node-version` and `mise.toml`. With [mise](https://mise.jdx.dev/), `mise install` sets up both (plus `buf` and `protoc` for the example).
 
 ```bash
-pnpm install
-pnpm build
+pnpm install   # first time only; this installs `vp`
+vp run build
 ```
+
+`mise.toml` puts `node_modules/.bin` on PATH, so `vp` runs without a global install. After the first install, use `vp install` to install or update dependencies.
 
 Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select `dist/`. Then open DevTools on your page and choose the **gRPC** tab. Only requests made while DevTools is open are recorded.
 
@@ -50,19 +52,19 @@ Each schema can be limited to request URLs with **Applies to** patterns, such as
 
 Additional tools:
 
-- Playwright's Chromium for component and E2E tests: `pnpm exec playwright install chromium`
+- Playwright's Chromium for component and E2E tests: `vp exec playwright install chromium`
 - Docker for visual regression tests
 
 ```bash
-pnpm dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
-pnpm check             # format check, lint, and type check (Vite+); `pnpm fmt` formats
-pnpm test              # unit + component tests (Vitest; components run in browser mode)
-pnpm test:e2e          # Playwright: real Chrome + DevTools + demo server
-pnpm test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
-pnpm fixtures:record   # re-record tests/fixtures/*-calls.json from the example app (-g shop for one scenario)
-pnpm example:gen       # regenerate example code and descriptor sets
-pnpm example:build && pnpm example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
-pnpm package           # build and zip into release/
+vp run dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
+vp check                 # format check, lint, and type check (Vite+); `vp fmt` formats
+vp run test              # unit + component tests (Vitest; components run in browser mode)
+vp run test:e2e          # Playwright: real Chrome + DevTools + demo server
+vp run test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
+vp run fixtures:record   # re-record tests/fixtures/*-calls.json from the example app (-g shop for one scenario)
+vp run example:gen       # regenerate example code and descriptor sets
+vp run example:build && vp run example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
+vp run package           # build and zip into release/
 ```
 
 ### Release
@@ -70,13 +72,13 @@ pnpm package           # build and zip into release/
 The version lives in `package.json` and is written into the built manifest. To publish to GitHub Releases with `gh`:
 
 1. Bump `version` in `package.json` (1-4 numbers, e.g. `0.2.0`), commit, and push to `main`.
-2. Run `pnpm release`. It checks that `main` matches `origin/main` and the tag is new, runs `pnpm check` and tests, then creates the `v<version>` release with the zipped build and generated notes.
+2. Run `vp run release`. It checks that `main` matches `origin/main` and the tag is new, runs `vp check` and tests, then creates the `v<version>` release with the zipped build and generated notes.
 
-`pnpm release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
+`vp run release --dry-run` does everything except creating the release. Other flags such as `--draft` are passed to `gh release create`.
 
 ### Example app
 
-`example/` has two sets of protos served by one Connect server (`pnpm example:serve`):
+`example/` has two sets of protos served by one Connect server (`vp run example:serve`):
 
 - `demo.v1`: a minimal service the tests and recorded fixtures depend on.
 - `common.v1` + `shop.v1`: a realistic catalog and order API. Shared types (money, address, paging, audit) are imported across files, and the messages cover nested and recursive types, maps of messages, oneofs, proto3 `optional`, enum aliases, `reserved`, custom `json_name`, every scalar type, well-known types (`Timestamp`, `Duration`, `FieldMask`, `Struct`/`Value`, wrappers, `Any`, `Empty`), typed error details, and all four RPC kinds.

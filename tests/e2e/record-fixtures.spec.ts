@@ -4,7 +4,7 @@ import { DEMO_ORIGIN, expect, test } from "./fixtures";
 
 /**
  * Records real HAR-derived calls from the demo app for unit / component / VRT tests.
- * Opt-in: `pnpm fixtures:record` (add `-g shop` to re-record one scenario only).
+ * Opt-in: `vp run fixtures:record` (add `-g shop` to re-record one scenario only).
  * Volatile fields are normalized so diffs stay meaningful.
  */
 for (const { scenario, query, file } of [
@@ -13,7 +13,7 @@ for (const { scenario, query, file } of [
   { scenario: "compression", query: "auto=compression", file: "compression-calls.json" },
 ]) {
   test(`record ${scenario} calls as fixtures`, async ({ app, devtools }) => {
-    test.skip(!process.env.RECORD_FIXTURES, "set RECORD_FIXTURES=1 (pnpm fixtures:record)");
+    test.skip(!process.env.RECORD_FIXTURES, "set RECORD_FIXTURES=1 (vp run fixtures:record)");
     await app.goto(`${DEMO_ORIGIN}/?${query}`);
     await expect(app).toHaveTitle("done", { timeout: 30_000 });
 

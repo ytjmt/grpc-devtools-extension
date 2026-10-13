@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 VERSION=$(node -p 'require("./package.json").version')
 ASSET="release/grpc-devtools-extension-v${VERSION}.zip"
 
-pnpm build >/dev/null
+vp run build >/dev/null
 rm -rf release
 mkdir release
 (cd dist && zip -qr "../${ASSET}" .)

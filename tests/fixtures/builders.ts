@@ -13,7 +13,7 @@ import demoCallsJson from "./demo-calls.json";
 import compressionCallsJson from "./compression-calls.json";
 import shopCallsJson from "./shop-calls.json";
 
-/** Real calls captured from the demo app by `pnpm fixtures:record`. */
+/** Real calls captured from the demo app by `vp run fixtures:record`. */
 export const demoCalls = demoCallsJson as RawCall[];
 
 /**

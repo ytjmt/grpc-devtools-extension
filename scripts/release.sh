@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Publishes the build to GitHub Releases as v<package.json version>.
 #
-#   pnpm release              # create and publish the release
-#   pnpm release --dry-run    # run every check and build, but only print the gh command
-#   pnpm release --draft      # other flags are passed to `gh release create`
+#   vp run release             # create and publish the release
+#   vp run release --dry-run   # run every check and build, but only print the gh command
+#   vp run release --draft     # other flags are passed to `gh release create`
 #
 # Bump "version" in package.json and push that commit to main first.
 set -euo pipefail
@@ -36,8 +36,8 @@ if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
 fi
 gh auth status >/dev/null 2>&1 || fail "gh is not authenticated; run: gh auth login"
 
-pnpm check
-pnpm test
+vp check
+vp run test
 ASSET=$(scripts/package.sh)
 
 # `${arr[@]+...}` keeps empty arrays safe under `set -u` on macOS's bash 3.2.

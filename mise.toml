@@ -4,6 +4,10 @@ pnpm = "12.9.1"
 buf = "1.73.0"
 protoc = "36.2"
 
+# Puts local bins such as `vp` on PATH, so they run without a global install.
+[env]
+_.path = ["{{config_root}}/node_modules/.bin"]
+
 # Regenerates the demo code and the descriptor sets used by example/ and tests/.
 [tasks."example:gen"]
 dir = "{{config_root}}/example"
