@@ -134,9 +134,37 @@ input[type="url"],
   overflow: auto;
 }
 
+/* Min widths match LIST_MIN_WIDTH / DETAIL_MIN_WIDTH in Splitter.tsx. */
 .main.with-detail .list {
-  flex: 0 0 clamp(140px, 30%, 320px);
+  flex: 0 0 var(--list-width, clamp(140px, 30%, 320px));
+  min-width: 140px;
+  max-width: calc(100% - 240px);
   border-right: 1px solid var(--border);
+}
+
+/* Zero-width handle over the list's right border, so it takes no layout space. */
+.splitter {
+  flex: 0 0 0;
+  position: relative;
+  z-index: 2;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.splitter::after {
+  content: "";
+  position: absolute;
+  inset: 0 -3px 0 -4px;
+}
+
+.splitter:hover::before,
+.splitter:focus-visible::before,
+.splitter.dragging::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -1px;
+  background: var(--accent);
 }
 
 .list table {

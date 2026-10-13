@@ -16,6 +16,7 @@ export const en = {
   "list.decodeError": "decode error",
   "list.empty": "Waiting for gRPC / gRPC-Web / Connect requests…",
   "list.emptyHint": "Only requests made while DevTools is open are recorded.",
+  "list.resize": "Resize request list",
   "status.count": "{visible} / {total} requests",
 
   // Detail

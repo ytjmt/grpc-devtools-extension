@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore, type CSSProperties } from "react";
 import type { CaptureStore } from "../capture";
 import { t } from "../i18n";
 import type { SchemaRef } from "../core/curl";
@@ -8,6 +8,7 @@ import { SchemaBrowser, type BrowseSchema, type BrowseSelection } from "./Schema
 import { CallList } from "./CallList";
 import type { SchemaBackend } from "./schemaBackend";
 import { SchemasView } from "./SchemasView";
+import { Splitter, useListWidth } from "./Splitter";
 import { useDecodedRows } from "./useDecodedRows";
 import { useSchemas } from "./useSchemas";
 
@@ -30,6 +31,7 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
   const [view, setView] = useState<"calls" | "schemas">("calls");
   const [schemasTab, setSchemasTab] = useState<"browse" | "manage">("browse");
   const [browseSelection, setBrowseSelection] = useState<BrowseSelection>();
+  const listWidth = useListWidth();
   const openSchemas = (tab: "browse" | "manage", selection?: BrowseSelection) => {
     setView("schemas");
     setSchemasTab(tab);
@@ -139,8 +141,12 @@ export function App({ store, schemaBackend }: { store: CaptureStore; schemaBacke
           )}
         </div>
       ) : (
-        <div className={`main ${selected ? "with-detail" : ""}`}>
+        <div
+          className={`main ${selected ? "with-detail" : ""}`}
+          style={listWidth.width ? ({ "--list-width": `${listWidth.width}px` } as CSSProperties) : undefined}
+        >
           <CallList rows={visible} selectedId={selected?.raw.id} onSelect={setSelectedId} empty={rows.length === 0} />
+          {selected && <Splitter onResize={listWidth.setWidth} onCommit={listWidth.save} />}
           {selected && (
             <CallDetail
               row={selected}

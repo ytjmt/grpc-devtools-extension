@@ -26,6 +26,61 @@ describe("Panel", () => {
     await expect.poll(rowCount).toBe(1);
   });
 
+  it("resizes the call list by dragging the splitter, within limits, and remembers the width", async () => {
+    await renderPanel({ calls: demoCalls });
+    await expect.poll(rowCount).toBe(6);
+    expect(document.querySelector(".splitter")).toBeNull();
+    (document.querySelector(".list tbody tr") as HTMLElement).click();
+
+    const splitter = page.getByRole("separator", { name: "Resize request list" });
+    await expect.element(splitter).toBeInTheDocument(); // zero-width; its grab area is a pseudo-element
+    const el = splitter.element() as HTMLElement;
+    const list = () => document.querySelector(".list")!.getBoundingClientRect().width;
+    const drag = (dx: number) => {
+      const x = el.getBoundingClientRect().left;
+      const init = { pointerId: 1, button: 0, bubbles: true };
+      el.dispatchEvent(new PointerEvent("pointerdown", { ...init, clientX: x }));
+      el.dispatchEvent(new PointerEvent("pointermove", { ...init, buttons: 1, clientX: x + dx }));
+      el.dispatchEvent(new PointerEvent("pointerup", { ...init, clientX: x + dx }));
+    };
+
+    const r = el.getBoundingClientRect();
+    for (const dx of [-3, 0, 2]) expect(document.elementFromPoint(r.left + dx, r.top + 50)).toBe(el);
+
+    const before = list();
+    drag(100);
+    await expect.poll(list).toBe(before + 100);
+    expect(localStorage.getItem("grpc-devtools.callListWidth")).toBe(String(before + 100));
+
+    drag(-10_000);
+    await expect.poll(list).toBe(140);
+    drag(10_000);
+    const main = document.querySelector(".main")!.clientWidth;
+    await expect.poll(list).toBe(main - 240);
+
+    // A missed release: moving with no button held ends the drag instead of resizing.
+    const x = el.getBoundingClientRect().left;
+    el.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 1, button: 0, bubbles: true, clientX: x }));
+    await expect.element(splitter).toHaveClass("dragging");
+    el.dispatchEvent(new PointerEvent("pointermove", { pointerId: 1, buttons: 0, bubbles: true, clientX: x - 50 }));
+    await expect.element(splitter).not.toHaveClass("dragging");
+    el.dispatchEvent(new PointerEvent("pointermove", { pointerId: 1, buttons: 1, bubbles: true, clientX: x - 80 }));
+    expect(list()).toBe(main - 240);
+
+    await userEvent.keyboard("{ArrowLeft}"); // no focus yet: ignored
+    el.focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect.poll(list).toBe(main - 240 - 16);
+  });
+
+  it("restores the saved call list width", async () => {
+    localStorage.setItem("grpc-devtools.callListWidth", "400");
+    await renderPanel({ calls: demoCalls });
+    await expect.poll(rowCount).toBe(6);
+    (document.querySelector(".list tbody tr") as HTMLElement).click();
+    await expect.poll(() => document.querySelector(".list")!.getBoundingClientRect().width).toBe(400);
+  });
+
   it("clears the log and toggles Preserve log on the store", async () => {
     const { store } = await renderPanel({ calls: demoCalls });
     await page.getByLabelText("Preserve log").click();
