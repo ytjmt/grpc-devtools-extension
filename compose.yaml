@@ -4,9 +4,11 @@ name: grpc-devtools-extension
 services:
   # Remote Chromium for VRT: tests run on the host, rendering happens in Linux.
   playwright:
-    image: mcr.microsoft.com/playwright:v1.64.0-noble
+    # The version comes from @playwright/test in package.json (`vp run test:vrt` sets it),
+    # so the server always matches the client; a mismatch fails to connect.
+    image: mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble
     # The npm cache volume lets restarts skip the registry.
-    command: ["npx", "--prefer-offline", "-y", "playwright@1.64.0", "run-server", "--port", "3000", "--host", "0.0.0.0"]
+    command: npx --prefer-offline -y playwright@${PLAYWRIGHT_VERSION} run-server --port 3000 --host 0.0.0.0
     init: true
     ipc: host
     ports:

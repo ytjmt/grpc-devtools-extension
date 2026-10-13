@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    # The composite setup action pins actions of its own.
+    directories: ["/", "/.github/actions/*"]
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # Also covers the pnpm catalog in pnpm-workspace.yaml. The Playwright image in
+  # compose.yaml follows @playwright/test, so it needs no entry of its own.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      # Minor and patch updates in one PR; majors each get their own.
+      minor-and-patch:
+        update-types: [minor, patch]

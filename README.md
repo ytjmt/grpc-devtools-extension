@@ -68,7 +68,9 @@ vp run example:build && vp run example:serve   # demo app at http://localhost:80
 vp run package           # build and zip into release/
 ```
 
-GitHub Actions (`.github/workflows/ci.yml`) runs `vp check`, the unit and component tests, the E2E tests, and the visual regression tests on pushes to `main` and on pull requests.
+GitHub Actions (`.github/workflows/ci.yml`) runs `vp check`, the unit and component tests, the E2E tests, and the visual regression tests on pushes to `main` and on pull requests. Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm packages and actions.
+
+The Playwright image in `compose.yaml` takes its version from `@playwright/test` in `package.json`, so the browser server always matches the client. Start it through `vp run test:vrt`, which passes that version, rather than with `docker compose up`.
 
 ### Release
 

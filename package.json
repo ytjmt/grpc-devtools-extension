@@ -18,7 +18,7 @@
     "fixtures:record": "vp run build && RECORD_FIXTURES=1 playwright test record-fixtures",
     "test:unit": "vp test run --project unit",
     "test:component": "vp test run --project component",
-    "test:vrt": "docker compose up -d --wait playwright && vp test run --project vrt",
+    "test:vrt": "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\") docker compose up -d --wait playwright && vp test run --project vrt",
     "prepare": "vp config --no-agent",
     "package": "scripts/package.sh",
     "release": "scripts/release.sh"
@@ -33,7 +33,7 @@
     "@connectrpc/connect": "^2.2.0",
     "@connectrpc/connect-node": "^2.2.0",
     "@connectrpc/connect-web": "^2.2.0",
-    "@playwright/test": "^1.64.0",
+    "@playwright/test": "1.64.0",
     "@types/chrome": "^0.3.4",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
