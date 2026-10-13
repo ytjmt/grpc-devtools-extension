@@ -16,6 +16,7 @@
     "example:build": "vp build -c example/client/vite.config.ts",
     "example:serve": "tsx example/server/server.ts",
     "fixtures:record": "vp run build && RECORD_FIXTURES=1 playwright test record-fixtures",
+    "demo:record": "vp run build && RECORD_DEMO=1 playwright test record-demo",
     "test:unit": "vp test run --project unit",
     "test:component": "vp test run --project component",
     "test:vrt": "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\") docker compose up -d --wait playwright && vp test run --project vrt",

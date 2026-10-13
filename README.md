@@ -2,7 +2,7 @@
 
 A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web and Connect requests and responses.
 
-![gRPC panel showing a decoded response](tests/vrt/__screenshots__/panel.test.tsx/detail-response-light-chromium-linux.png)
+![The gRPC panel recording calls, decoding a response and an error, and browsing the schema](docs/demo.gif)
 
 ## Features
 
@@ -63,6 +63,7 @@ vp run test              # unit + component tests (Vitest; components run in bro
 vp run test:e2e          # Playwright: real Chrome + DevTools + demo server
 vp run test:vrt          # screenshot tests rendered by Chromium in Docker (add -u to update baselines)
 vp run fixtures:record   # re-record tests/fixtures/*-calls.json from the example app (-g shop for one scenario)
+vp run demo:record       # re-record docs/demo.gif, the README demo, in real DevTools (needs ffmpeg)
 vp run example:gen       # regenerate example code and descriptor sets
 vp run example:build && vp run example:serve   # demo app at http://localhost:8080, native gRPC on localhost:8081
 vp run package           # build and zip into release/
@@ -104,6 +105,7 @@ extension/          the extension (DevTools page, panel UI, decoder)
   src/panel/        React UI
   src/i18n/         all UI wording
 example/            demo and shop protos, Connect server, and client
+docs/               README demo (vp run demo:record)
 tests/
   unit/             decoder, schemas, capture (Node)
   component/        UI components (Vitest browser mode)
