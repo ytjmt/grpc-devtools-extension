@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from "vite-plus/test";
+import { useState } from "react";
+import { userEvent } from "vite-plus/test/browser";
 import { render } from "vitest-browser-react";
 import { SchemaIndex } from "../../extension/src/core/schema";
 import { CallList } from "../../extension/src/panel/CallList";
@@ -38,6 +40,30 @@ describe("CallList", () => {
 
     await screen.getByText("Count").first().click();
     expect(onSelect).toHaveBeenCalledWith(rows[4].raw.id);
+  });
+
+  it("moves the selection with the arrow keys, Home, and End", async () => {
+    function Selectable() {
+      const [selectedId, setSelectedId] = useState<number>();
+      return <CallList rows={rows} selectedId={selectedId} onSelect={setSelectedId} empty={false} />;
+    }
+    const screen = await render(<Selectable />);
+    const selected = () =>
+      [...screen.container.querySelectorAll("tbody tr")].findIndex((tr) => tr.getAttribute("aria-selected") === "true");
+
+    (screen.container.querySelector(".list") as HTMLElement).focus();
+    await userEvent.keyboard("{ArrowDown}");
+    expect(selected()).toBe(0);
+    await userEvent.keyboard("{ArrowDown}{ArrowDown}");
+    expect(selected()).toBe(2);
+    await userEvent.keyboard("{ArrowUp}");
+    expect(selected()).toBe(1);
+    await userEvent.keyboard("{End}");
+    expect(selected()).toBe(5);
+    await userEvent.keyboard("{ArrowDown}"); // stays on the last row
+    expect(selected()).toBe(5);
+    await userEvent.keyboard("{Home}");
+    expect(selected()).toBe(0);
   });
 
   it("shows decode errors and the empty state", async () => {

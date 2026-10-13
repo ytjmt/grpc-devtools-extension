@@ -6,6 +6,7 @@ export const en = {
   "toolbar.errorsOnly": "Errors only",
   "toolbar.preserveLog": "Preserve log",
   "toolbar.schemas": "Schemas ({count})",
+  "list.label": "Recorded calls",
   "list.name": "Name",
   "list.protocol": "Protocol",
   "list.status": "Status",

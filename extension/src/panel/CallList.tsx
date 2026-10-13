@@ -1,3 +1,4 @@
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import { t } from "../i18n";
 import type { CallRow } from "./useDecodedRows";
 
@@ -14,8 +15,22 @@ export function CallList({
   empty: boolean;
 }) {
   const compact = selectedId !== undefined;
+  // Arrow keys, Home, and End move the selection, as in the Network panel.
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const last = rows.length - 1;
+    const i = rows.findIndex((r) => r.raw.id === selectedId);
+    const next = {
+      ArrowDown: i < 0 ? 0 : Math.min(i + 1, last),
+      ArrowUp: i < 0 ? last : Math.max(i - 1, 0),
+      Home: 0,
+      End: last,
+    }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    if (rows[next]) onSelect(rows[next].raw.id);
+  };
   return (
-    <div className="list">
+    <div className="list" tabIndex={0} aria-label={t("list.label")} onKeyDown={onKeyDown}>
       <table>
         <thead>
           <tr>
@@ -65,8 +80,13 @@ function ListRow({
 }) {
   const { call, raw } = row;
   const failed = !call || call.status.code !== 0;
+  const ref = useRef<HTMLTableRowElement>(null);
+  useEffect(() => {
+    if (selected) ref.current?.scrollIntoView({ block: "nearest" });
+  }, [selected]);
   return (
     <tr
+      ref={ref}
       className={`${selected ? "selected" : ""} ${failed ? "failed" : ""}`}
       data-method={call?.method}
       data-transport={call?.transport}

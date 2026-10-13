@@ -149,6 +149,17 @@ input[type="url"],
 .list {
   flex: 1;
   overflow: auto;
+  /* Keeps rows scrolled into view clear of the sticky header. */
+  scroll-padding-top: 24px;
+}
+
+.list:focus {
+  outline: none;
+}
+
+.list:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
 }
 
 /* Min widths match LIST_MIN_WIDTH / DETAIL_MIN_WIDTH in Splitter.tsx. */
