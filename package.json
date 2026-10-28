@@ -44,7 +44,6 @@
     "fake-indexeddb": "^6.2.5",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.3.0"
