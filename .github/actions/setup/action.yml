@@ -9,11 +9,12 @@ inputs:
 runs:
   using: composite
   steps:
-    # Reads the pnpm version from packageManager in package.json.
-    - uses: pnpm/action-setup@v6
+    - uses: jdx/mise-action@v5
+      with:
+        install_args: node pnpm
+    # Only caches the pnpm store; Node and pnpm come from mise.
     - uses: actions/setup-node@v7
       with:
-        node-version-file: .node-version
         cache: pnpm
     - run: pnpm install --frozen-lockfile
       shell: bash

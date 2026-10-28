@@ -18,7 +18,7 @@ A Chrome DevTools extension that adds a **gRPC** panel for inspecting gRPC-Web a
 
 ## Install
 
-Requires Node.js and pnpm, pinned in `.node-version` and `mise.toml`. With [mise](https://mise.jdx.dev/), `mise install` sets up both (plus `buf` and `protoc` for the example).
+Requires Node.js and pnpm, pinned in `mise.toml`. With [mise](https://mise.jdx.dev/), `mise install` sets up both (plus `buf` and `protoc` for the example).
 
 ```bash
 pnpm install   # first time only; this installs `vp`
