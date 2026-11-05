@@ -1,0 +1,81 @@
+name: Update Vite+
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  update:
+    name: Update Vite+
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: update-vite-plus
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # The newest stable release that pnpm's minimumReleaseAge already lets in.
+      - id: version
+        run: |
+          current=$(yq '.catalog."vite-plus"' pnpm-workspace.yaml)
+          age=$(yq '.minimumReleaseAge // 0' pnpm-workspace.yaml)
+          target=$(pnpm view vite-plus time --json | AGE="$age" node -e '
+            const times = JSON.parse(require("fs").readFileSync(0, "utf8"));
+            const cutoff = Date.now() - Number(process.env.AGE) * 60_000;
+            const parse = (v) => v.split(".").map(Number);
+            const newer = (a, b) => {
+              const [x, y] = [parse(a), parse(b)];
+              for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i];
+              return false;
+            };
+            const best = Object.keys(times)
+              .filter((v) => /^\d+\.\d+\.\d+$/.test(v) && Date.parse(times[v]) <= cutoff)
+              .reduce((a, b) => (a && !newer(b, a) ? a : b), "");
+            console.log(best);
+          ')
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          if [ -n "$target" ] && [ "$target" != "$current" ] \
+            && [ "$(printf '%s\n%s\n' "$current" "$target" | sort -V | tail -1)" = "$target" ]; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.version.outputs.update == 'true'
+        run: pnpm --package=vite-plus@${{ steps.version.outputs.target }} dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks
+
+      # migrate exempts the toolchain from minimumReleaseAge; keep the repository's policy.
+      - if: steps.version.outputs.update == 'true'
+        run: |
+          yq -i 'del(.minimumReleaseAgeExclude)' pnpm-workspace.yaml
+          pnpm install
+
+      - if: steps.version.outputs.update == 'true'
+        env:
+          CURRENT: ${{ steps.version.outputs.current }}
+          TARGET: ${{ steps.version.outputs.target }}
+        run: |
+          title="Update Vite+ from $CURRENT to $TARGET"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git commit -am "$title"
+          git push --force origin "$BRANCH"
+          body="Ran \`vp migrate\` with vite-plus $TARGET, which re-pins vite-plus, the vite alias to @voidzero-dev/vite-plus-core and the Vitest packages together."
+          if gh pr view "$BRANCH" --json state --jq .state | grep -q OPEN; then
+            gh pr edit "$BRANCH" --title "$title" --body "$body"
+          else
+            gh pr create --head "$BRANCH" --title "$title" --body "$body"
+          fi
+          # Pushes made with GITHUB_TOKEN start no pull_request runs, but a dispatch does.
+          gh workflow run ci.yml --ref "$BRANCH"
