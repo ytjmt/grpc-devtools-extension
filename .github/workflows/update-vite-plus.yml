@@ -12,7 +12,6 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
-  actions: write
 
 jobs:
   update:
@@ -77,5 +76,3 @@ jobs:
           else
             gh pr create --head "$BRANCH" --title "$title" --body "$body"
           fi
-          # Pushes made with GITHUB_TOKEN start no pull_request runs, but a dispatch does.
-          gh workflow run ci.yml --ref "$BRANCH"
