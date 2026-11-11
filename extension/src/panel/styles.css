@@ -170,6 +170,11 @@ input[type="url"],
   border-right: 1px solid var(--border);
 }
 
+/* Hidden rather than unrendered, so opening the detail pane does not rebuild every row. */
+.list.compact :is(th, td):not(:first-child) {
+  display: none;
+}
+
 /* Zero-width handle over the list's right border, so it takes no layout space. */
 .splitter {
   flex: 0 0 0;

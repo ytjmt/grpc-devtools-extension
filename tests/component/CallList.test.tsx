@@ -52,7 +52,10 @@ describe("CallList", () => {
   it("collapses to the name column while a call is selected", async () => {
     const onSelect = vi.fn();
     const screen = await render(<CallList rows={rows} selectedId={rows[3].raw.id} onSelect={onSelect} empty={false} />);
-    expect(screen.container.querySelectorAll("th")).toHaveLength(1);
+    const visible = (selector: string) =>
+      [...screen.container.querySelectorAll(selector)].filter((el) => el.checkVisibility());
+    expect(visible("th")).toHaveLength(1);
+    expect(visible("tbody tr:first-child td")).toHaveLength(1);
     expect(screen.container.querySelector('tr[aria-selected="true"]')?.getAttribute("data-method")).toBe("Fail");
 
     await screen.getByText("Count").first().click();
