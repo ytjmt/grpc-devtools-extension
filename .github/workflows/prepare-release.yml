@@ -1,0 +1,61 @@
+name: Prepare release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Part of the version to increment.
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare:
+    name: Open release PR
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          next=$(jq -r .version package.json | BUMP="$BUMP" node -e '
+            const parts = require("fs").readFileSync(0, "utf8").trim().split(".").map(Number);
+            while (parts.length < 3) parts.push(0);
+            const i = ["major", "minor", "patch"].indexOf(process.env.BUMP);
+            parts.splice(i, parts.length - i, parts[i] + 1, ...Array(2 - i).fill(0));
+            console.log(parts.join("."));
+          ')
+          jq --arg v "$next" '.version = $v' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          echo "tag=v$next" >> "$GITHUB_OUTPUT"
+
+      - id: body
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          notes=$(gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" -f tag_name="$TAG" -f target_commitish=main --jq .body)
+          {
+            echo 'text<<EOF'
+            printf 'Merging this publishes %s to GitHub Releases once CI passes on main.\n\n## Release notes (draft)\n\n%s\n' "$TAG" "$notes"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: $/.github/actions/open-pr
+        with:
+          branch: release
+          title: Release ${{ steps.version.outputs.tag }}
+          body: ${{ steps.body.outputs.text }}

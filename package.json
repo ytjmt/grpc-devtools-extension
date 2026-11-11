@@ -21,8 +21,7 @@
     "test:component": "vp test run --project component",
     "test:vrt": "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\") docker compose up -d --wait playwright && vp test run --project vrt",
     "prepare": "vp config --no-agent && (test -n \"$CI\" || playwright install chromium)",
-    "package": "scripts/package.sh",
-    "release": "scripts/release.sh"
+    "package": "scripts/package.sh"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.17.0",
