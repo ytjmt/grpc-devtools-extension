@@ -6,10 +6,12 @@ on:
     paths:
       - .github/workflows/**
       - .github/actions/**
+      - mise.toml
   pull_request:
     paths:
       - .github/workflows/**
       - .github/actions/**
+      - mise.toml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,5 +30,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - run: gh extension install github/gh-actions-lock --pin v0.4.1
-      - run: gh actions-lock --verify
+      - uses: jdx/mise-action@v5.2.7
+        with:
+          install_args: github:github/gh-actions-lock
+      - run: gh-actions-lock --verify
