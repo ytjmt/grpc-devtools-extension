@@ -78,6 +78,7 @@ export default defineConfig({
   staged: {
     "*": "vp check --fix",
     ".github/workflows/*.yml": "actionlint",
+    "*.sh": "shellcheck",
     // Checks the whole lockfile, so the staged paths are dropped.
     ".github/**": "sh -c 'gh-actions-lock --verify-local --no-fix' --",
   },

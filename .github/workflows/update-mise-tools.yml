@@ -53,6 +53,7 @@ jobs:
       - if: steps.upgrade.outputs.update == 'true'
         id: body
         run: |
+          # shellcheck disable=SC2016 # literal backticks
           {
             echo 'text<<EOF'
             printf 'Ran `mise upgrade --bump`, synced pnpm in package.json, and regenerated the example code.\n\n```diff\n%s\n```\n' \

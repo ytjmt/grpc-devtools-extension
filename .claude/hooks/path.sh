@@ -11,4 +11,5 @@ if command -v mise >/dev/null && command -v jq >/dev/null; then
   # shellcheck disable=SC2086 # one tool per word
   [ -n "$tools" ] && bins=$(cd "$root" && mise bin-paths $tools | paste -sd: -)
 fi
+# shellcheck disable=SC2016 # $PATH expands where the line is sourced
 printf 'export PATH="%s%s/node_modules/.bin:$PATH"\n' "${bins:+$bins:}" "$root"

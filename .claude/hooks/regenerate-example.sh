@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # PostToolUse: regenerates example/gen and the descriptor sets after a .proto edit.
 set -uo pipefail
-cd "$CLAUDE_PROJECT_DIR"
+cd "$CLAUDE_PROJECT_DIR" || exit 1
 case "$(jq -r '.tool_input.file_path // empty')" in
   "$CLAUDE_PROJECT_DIR"/example/proto/*.proto) ;;
   *) exit 0 ;;
