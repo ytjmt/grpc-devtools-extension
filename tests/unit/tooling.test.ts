@@ -13,4 +13,12 @@ describe("tooling", () => {
       "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\")",
     );
   });
+
+  it("pins the same pnpm in mise.toml and package.json", () => {
+    const mise = readFileSync(new URL("../../mise.toml", import.meta.url), "utf8");
+    const pinned = /^pnpm = "([^"]+)"$/m.exec(mise)?.[1];
+    expect(pinned).toBeDefined();
+    expect(packageJson.packageManager).toBe(`pnpm@${pinned}`);
+    expect(packageJson.devEngines.packageManager.version).toBe(pinned);
+  });
 });
