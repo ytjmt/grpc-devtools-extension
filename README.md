@@ -49,10 +49,7 @@ Each schema can be limited to request URLs with **Applies to** patterns, such as
 
 ## Development
 
-Additional tools:
-
-- Playwright's Chromium for component and E2E tests: `vp exec playwright install chromium`
-- Docker for visual regression tests
+Visual regression tests also need Docker. `pnpm install` installs Playwright's Chromium for the other browser tests.
 
 ```bash
 vp run dev               # rebuild dist/ on change (reload the extension in chrome://extensions)
