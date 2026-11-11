@@ -17,6 +17,7 @@ jobs:
   update:
     name: Update Vite+
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       BRANCH: update-vite-plus
       GH_TOKEN: ${{ github.token }}
@@ -60,19 +61,8 @@ jobs:
           pnpm install
 
       - if: steps.version.outputs.update == 'true'
-        env:
-          CURRENT: ${{ steps.version.outputs.current }}
-          TARGET: ${{ steps.version.outputs.target }}
-        run: |
-          title="Update Vite+ from $CURRENT to $TARGET"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -C "$BRANCH"
-          git commit -am "$title"
-          git push --force origin "$BRANCH"
-          body="Ran \`vp migrate\` with vite-plus $TARGET, which re-pins vite-plus, the vite alias to @voidzero-dev/vite-plus-core and the Vitest packages together."
-          if gh pr view "$BRANCH" --json state --jq .state | grep -q OPEN; then
-            gh pr edit "$BRANCH" --title "$title" --body "$body"
-          else
-            gh pr create --head "$BRANCH" --title "$title" --body "$body"
-          fi
+        uses: $/.github/actions/open-pr
+        with:
+          branch: ${{ env.BRANCH }}
+          title: Update Vite+ from ${{ steps.version.outputs.current }} to ${{ steps.version.outputs.target }}
+          body: Ran `vp migrate` with vite-plus ${{ steps.version.outputs.target }}, which re-pins vite-plus, the vite alias to @voidzero-dev/vite-plus-core and the Vitest packages together.

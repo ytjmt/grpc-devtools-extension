@@ -1,0 +1,37 @@
+name: Open PR
+description: Commit tracked changes to a branch, force-push it, and open or update its pull request.
+
+inputs:
+  branch:
+    description: Branch to push the commit to.
+    required: true
+  title:
+    description: Commit message and pull request title.
+    required: true
+  body:
+    description: Pull request body.
+    required: true
+  token:
+    description: Token for pushing and for gh.
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        BRANCH: ${{ inputs.branch }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git switch -C "$BRANCH"
+        git commit -am "$TITLE"
+        git push --force origin "$BRANCH"
+        if gh pr view "$BRANCH" --json state --jq .state | grep -q OPEN; then
+          gh pr edit "$BRANCH" --title "$TITLE" --body "$BODY"
+        else
+          gh pr create --head "$BRANCH" --title "$TITLE" --body "$BODY"
+        fi

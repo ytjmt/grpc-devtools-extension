@@ -17,9 +17,9 @@ jobs:
   update:
     name: Update mise tools
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       BRANCH: update-mise-tools
-      GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7.0.1
@@ -44,18 +44,25 @@ jobs:
           mv package.json.tmp package.json
           mise exec -- pnpm install
 
+      # A new buf or protoc can change the generated example code; CI checks it is up to date.
       - if: steps.upgrade.outputs.update == 'true'
         run: |
-          title="Update mise-managed tools"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -C "$BRANCH"
-          git commit -am "$title"
-          git push --force origin "$BRANCH"
-          body=$(printf 'Ran `mise upgrade --bump` and synced pnpm in package.json.\n\n```diff\n%s\n```' \
-            "$(git diff -U0 HEAD~1 -- mise.toml | grep '^[-+][^-+]')")
-          if gh pr view "$BRANCH" --json state --jq .state | grep -q OPEN; then
-            gh pr edit "$BRANCH" --title "$title" --body "$body"
-          else
-            gh pr create --head "$BRANCH" --title "$title" --body "$body"
-          fi
+          mise install buf protoc
+          mise run example:gen
+
+      - if: steps.upgrade.outputs.update == 'true'
+        id: body
+        run: |
+          {
+            echo 'text<<EOF'
+            printf 'Ran `mise upgrade --bump`, synced pnpm in package.json, and regenerated the example code.\n\n```diff\n%s\n```\n' \
+              "$(git diff -U0 -- mise.toml | grep '^[-+][^-+]')"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - if: steps.upgrade.outputs.update == 'true'
+        uses: $/.github/actions/open-pr
+        with:
+          branch: ${{ env.BRANCH }}
+          title: Update mise-managed tools
+          body: ${{ steps.body.outputs.text }}
