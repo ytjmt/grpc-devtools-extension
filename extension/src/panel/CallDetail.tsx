@@ -193,7 +193,7 @@ function MessageView({
           <span className="type">{message.typeName ?? t("detail.unknownType")}</span>
         )}
         <span className={`badge via-${message.via}`}>{message.via}</span>
-        <span className="size">{message.size} B</span>
+        <span className="size">{t("detail.bytes", { size: message.size })}</span>
         <span className="spacer" />
         <button onClick={copy}>{copied ? t("detail.copied") : t("detail.copyJson")}</button>
       </div>

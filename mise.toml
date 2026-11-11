@@ -4,6 +4,7 @@ pnpm = "12.18.0"
 buf = "1.75.0"
 protoc = "36.2"
 "github:github/gh-actions-lock" = { version = "0.4.1", bin = "gh-actions-lock" }
+"aqua:rhysd/actionlint" = "1.7.12"
 
 # Puts local bins such as `vp` on PATH, so they run without a global install.
 [env]

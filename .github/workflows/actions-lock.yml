@@ -1,4 +1,4 @@
-name: Actions lockfile
+name: Workflows
 
 on:
   push:
@@ -6,11 +6,13 @@ on:
     paths:
       - .github/workflows/**
       - .github/actions/**
+      - .github/actionlint.yaml
       - mise.toml
   pull_request:
     paths:
       - .github/workflows/**
       - .github/actions/**
+      - .github/actionlint.yaml
       - mise.toml
 
 concurrency:
@@ -22,7 +24,7 @@ permissions:
 
 jobs:
   verify:
-    name: Verify actions lockfile
+    name: Lint workflows and verify actions lockfile
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -33,5 +35,6 @@ jobs:
           persist-credentials: false
       - uses: jdx/mise-action@v5.2.7
         with:
-          install_args: github:github/gh-actions-lock
+          install_args: github:github/gh-actions-lock aqua:rhysd/actionlint
+      - run: actionlint
       - run: gh-actions-lock --verify
