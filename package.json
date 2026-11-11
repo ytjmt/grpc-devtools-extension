@@ -10,7 +10,7 @@
     "dev": "vp build -c extension/vite.config.ts --watch",
     "check": "vp check",
     "fmt": "vp fmt",
-    "test": "vp test run --project unit --project component",
+    "test": "vp test run",
     "test:e2e": "vp run build && playwright test",
     "example:gen": "mise run example:gen",
     "example:build": "vp build -c example/client/vite.config.ts",
@@ -19,7 +19,7 @@
     "demo:record": "vp run build && RECORD_DEMO=1 playwright test record-demo",
     "test:unit": "vp test run --project unit",
     "test:component": "vp test run --project component",
-    "test:vrt": "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\") docker compose up -d --wait playwright && vp test run --project vrt",
+    "test:vrt": "PLAYWRIGHT_VERSION=$(node -p \"require('@playwright/test/package.json').version\") docker compose up -d --wait playwright && VRT=1 vp test run --project vrt",
     "prepare": "vp config --no-agent && (test -n \"$CI\" || playwright install chromium)",
     "package": "scripts/package.sh"
   },

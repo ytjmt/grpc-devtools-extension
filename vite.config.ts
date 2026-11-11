@@ -32,11 +32,11 @@ export default defineConfig({
         },
       },
       {
-        // Run via `vp run test:vrt`, which starts the browser container first.
+        // `vp run test:vrt` sets VRT after starting the browser container; other runs skip these tests.
         extends: true,
         test: {
           name: "vrt",
-          include: ["tests/vrt/**/*.test.tsx"],
+          include: process.env.VRT ? ["tests/vrt/**/*.test.tsx"] : [],
           setupFiles: ["tests/support/browser-setup.ts", "tests/support/vrt-setup.ts"],
           browser: {
             ...browser({ width: 1000, height: 700 }),
@@ -77,11 +77,52 @@ export default defineConfig({
   // Run by the pre-commit hook (.vite-hooks/pre-commit) on staged files.
   staged: {
     "*": "vp check --fix",
+    ".github/workflows/*.yml": "actionlint",
+    "*.sh": "shellcheck",
+    // Checks the whole lockfile, so the staged paths are dropped.
+    ".github/**": "sh -c 'gh-actions-lock --verify-local --no-fix' --",
   },
   lint: {
     ignorePatterns: ["example/gen/**"],
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },
+    overrides: [
+      {
+        files: ["extension/src/core/**"],
+        rules: {
+          "no-restricted-imports": [
+            "error",
+            {
+              patterns: [
+                {
+                  group: ["react", "react-dom", "react/*", "react-dom/*", "../panel/*"],
+                  message: "core/ stays free of UI code.",
+                },
+              ],
+            },
+          ],
+          "no-restricted-globals": [
+            "error",
+            { name: "chrome", message: "core/ does not call chrome.* APIs; pass data in instead." },
+          ],
+        },
+      },
+      {
+        // UI text goes through the i18n catalog; punctuation and .proto keywords may stay inline.
+        files: ["extension/src/panel/**/*.tsx"],
+        plugins: ["react"],
+        rules: {
+          "react/jsx-no-literals": [
+            "error",
+            {
+              noStrings: false,
+              ignoreProps: true,
+              allowedStrings: ["✕", "·", "—", "→", ".", ":", "#", "(", ")", '"', "oneof"],
+            },
+          ],
+        },
+      },
+    ],
     options: { typeAware: true, typeCheck: true },
   },
 });

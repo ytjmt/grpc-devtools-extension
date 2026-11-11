@@ -46,6 +46,7 @@ export const en = {
   "detail.duration": "Duration",
   "detail.noMessages": "No messages",
   "detail.unknownType": "(unknown type)",
+  "detail.bytes": "{size} B",
   "detail.copyJson": "Copy JSON",
   "detail.copied": "Copied",
   "detail.none": "None",
