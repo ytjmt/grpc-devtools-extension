@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { t } from "../i18n";
 import { COLUMNS, NAME_COLUMN, sortRows, type Column, type Sort } from "./listColumns";
 import type { CallRow } from "./useDecodedRows";
@@ -15,6 +15,7 @@ export function CallList({
   /** True when nothing has been recorded at all (as opposed to everything being filtered out). */
   empty: boolean;
 }) {
+  // Only the name column fits beside the detail pane.
   const compact = selectedId !== undefined;
   const [sort, setSort] = useState<Sort>();
   const rows = useMemo(() => sortRows(recorded, sort), [recorded, sort]);
@@ -41,23 +42,17 @@ export function CallList({
     if (rows[next]) onSelect(rows[next].raw.id);
   };
   return (
-    <div className="list" tabIndex={0} aria-label={t("list.label")} onKeyDown={onKeyDown}>
+    <div className={`list ${compact ? "compact" : ""}`} tabIndex={0} aria-label={t("list.label")} onKeyDown={onKeyDown}>
       <table>
         <thead>
           <tr>
             {header(NAME_COLUMN)}
-            {!compact && COLUMNS.map(header)}
+            {COLUMNS.map(header)}
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <ListRow
-              key={r.raw.id}
-              row={r}
-              compact={compact}
-              selected={r.raw.id === selectedId}
-              onSelect={() => onSelect(r.raw.id)}
-            />
+            <ListRow key={r.raw.id} row={r} selected={r.raw.id === selectedId} onSelect={onSelect} />
           ))}
         </tbody>
       </table>
@@ -71,16 +66,15 @@ export function CallList({
   );
 }
 
-function ListRow({
+/** Memoized: with up to 2000 rows, selecting or filtering should only re-render the rows that changed. */
+const ListRow = memo(function ListRow({
   row,
-  compact,
   selected,
   onSelect,
 }: {
   row: CallRow;
-  compact: boolean;
   selected: boolean;
-  onSelect: () => void;
+  onSelect: (id: number) => void;
 }) {
   const { call } = row;
   const failed = !call || call.status.code !== 0;
@@ -96,7 +90,7 @@ function ListRow({
       data-transport={call?.transport}
       data-codec={call?.codec}
       aria-selected={selected}
-      onClick={onSelect}
+      onClick={() => onSelect(row.raw.id)}
     >
       <td title={NAME_COLUMN.text(row)}>
         <span className="method">{call?.method ?? "?"}</span>
@@ -107,15 +101,14 @@ function ListRow({
           </span>
         )}
       </td>
-      {!compact &&
-        COLUMNS.map((c) => (
-          <td key={c.key} className={`col-${c.key}`} title={c.text(row)}>
-            {c.text(row)}
-          </td>
-        ))}
+      {COLUMNS.map((c) => (
+        <td key={c.key} className={`col-${c.key}`} title={c.text(row)}>
+          {c.text(row)}
+        </td>
+      ))}
     </tr>
   );
-}
+});
 
 /** Clicking sorts by the column, ascending first; clicking again reverses it. */
 function SortHeader({ column, sort, onSort }: { column: Column; sort?: Sort; onSort: () => void }) {
