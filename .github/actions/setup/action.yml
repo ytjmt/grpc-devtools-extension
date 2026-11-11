@@ -9,11 +9,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: jdx/mise-action@v5
+    - uses: jdx/mise-action@v5.2.7
       with:
         install_args: node pnpm
     # Only caches the pnpm store; Node and pnpm come from mise.
-    - uses: actions/setup-node@v7
+    - uses: actions/setup-node@v7.1.0
       with:
         cache: pnpm
     - run: pnpm install --frozen-lockfile
@@ -30,7 +30,7 @@ runs:
       shell: bash
     - if: inputs.chromium == 'true'
       id: playwright-cache
-      uses: actions/cache@v6
+      uses: actions/cache@v6.1.0
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.playwright.outputs.version }}
