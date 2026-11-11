@@ -1,4 +1,4 @@
-import { extractBodies, type Bodies } from "./decode";
+import { extractBodies, hasCompression, type Bodies } from "./bodies";
 import { detectProtocol, encodeFrames, FLAG_COMPRESSED, parseFrames } from "./framing";
 import type { RawCall } from "./types";
 
@@ -25,18 +25,16 @@ async function inflate(bytes: Uint8Array, format: CompressionFormat): Promise<Ui
 /** True when the call uses RPC-level compression, so decompressBodies() is worth awaiting. */
 export function isCompressed(raw: RawCall): boolean {
   if (!detectProtocol(raw.url, raw.httpMethod, raw.requestHeaders)) return false;
-  const { requestEncoding, responseEncoding } = extractBodies(raw);
-  return Boolean(requestEncoding || responseEncoding);
+  return hasCompression(extractBodies(raw));
 }
 
 /**
  * Bodies with RPC-level compression undone. Frames (or unary bodies) that use an
  * unsupported encoding or fail to inflate are left compressed; decodeCall then
- * reports them with the encoding's name.
+ * reports them with the encoding's name. Pass `bodies` when already extracted.
  */
-export async function decompressBodies(raw: RawCall): Promise<Bodies> {
+export async function decompressBodies(raw: RawCall, bodies: Bodies = extractBodies(raw)): Promise<Bodies> {
   const detected = detectProtocol(raw.url, raw.httpMethod, raw.requestHeaders);
-  const bodies = extractBodies(raw);
   if (!detected) return bodies;
   const enveloped = detected.transport !== "connect";
 
