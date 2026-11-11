@@ -16,6 +16,7 @@ jobs:
   test:
     name: Check and test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: $/.github/actions/setup
@@ -24,9 +25,22 @@ jobs:
       - run: vp check
       - run: vp run test
 
+  generated:
+    name: Generated code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # buf generate runs protoc-gen-es from node_modules.
+      - uses: $/.github/actions/setup
+      - run: mise install buf protoc
+      - run: mise run example:gen
+      - run: git add -N . && git diff --exit-code --stat
+
   e2e:
     name: E2E
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: $/.github/actions/setup
@@ -43,6 +57,7 @@ jobs:
   vrt:
     name: Visual regression
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
       # Chromium runs in the Playwright container from compose.yaml.

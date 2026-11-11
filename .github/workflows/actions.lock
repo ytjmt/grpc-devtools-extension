@@ -12,6 +12,7 @@ workflows:
         - 'actions/setup-node@v7.1.0'
         - 'actions/upload-artifact@v7.0.2'
         - 'jdx/mise-action@v5.2.7'
+    '.github/workflows/dependabot-auto-merge.yml': []
     '.github/workflows/update-mise-tools.yml':
         - 'actions/checkout@v7.0.1'
         - 'jdx/mise-action@v5.2.7'

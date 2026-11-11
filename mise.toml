@@ -17,5 +17,5 @@ run = [
   "buf generate",
   "buf build -o descriptor.binpb",
   # Same schema via protoc *without* --include_imports, to exercise the well-known-type fallback.
-  "protoc -I proto --descriptor_set_out=descriptor.protoc.binpb $(find proto -name '*.proto')",
+  "protoc -I proto --descriptor_set_out=descriptor.protoc.binpb $(find proto -name '*.proto' | LC_ALL=C sort)",
 ]
