@@ -5,11 +5,15 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/actions-lock.yml':
         - 'actions/checkout@v7.0.1'
+        - 'jdx/mise-action@v5.2.7'
     '.github/workflows/ci.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
         - 'actions/upload-artifact@v7.0.2'
+        - 'jdx/mise-action@v5.2.7'
+    '.github/workflows/update-mise-tools.yml':
+        - 'actions/checkout@v7.0.1'
         - 'jdx/mise-action@v5.2.7'
     '.github/workflows/update-vite-plus.yml':
         - 'actions/cache@v6.1.0'

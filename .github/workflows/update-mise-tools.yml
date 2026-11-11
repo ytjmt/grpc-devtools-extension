@@ -1,0 +1,61 @@
+name: Update mise tools
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Update mise tools
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: update-mise-tools
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: jdx/mise-action@v5.2.7
+        with:
+          install: false
+
+      # Same cooldown as pnpm's minimumReleaseAge.
+      - id: upgrade
+        run: |
+          age=$(yq '.minimumReleaseAge // 0' pnpm-workspace.yaml)
+          mise upgrade --bump --minimum-release-age "${age}m"
+          if ! git diff --quiet mise.toml; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # package.json pins pnpm as well; keep it and the lockfile in step with mise.toml.
+      - if: steps.upgrade.outputs.update == 'true'
+        run: |
+          pnpm=$(mise current pnpm)
+          jq --arg v "$pnpm" '.packageManager = "pnpm@\($v)" | .devEngines.packageManager.version = $v' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          mise exec -- pnpm install
+
+      - if: steps.upgrade.outputs.update == 'true'
+        run: |
+          title="Update mise-managed tools"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git commit -am "$title"
+          git push --force origin "$BRANCH"
+          body=$(printf 'Ran `mise upgrade --bump` and synced pnpm in package.json.\n\n```diff\n%s\n```' \
+            "$(git diff -U0 HEAD~1 -- mise.toml | grep '^[-+][^-+]')")
+          if gh pr view "$BRANCH" --json state --jq .state | grep -q OPEN; then
+            gh pr edit "$BRANCH" --title "$title" --body "$body"
+          else
+            gh pr create --head "$BRANCH" --title "$title" --body "$body"
+          fi
