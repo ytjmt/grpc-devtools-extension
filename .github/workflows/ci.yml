@@ -69,3 +69,34 @@ jobs:
           name: vrt-results
           path: .vitest/
           if-no-files-found: ignore
+
+  # Publishes package.json's version once it has no tag yet; other pushes to main skip it.
+  release:
+    name: Release
+    needs: [test, generated, e2e, vrt]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: version
+        run: |
+          tag="v$(jq -r .version package.json)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
+            echo "$tag is already released"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.version.outputs.new == 'true'
+        uses: $/.github/actions/setup
+      - if: steps.version.outputs.new == 'true'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          asset=$(scripts/package.sh)
+          gh release create "$TAG" "$asset" --target "$GITHUB_SHA" --title "$TAG" --generate-notes

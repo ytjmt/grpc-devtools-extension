@@ -66,8 +66,8 @@ vp run package           # build and zip into release/
 
 ### Release
 
-1. Bump `version` in `package.json` (1-4 numbers, e.g. `0.2.0`), commit, and push to `main`.
-2. Run `vp run release` to publish to GitHub Releases with `gh` (`--dry-run` to only run the checks).
+1. Run the **Prepare release** workflow on GitHub Actions, choosing patch, minor, or major. It opens a PR that bumps `version` in `package.json`.
+2. Approve the PR's workflow runs, then merge it once CI passes. CI on `main` then publishes the release to GitHub Releases.
 
 ### Example app
 
