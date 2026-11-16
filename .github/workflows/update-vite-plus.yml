@@ -58,7 +58,7 @@ jobs:
       - if: steps.version.outputs.update == 'true'
         run: |
           yq -i 'del(.minimumReleaseAgeExclude)' pnpm-workspace.yaml
-          pnpm install
+          pnpm install --no-frozen-lockfile
 
       - if: steps.version.outputs.update == 'true'
         uses: $/.github/actions/open-pr

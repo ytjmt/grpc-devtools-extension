@@ -42,7 +42,7 @@ jobs:
           pnpm=$(mise current pnpm)
           jq --arg v "$pnpm" '.packageManager = "pnpm@\($v)" | .devEngines.packageManager.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
-          mise exec -- pnpm install
+          mise exec -- pnpm install --no-frozen-lockfile
 
       # A new buf or protoc can change the generated example code; CI checks it is up to date.
       - if: steps.upgrade.outputs.update == 'true'
