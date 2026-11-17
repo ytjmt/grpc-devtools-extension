@@ -9,7 +9,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: jdx/mise-action@v5.2.7
+    - uses: jdx/mise-action@v5.2.8
       with:
         install_args: node pnpm
     # Only caches the pnpm store; Node and pnpm come from mise.
