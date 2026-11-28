@@ -19,7 +19,7 @@ runs:
     - run: pnpm install --frozen-lockfile
       shell: bash
     # mise does this locally (mise.toml); vp is a local binary.
-    - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH"
+    - run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> "$GITHUB_PATH" # zizmor: ignore[github-env]
       shell: bash
     # The browser download is cached per Playwright version. Its system dependencies
     # (--with-deps) are skipped: the runner image ships Chrome and so has the libraries,

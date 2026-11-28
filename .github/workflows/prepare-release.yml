@@ -32,7 +32,8 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - uses: actions/checkout@v7.0.1
+      # open-pr pushes with the checkout's credentials.
+      - uses: actions/checkout@v7.0.1 # zizmor: ignore[artipacked]
         with:
           token: ${{ steps.token.outputs.token }}
 

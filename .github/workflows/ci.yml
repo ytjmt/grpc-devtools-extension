@@ -19,6 +19,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: $/.github/actions/setup
         with:
           chromium: "true"
@@ -31,6 +33,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       # buf generate runs protoc-gen-es from node_modules.
       - uses: $/.github/actions/setup
       - run: mise install buf protoc
@@ -43,6 +47,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: $/.github/actions/setup
         with:
           chromium: "true"
@@ -60,6 +66,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       # Chromium runs in the Playwright container from compose.yaml.
       - uses: $/.github/actions/setup
       - run: vp run test:vrt
@@ -83,6 +91,8 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - id: version
         run: |
           tag="v$(jq -r .version package.json)"
