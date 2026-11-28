@@ -67,7 +67,7 @@ vp run package           # build and zip into release/
 ### Release
 
 1. Run the **Prepare release** workflow on GitHub Actions, choosing patch, minor, or major. It opens a PR that bumps `version` in `package.json`.
-2. Approve the PR's workflow runs, then merge it once CI passes. CI on `main` then publishes the release to GitHub Releases.
+2. Merge the PR once CI passes. CI on `main` then publishes the release to GitHub Releases.
 
 ### Example app
 
