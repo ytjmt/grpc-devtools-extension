@@ -18,14 +18,6 @@ workflows:
         - 'actions/cache@v6.1.0'
         - 'actions/create-github-app-token@v3.4.0'
         - 'renovatebot/github-action@v46.3.15'
-    '.github/workflows/update-mise-tools.yml':
-        - 'actions/checkout@v7.0.1'
-        - 'jdx/mise-action@v5.3.0'
-    '.github/workflows/update-vite-plus.yml':
-        - 'actions/cache@v6.1.0'
-        - 'actions/checkout@v7.0.1'
-        - 'actions/setup-node@v7.1.0'
-        - 'jdx/mise-action@v5.3.0'
 dependencies:
     'actions/cache@v6.1.0':
         ref: 'v6.1.0'

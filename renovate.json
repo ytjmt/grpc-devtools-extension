@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices", ":pinAllExceptPeerDependencies"],
   "ignorePresets": ["helpers:pinGitHubActionDigests"],
-  "enabledManagers": ["npm", "github-actions", "custom.regex"],
+  "enabledManagers": ["npm", "github-actions", "mise", "custom.regex"],
   "timezone": "Asia/Tokyo",
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
@@ -34,15 +34,69 @@
       "platformAutomerge": false
     },
     {
-      "description": "The Update Vite+ workflow moves the catalog together with vp migrate.",
+      "matchManagers": ["mise"],
+      "groupName": "mise tools",
+      "groupSlug": "mise-tools"
+    },
+    {
+      "description": "mise.toml and package.json pin pnpm together.",
+      "matchPackageNames": ["pnpm"],
+      "groupName": "pnpm",
+      "groupSlug": "pnpm",
+      "automerge": false
+    },
+    {
+      "description": "CI verifies actions.lock with the mise.toml version, and Renovate regenerates it with constraints.ghActionsLock.",
+      "matchPackageNames": ["github/gh-actions-lock"],
+      "groupName": "gh-actions-lock",
+      "groupSlug": "gh-actions-lock"
+    },
+    {
+      "description": "Regenerates the example code when its generators change.",
+      "matchPackageNames": [
+        "bufbuild/buf",
+        "protocolbuffers/protobuf",
+        "@bufbuild/protobuf",
+        "@bufbuild/protoc-gen-es"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "mise trust",
+          "mise install node pnpm buf protoc",
+          "mise exec -- pnpm install --frozen-lockfile --ignore-scripts",
+          "mise run example:gen"
+        ],
+        "executionMode": "branch",
+        "installTools": {
+          "mise": {}
+        }
+      }
+    },
+    {
+      "description": "vp migrate moves the rest of the catalog with vite-plus.",
       "matchDepTypes": ["pnpm.catalog.default"],
+      "matchPackageNames": ["!vite-plus"],
       "enabled": false
     },
     {
-      "description": "The Update mise tools workflow keeps pnpm in step with mise.toml.",
-      "matchManagers": ["npm"],
-      "matchPackageNames": ["pnpm"],
-      "enabled": false
+      "description": "vp migrate exempts the toolchain from minimumReleaseAge, so the exemption is removed again.",
+      "matchPackageNames": ["vite-plus"],
+      "groupName": "Vite+",
+      "groupSlug": "vite-plus",
+      "automerge": false,
+      "postUpgradeTasks": {
+        "commands": [
+          "mise trust",
+          "mise install node pnpm",
+          "mise exec -- pnpm --package=vite-plus@{{{newVersion}}} dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks",
+          "mise exec -- pnpm config delete minimumReleaseAgeExclude --location project",
+          "mise exec -- pnpm install --no-frozen-lockfile --ignore-scripts"
+        ],
+        "executionMode": "branch",
+        "installTools": {
+          "mise": {}
+        }
+      }
     },
     {
       "matchPackageNames": ["renovate"],
@@ -64,6 +118,13 @@
       "matchStrings": ["--package=renovate@(?<currentValue>\\S+)", "renovate-version: (?<currentValue>\\S+)"],
       "depNameTemplate": "renovate",
       "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^renovate\\.json$/"],
+      "matchStrings": ["\"ghActionsLock\": \"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "github/gh-actions-lock",
+      "datasourceTemplate": "github-releases"
     }
   ]
 }

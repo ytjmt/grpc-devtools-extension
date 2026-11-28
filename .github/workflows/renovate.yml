@@ -39,7 +39,9 @@ jobs:
     name: Renovate
     if: >-
       github.event_name != 'issues'
-      || (github.event.issue.title == 'Dependency Dashboard' && github.event.sender.type != 'Bot')
+      || (github.event.issue.user.login == 'ytjmt-renovate[bot]'
+        && github.event.issue.title == 'Dependency Dashboard'
+        && github.event.sender.type != 'Bot')
     # Job-level, so runs the `if` skips (Renovate's own Dashboard edits) never take the
     # pending slot from a run a person triggered.
     concurrency:
@@ -81,6 +83,16 @@ jobs:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: required
+          RENOVATE_ALLOWED_COMMANDS: >-
+            ["^mise trust$",
+            "^mise install( [a-z]+)+$",
+            "^mise exec -- pnpm install --(no-)?frozen-lockfile --ignore-scripts$",
+            "^mise run example:gen$",
+            "^mise exec -- pnpm --package=vite-plus@\\d+\\.\\d+\\.\\d+ dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks$",
+            "^mise exec -- pnpm config delete minimumReleaseAgeExclude --location project$"]
+          # Post-upgrade tasks install only the tools they name; auto-installing the rest of mise.toml
+          # would call the GitHub API without a token.
+          RENOVATE_CUSTOM_ENV_VARIABLES: '{"MISE_AUTO_INSTALL": "false"}'
           RENOVATE_REPOSITORY_CACHE: ${{ inputs.repository-cache || 'enabled' }}
           RENOVATE_DRY_RUN: ${{ inputs.dry-run && 'full' || '' }}
           LOG_LEVEL: ${{ inputs.log-level || 'info' }}
