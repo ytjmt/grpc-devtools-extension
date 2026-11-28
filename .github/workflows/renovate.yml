@@ -89,7 +89,8 @@ jobs:
             "^mise exec -- pnpm install --(no-)?frozen-lockfile --ignore-scripts$",
             "^mise run example:gen$",
             "^mise exec -- pnpm --package=vite-plus@\\d+\\.\\d+\\.\\d+ dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks$",
-            "^mise exec -- pnpm config delete minimumReleaseAgeExclude --location project$"]
+            "^mise exec -- pnpm config delete minimumReleaseAgeExclude --location project$",
+            "^mise exec -- vp fmt pnpm-workspace\\.yaml$"]
           # Post-upgrade tasks install only the tools they name; auto-installing the rest of mise.toml
           # would call the GitHub API without a token.
           RENOVATE_CUSTOM_ENV_VARIABLES: '{"MISE_AUTO_INSTALL": "false"}'
