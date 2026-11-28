@@ -14,8 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   prepare:
@@ -23,10 +22,19 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
+      # Pushes and PRs made with GITHUB_TOKEN do not trigger CI, so the release PR could never pass its required checks.
+      - id: token
+        uses: actions/create-github-app-token@v3.4.0
+        with:
+          client-id: ${{ vars.RENOVATE_CLIENT_ID }}
+          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - uses: actions/checkout@v7.0.1
+        with:
+          token: ${{ steps.token.outputs.token }}
 
       - id: version
         env:
@@ -46,6 +54,7 @@ jobs:
       - id: body
         env:
           TAG: ${{ steps.version.outputs.tag }}
+          GH_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           notes=$(gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" -f tag_name="$TAG" -f target_commitish=main --jq .body)
           {
@@ -59,3 +68,4 @@ jobs:
           branch: release
           title: Release ${{ steps.version.outputs.tag }}
           body: ${{ steps.body.outputs.text }}
+          token: ${{ steps.token.outputs.token }}
