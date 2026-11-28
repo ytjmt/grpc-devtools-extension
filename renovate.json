@@ -79,7 +79,7 @@
       "enabled": false
     },
     {
-      "description": "vp migrate exempts the toolchain from minimumReleaseAge, so the exemption is removed again.",
+      "description": "vp migrate exempts the toolchain from minimumReleaseAge, so the exemption is removed again. Renovate's catalog edit requotes pnpm-workspace.yaml, so it is formatted last.",
       "matchPackageNames": ["vite-plus"],
       "groupName": "Vite+",
       "groupSlug": "vite-plus",
@@ -90,7 +90,8 @@
           "mise install node pnpm",
           "mise exec -- pnpm --package=vite-plus@{{{newVersion}}} dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks",
           "mise exec -- pnpm config delete minimumReleaseAgeExclude --location project",
-          "mise exec -- pnpm install --no-frozen-lockfile --ignore-scripts"
+          "mise exec -- pnpm install --no-frozen-lockfile --ignore-scripts",
+          "mise exec -- vp fmt pnpm-workspace.yaml"
         ],
         "executionMode": "branch",
         "installTools": {
