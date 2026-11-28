@@ -43,18 +43,24 @@
       "enabled": false
     },
     {
-      "matchPackageNames": ["renovate", "ghcr.io/renovatebot/renovate"],
+      "matchPackageNames": ["renovate"],
       "groupName": "Renovate",
       "groupSlug": "renovate",
-      "pinDigests": false,
       "automerge": false
+    },
+    {
+      "description": "The renovate-version input moves with the npm package through the custom manager, so both copies pick the same release.",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["ghcr.io/renovatebot/renovate"],
+      "enabled": false
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/actions-lock\\.yml$/"],
-      "matchStrings": ["--package=(?<depName>renovate)@(?<currentValue>\\S+)"],
+      "managerFilePatterns": ["/^\\.github/workflows/actions-lock\\.yml$/", "/^\\.github/workflows/renovate\\.yml$/"],
+      "matchStrings": ["--package=renovate@(?<currentValue>\\S+)", "renovate-version: (?<currentValue>\\S+)"],
+      "depNameTemplate": "renovate",
       "datasourceTemplate": "npm"
     }
   ]
