@@ -27,6 +27,12 @@ vp run build
 
 Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select `dist/`. Then open DevTools on your page and choose the **gRPC** tab. Only requests made while DevTools is open are recorded.
 
+Instead of building, you can unzip a release from [GitHub Releases](https://github.com/ytjmt/grpc-devtools-extension/releases) and load that folder. Releases from v0.1.5 on carry a build provenance attestation, which shows that CI built the zip from this repository:
+
+```bash
+gh attestation verify grpc-devtools-extension-v0.1.5.zip --repo ytjmt/grpc-devtools-extension
+```
+
 ## Schemas
 
 Without a schema, messages are shown by field number. To see field names, generate a FileDescriptorSet from your `.proto` files and add it under **Schemas → Manage**. `buf build` keeps `.proto` comments and declaration order for the schema browser; with `protoc`, add `--include_source_info`.
