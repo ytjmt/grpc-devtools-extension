@@ -87,6 +87,8 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -105,8 +107,14 @@ jobs:
       - if: steps.version.outputs.new == 'true'
         uses: $/.github/actions/setup
       - if: steps.version.outputs.new == 'true'
+        id: package
+        run: echo "asset=$(scripts/package.sh)" >> "$GITHUB_OUTPUT"
+      - if: steps.version.outputs.new == 'true'
+        uses: actions/attest@v4.2.2
+        with:
+          subject-path: ${{ steps.package.outputs.asset }}
+      - if: steps.version.outputs.new == 'true'
         env:
           TAG: ${{ steps.version.outputs.tag }}
-        run: |
-          asset=$(scripts/package.sh)
-          gh release create "$TAG" "$asset" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+          ASSET: ${{ steps.package.outputs.asset }}
+        run: gh release create "$TAG" "$ASSET" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
