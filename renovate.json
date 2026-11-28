@@ -1,0 +1,61 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":pinAllExceptPeerDependencies"],
+  "ignorePresets": ["helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["npm", "github-actions", "custom.regex"],
+  "timezone": "Asia/Tokyo",
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "prHourlyLimit": 0,
+  "rebaseWhen": "conflicted",
+  "platformCommit": "enabled",
+  "constraints": {
+    "ghActionsLock": "v0.5.1"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-major dependencies",
+      "groupSlug": "npm-non-major",
+      "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "GitHub Actions non-major",
+      "groupSlug": "github-actions-non-major",
+      "automerge": true
+    },
+    {
+      "description": "The Update Vite+ workflow moves the catalog together with vp migrate.",
+      "matchDepTypes": ["pnpm.catalog.default"],
+      "enabled": false
+    },
+    {
+      "description": "The Update mise tools workflow keeps pnpm in step with mise.toml.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["pnpm"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["renovate", "ghcr.io/renovatebot/renovate"],
+      "groupName": "Renovate",
+      "groupSlug": "renovate",
+      "pinDigests": false,
+      "automerge": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/actions-lock\\.yml$/"],
+      "matchStrings": ["--package=(?<depName>renovate)@(?<currentValue>\\S+)"],
+      "datasourceTemplate": "npm"
+    }
+  ]
+}

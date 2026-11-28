@@ -1,0 +1,90 @@
+name: Renovate
+
+on:
+  schedule:
+    # 03:00 in Asia/Tokyo, inside lockFileMaintenance's "before 4am on monday".
+    - cron: "0 18 * * *"
+  # Checkboxes on the Dependency Dashboard take effect on the next run.
+  issues:
+    types: [edited]
+  push:
+    branches: [main]
+    paths: [renovate.json]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Look up updates without opening PRs or pushing branches.
+        type: boolean
+        default: false
+      log-level:
+        type: choice
+        options: [info, debug]
+        default: info
+      repository-cache:
+        description: Reset the repository cache if it has gone stale.
+        type: choice
+        options: [enabled, reset, disabled]
+        default: enabled
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  CACHE_DIR: /tmp/renovate/cache/renovate/repository
+  CACHE_KEY: renovate-repository
+
+jobs:
+  renovate:
+    name: Renovate
+    if: >-
+      github.event_name != 'issues'
+      || (github.event.issue.title == 'Dependency Dashboard' && github.event.sender.type != 'Bot')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - id: token
+        uses: actions/create-github-app-token@v3.4.0
+        with:
+          client-id: ${{ vars.RENOVATE_CLIENT_ID }}
+          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+          permission-workflows: write
+          permission-statuses: write
+          permission-checks: read
+          permission-vulnerability-alerts: read
+
+      - id: cache
+        if: inputs.repository-cache == '' || inputs.repository-cache == 'enabled'
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: ${{ env.CACHE_DIR }}
+          key: ${{ env.CACHE_KEY }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: ${{ env.CACHE_KEY }}-
+
+      # Renovate runs as uid 12021 inside its container.
+      - if: steps.cache.outputs.cache-matched-key != ''
+        run: sudo chown -R 12021:0 /tmp/renovate
+
+      - uses: renovatebot/github-action@v46.3.15
+        with:
+          token: ${{ steps.token.outputs.token }}
+          renovate-version: 44.261.2
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_ONBOARDING: "false"
+          RENOVATE_REQUIRE_CONFIG: required
+          RENOVATE_REPOSITORY_CACHE: ${{ inputs.repository-cache || 'enabled' }}
+          RENOVATE_DRY_RUN: ${{ inputs.dry-run && 'full' || '' }}
+          LOG_LEVEL: ${{ inputs.log-level || 'info' }}
+
+      - if: inputs.repository-cache != 'disabled' && steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: ${{ env.CACHE_DIR }}
+          key: ${{ env.CACHE_KEY }}-${{ github.run_id }}-${{ github.run_attempt }}

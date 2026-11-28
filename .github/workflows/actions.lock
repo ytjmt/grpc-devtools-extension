@@ -12,9 +12,12 @@ workflows:
         - 'actions/setup-node@v7.1.0'
         - 'actions/upload-artifact@v7.0.2'
         - 'jdx/mise-action@v5.2.10'
-    '.github/workflows/dependabot-auto-merge.yml': []
     '.github/workflows/prepare-release.yml':
         - 'actions/checkout@v7.0.1'
+    '.github/workflows/renovate.yml':
+        - 'actions/cache@v6.1.0'
+        - 'actions/create-github-app-token@v3.4.0'
+        - 'renovatebot/github-action@v46.3.15'
     '.github/workflows/update-mise-tools.yml':
         - 'actions/checkout@v7.0.1'
         - 'jdx/mise-action@v5.2.10'
@@ -34,6 +37,11 @@ dependencies:
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
+    'actions/create-github-app-token@v3.4.0':
+        ref: 'v3.4.0'
+        commit: 'sha1-f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc'
+        owner_id: 44036562
+        repo_id: 642580244
     'actions/setup-node@v7.1.0':
         ref: 'v7.1.0'
         commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
@@ -49,3 +57,8 @@ dependencies:
         commit: 'sha1-90f833d396d0cc3674b631d2d225e306476c303a'
         owner_id: 216188
         repo_id: 738284564
+    'renovatebot/github-action@v46.3.15':
+        ref: 'v46.3.15'
+        commit: 'sha1-ebcbb513d07ead4d9c0c2139064301db05e84a3e'
+        owner_id: 38656520
+        repo_id: 252754603
