@@ -24,28 +24,28 @@
     "package": "scripts/package.sh"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.17.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "@bufbuild/protobuf": "2.17.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@bufbuild/protoc-gen-es": "^2.17.0",
-    "@connectrpc/connect": "^2.3.0",
-    "@connectrpc/connect-node": "^2.3.0",
-    "@connectrpc/connect-web": "^2.3.0",
+    "@bufbuild/protoc-gen-es": "2.17.0",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-node": "2.3.0",
+    "@connectrpc/connect-web": "2.3.0",
     "@playwright/test": "1.65.1",
-    "@types/chrome": "^0.3.7",
-    "@types/node": "^26.6.6",
+    "@types/chrome": "0.3.7",
+    "@types/node": "26.6.6",
     "@types/react": "19.3.1",
     "@types/react-dom": "19.3.0",
-    "@vitejs/plugin-react": "^6.3.0",
+    "@vitejs/plugin-react": "6.3.0",
     "@vitest/browser-playwright": "catalog:",
-    "fake-indexeddb": "^6.2.8",
-    "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
+    "fake-indexeddb": "6.2.8",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
-    "vitest-browser-react": "^2.3.0"
+    "vitest-browser-react": "2.3.0"
   },
   "devEngines": {
     "packageManager": {
