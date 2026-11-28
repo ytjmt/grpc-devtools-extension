@@ -1,0 +1,69 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":pinAllExceptPeerDependencies"],
+  "ignorePresets": ["helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["npm", "github-actions", "custom.regex"],
+  "timezone": "Asia/Tokyo",
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "prHourlyLimit": 0,
+  "rebaseWhen": "conflicted",
+  "platformCommit": "enabled",
+  "constraints": {
+    "ghActionsLock": "v0.5.1"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-major dependencies",
+      "groupSlug": "npm-non-major",
+      "automerge": true
+    },
+    {
+      "description": "Renovate merges these itself once every check passes, because the actions.lock verify is not a required check.",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "GitHub Actions non-major",
+      "groupSlug": "github-actions-non-major",
+      "automerge": true,
+      "platformAutomerge": false
+    },
+    {
+      "description": "The Update Vite+ workflow moves the catalog together with vp migrate.",
+      "matchDepTypes": ["pnpm.catalog.default"],
+      "enabled": false
+    },
+    {
+      "description": "The Update mise tools workflow keeps pnpm in step with mise.toml.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["pnpm"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["renovate"],
+      "groupName": "Renovate",
+      "groupSlug": "renovate",
+      "automerge": false
+    },
+    {
+      "description": "The renovate-version input moves with the npm package through the custom manager, so both copies pick the same release.",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["ghcr.io/renovatebot/renovate"],
+      "enabled": false
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/actions-lock\\.yml$/", "/^\\.github/workflows/renovate\\.yml$/"],
+      "matchStrings": ["--package=renovate@(?<currentValue>\\S+)", "renovate-version: (?<currentValue>\\S+)"],
+      "depNameTemplate": "renovate",
+      "datasourceTemplate": "npm"
+    }
+  ]
+}

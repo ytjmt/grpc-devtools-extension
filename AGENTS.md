@@ -23,8 +23,9 @@ Lint, type checks, and formatting run in `vp check`. CI runs every suite. Run th
 ## Dependencies and CI
 
 - Packages come from Takumi Guard (`.npmrc`) and must be at least 3 days old (`minimumReleaseAge`). Do not bypass either.
-- Vite+ and Vitest move together through the Update Vite+ workflow (`vp migrate`). Dependabot ignores them.
-- Tool versions are pinned in `mise.toml`.
+- The Renovate workflow runs self-hosted Renovate daily for npm packages and GitHub Actions (`renovate.json`).
+- Vite+ and Vitest move together through the Update Vite+ workflow (`vp migrate`). Renovate ignores them.
+- Tool versions are pinned in `mise.toml`. Keep `constraints.ghActionsLock` in `renovate.json` on the same gh-actions-lock version.
 - After editing `.github/`, run `gh-actions-lock` to update `actions.lock`.
 
 ## Releases
