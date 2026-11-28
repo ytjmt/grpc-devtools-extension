@@ -88,6 +88,9 @@ jobs:
             "^mise run example:gen$",
             "^mise exec -- pnpm --package=vite-plus@\\d+\\.\\d+\\.\\d+ dlx vp migrate --no-interactive --no-agent --no-editor --no-hooks$",
             "^mise exec -- pnpm config delete minimumReleaseAgeExclude --location project$"]
+          # Post-upgrade tasks install only the tools they name; auto-installing the rest of mise.toml
+          # would call the GitHub API without a token.
+          RENOVATE_CUSTOM_ENV_VARIABLES: '{"MISE_AUTO_INSTALL": "false"}'
           RENOVATE_REPOSITORY_CACHE: ${{ inputs.repository-cache || 'enabled' }}
           RENOVATE_DRY_RUN: ${{ inputs.dry-run && 'full' || '' }}
           LOG_LEVEL: ${{ inputs.log-level || 'info' }}
