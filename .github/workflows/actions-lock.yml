@@ -45,4 +45,4 @@ jobs:
       - run: actionlint
       - run: shellcheck .claude/hooks/*.sh scripts/*.sh
       - run: gh-actions-lock --verify
-      - run: pnpm dlx --package=renovate@44.262.0 renovate-config-validator --strict
+      - run: pnpm dlx --package=renovate@44.262.1 renovate-config-validator --strict
