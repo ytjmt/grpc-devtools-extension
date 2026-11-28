@@ -25,11 +25,13 @@
       "automerge": true
     },
     {
+      "description": "Renovate merges these itself once every check passes, because the actions.lock verify is not a required check.",
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "GitHub Actions non-major",
       "groupSlug": "github-actions-non-major",
-      "automerge": true
+      "automerge": true,
+      "platformAutomerge": false
     },
     {
       "description": "The Update Vite+ workflow moves the catalog together with vp migrate.",

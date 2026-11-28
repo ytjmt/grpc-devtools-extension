@@ -2,8 +2,9 @@ name: Renovate
 
 on:
   schedule:
-    # 03:00 in Asia/Tokyo, inside lockFileMaintenance's "before 4am on monday".
-    - cron: "0 18 * * *"
+    # 01:17 in Asia/Tokyo: early enough in lockFileMaintenance's "before 4am on monday"
+    # to survive schedule delays, and off the top of the hour when those delays peak.
+    - cron: "17 16 * * *"
   # Checkboxes on the Dependency Dashboard take effect on the next run.
   issues:
     types: [edited]
@@ -26,10 +27,6 @@ on:
         options: [enabled, reset, disabled]
         default: enabled
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
-
 permissions:
   contents: read
 
@@ -43,6 +40,11 @@ jobs:
     if: >-
       github.event_name != 'issues'
       || (github.event.issue.title == 'Dependency Dashboard' && github.event.sender.type != 'Bot')
+    # Job-level, so runs the `if` skips (Renovate's own Dashboard edits) never take the
+    # pending slot from a run a person triggered.
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
